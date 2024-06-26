@@ -2,6 +2,7 @@ package main;
 
 import javax.swing.JPanel;
 
+import entity.EntityManager;
 import entity.Player;
 import tile.TileManager;
 
@@ -21,7 +22,7 @@ public class GamePanel extends JPanel implements Runnable{
 	// SCREEN SETTINGS
 	public final int originalTileSize = 16; // 16X16 tile... don't mess with this number
 	public final int scale = 3;
-	public final int tileSize = originalTileSize*scale; // 48x48 pixel tile
+	public final int tileSize = originalTileSize*scale; // 48x48 tile
 	public final int maxScreenCol = 16;
 	public final int maxScreenRow = 14;
 	public final int screenWidth = tileSize*maxScreenCol; // 1536 pixels
@@ -31,12 +32,11 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	public int frameCount;
 	
-	int temp;
-	
 	MouseHandler mouseH;
 	TileManager tileM;
 	Thread gameThread;
 	Player player;
+	EntityManager entityM;
 	Random random;
 	
 	
@@ -44,13 +44,17 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		random = new Random(System.currentTimeMillis());
 		mouseH = new MouseHandler();
-		tileM = new TileManager(this, mouseH);
+		entityM = new EntityManager(this, mouseH);
+		tileM = new TileManager(this, mouseH, entityM);
 		player = new Player(this, mouseH);
 		
 		frameCount = 0;
 		
 		tileM.setPlayer(player);
 		player.setTileManager(tileM);
+		
+		entityM.setPlayer(player);
+		entityM.setTileManager(tileM);
 		
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		this.setBackground(Color.gray);
@@ -106,6 +110,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		tileM.update();
 		player.update();
+		entityM.update();
 		
 	}
 	
@@ -117,6 +122,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		tileM.draw(g2);
 		player.draw(g2);
+		entityM.draw(g2);
 		
 		
 		g2.dispose();

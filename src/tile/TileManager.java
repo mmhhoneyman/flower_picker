@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import entity.EntityManager;
 import entity.Player;
 import main.GamePanel;
 import main.MouseHandler;
@@ -18,6 +19,7 @@ public class TileManager {
 	GamePanel gp;
 	MouseHandler mouseH;
 	Player player;
+	EntityManager entityM;
 	
 	BufferedImage fence, flower_blue_1, flower_blue_2, flower_blue_3, flower_orange_1, flower_orange_2, flower_orange_3, 
 	flower_picked, flower_rose_1, flower_rose_2, flower_rose_3, flower_sprout_1, flower_sprout_2, flower_white_1, flower_white_2, 
@@ -36,30 +38,30 @@ public class TileManager {
 	public int[][] tileNums;
 	
 	
-	// only works if the max screen columns are 15 and rows are 15 or smaller (not recommended)
-	/* int[][] initTileNums = {
-			{26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26},
-			{26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26},
-			{01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01},
-			{24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 24, 24, 24, 24, 24},
-			{24, 20, 24, 24, 24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 24},
-			{24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 20, 24},
-			{24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 24, 20, 24, 24, 24},
-			{24, 24, 24, 24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 24, 24},
-			{24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24},
-			{20, 24, 24, 20, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24},
-			{24, 24, 24, 24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 20, 24},
-			{24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24},
-			{24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 24, 24, 20, 24, 24},
-			{24, 20, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24},
-			{24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 20, 24}
+	// only works if the max screen columns are 16 and rows are 14 or smaller (not recommended)
+	/* public int[][] tileNums = {
+			{26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26},
+			{26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26},
+			{01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01, 01},
+			{24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24},
+			{24, 20, 24, 24, 24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 24, 24},
+			{24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 20, 24, 24},
+			{24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 24, 20, 24, 24, 24, 24},
+			{24, 24, 24, 24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 24, 24, 24},
+			{24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24},
+			{20, 24, 24, 20, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24},
+			{24, 24, 24, 24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 20, 24, 24},
+			{24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24},
+			{24, 24, 24, 24, 24, 20, 24, 24, 24, 24, 24, 24, 20, 24, 24, 24},
+			{24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 20, 24, 24}
 	}; */
 	
 	
-	public TileManager(GamePanel gp, MouseHandler mouseH) {
+	public TileManager(GamePanel gp, MouseHandler mouseH, EntityManager entityM) {
 		
 		this.gp = gp;
 		this.mouseH = mouseH;
+		this.entityM = entityM;
 		
 		tile = new Tile[gp.maxScreenRow][gp.maxScreenCol];
 		
@@ -116,7 +118,14 @@ public class TileManager {
 				}
 			}
 		}
-		tileNums = initTileNums;
+		
+		// assign the same values to tileNums
+		tileNums = new int[gp.maxScreenRow][gp.maxScreenCol];
+		for(int r = 0; r < gp.maxScreenRow; r++) {
+			for(int c = 0; c < gp.maxScreenCol; c++) {
+				tileNums[r][c] = initTileNums[r][c];
+			}
+		}
 	}
 	
 	// returns true if all surrounding tiles don't contain grass_hori
@@ -196,16 +205,13 @@ public class TileManager {
 				tile[r][c].image = tileSwitch(initTileNums[r][c]);
 				
 				if(tile[r][c].image == grass_plain || tile[r][c].image == grass_hori || tile[r][c].image == grass_vert) {
-					//tile[r][c].nextState = "flower_sprout_1";
 					tile[r][c].walkable = true;
-					tile[r][c].pickable = false;
-					//tile[r][c].timeStamp = gp.frameCount;
 				} else {
-					//tile[r][c].nextState = "none";
 					tile[r][c].walkable = false;
-					tile[r][c].pickable = false;
-					//tile[r][c].timeStamp = gp.frameCount;
 				}
+				tile[r][c].pickable = false;
+				tile[r][c].isFlower = false;
+				tile[r][c].entityStamp = Integer.MAX_VALUE;
 			}
 		}
 	}
@@ -244,10 +250,21 @@ public class TileManager {
 	public void updateTiles() {
 		for(int r = 0; r < gp.maxScreenRow; r++) {
 			for(int c = 0; c < gp.maxScreenCol; c++) {
+				// changes tile type
 				if(tile[r][c].changeStamp <= gp.frameCount && (r*gp.tileSize != player.pickTileY && c*gp.tileSize != player.pickTileX)) {
 					updateTile(r, c);
 				}
 				tile[r][c].image = tileSwitch(tileNums[r][c]);
+				// spawns new enemy
+				if(tile[r][c].entityStamp == gp.frameCount) {
+					int rand = gp.generateRandom(1, 1);
+					if(rand == 1) {
+						entityM.addEntity(gp, c * gp.tileSize, r * gp.tileSize, "Butterfly");
+					} else {
+						
+					}
+					
+				}
 			}
 		}
 	}
@@ -289,6 +306,9 @@ public class TileManager {
 		int maxGrassGrowth1 = 240;
 		int minGrassGrowth2 = 180;
 		int maxGrassGrowth2 = 240;
+		
+		int minEntityStamp = 180;
+		int maxEntityStamp = 240;
 		
 		int max = Integer.MAX_VALUE; // used to ensure that the stamp doesn't get triggered, this is similar to infinity
 		int tileNum = tileNums[r][c];
@@ -332,20 +352,28 @@ public class TileManager {
 				
 				if(rand == 1) {
 					tileNums[r][c] = 9;
+					tile[r][c].isFlower = true;
 				} else if(rand > 1 && rand <= 6) {
 					tileNums[r][c] = 2;
+					tile[r][c].isFlower = true;
 				} else if(rand > 6 && rand <= 11) {
 					tileNums[r][c] = 5;
+					tile[r][c].isFlower = true;
 				} else if(rand > 11 && rand <= 16) {
 					tileNums[r][c] = 14;
+					tile[r][c].isFlower = true;
 				} else if(rand > 16 && rand <= 21) {
 					tileNums[r][c] = 17;
+					tile[r][c].isFlower = true;
 				} else {
 					tileNums[r][c] = 27;
 				}
 						
 				tile[r][c].pickable = true;
 				tile[r][c].changeStamp = gp.generateRandom(minSproutGrowth2, maxSproutGrowth2) + gp.frameCount;
+				if(tile[r][c].isFlower) {
+					tile[r][c].entityStamp = gp.generateRandom(minEntityStamp, maxEntityStamp) + gp.frameCount;
+				}
 				break;
 			case 14: // flower_white_1
 				tileNums[r][c] = 15;

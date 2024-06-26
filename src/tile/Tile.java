@@ -9,7 +9,9 @@ public class Tile {
 	// public String nextState; // what the next state is able to be, "none" for no state available or can only be mowed or picked
 	public boolean walkable; // is able to be turned into grass_mowed_1
 	public boolean pickable; // is able to be turned into flower_picked
+	public boolean isFlower; // is a flower
 	//public int timeStamp; // stamp for when tile last changed
 	public int changeStamp; // stamp for when tile will change
+	public int entityStamp; // stamp for when a butterfly or bee will attempt to pick flower
 
 }

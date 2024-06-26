@@ -277,12 +277,12 @@ public class Player {
 				pickTileY = -1;
 				tileM.tileNums[playerY/gp.tileSize][playerX/gp.tileSize] = 8;
 				tileM.tile[playerY/gp.tileSize][playerX/gp.tileSize].pickable = false;
+				tileM.tile[playerY/gp.tileSize][playerX/gp.tileSize].isFlower = false;
 				tileM.tile[playerY/gp.tileSize][playerX/gp.tileSize].changeStamp = gp.generateRandom(180, 240) + gp.frameCount;
 			}
 		}
 	}
 	
-
 }
 
 
