@@ -9,23 +9,30 @@ import tile.TileManager;
 
 abstract class Entity {
 	
-	public int spawnX, spawnY;
-	public int entityX, entityY;
-	public int destX, destY;
+	public int spawnX, spawnY; // spawn location
+	public int entityX, entityY; // actual location
+	public int destX, destY; // destination location
+	public int swatX, swatY; // swat end location
 	public double speed;
 	
 	public BufferedImage image;
 	public String state; // most entities will have: up, down, left, right, flee, swat
-	public int spawnStamp;
+	public int swatStamp;
+	public boolean swat;
 	
 	GamePanel gp;
+	MouseHandler mouseH;
+	Player player;
+	TileManager tileM;
 	
-	public Entity(GamePanel gp, int destX, int destY) {
+	public Entity(GamePanel gp, MouseHandler mouseH, Player player, TileManager tileM, int destX, int destY) {
 		
 		this.gp = gp;
+		this.mouseH = mouseH;
+		this.player = player;
+		this.tileM = tileM;
 		this.destX = destX;
 		this.destY = destY;
-		spawnStamp = gp.frameCount;
 		
 		setSpawnLocation();
 		

@@ -22,7 +22,7 @@ public class Player {
 	public int pickTileX, pickTileY;
 	
 	public BufferedImage idle1, idle2, front1, front2, front3, back1, back2, back3, right1, right2, right3, left1, left2, left3, bent1, bent2, bent3;
-	public String state; // idle, front, back, right, left, picking
+	public String state; // idle, up, down, right, left, picking
 	public int timeStamp;
 	public int pickInterval;
 
@@ -45,7 +45,7 @@ public class Player {
 		
 		playerX = 0;
 		playerY = gp.tileSize * gp.skyLevel;
-		speed = 1 * gp.scale;
+		speed = 3;
 		state = "idle";
 	}
 	
@@ -114,7 +114,7 @@ public class Player {
 			}
 			
 			break;
-		case "front":
+		case "down":
 			
 			if(gp.frameCount % 60 <= 15 || (gp.frameCount % 60 > 30 && gp.frameCount % 60 <= 45)) {
 				image = front1;
@@ -125,7 +125,7 @@ public class Player {
 			}
 			
 			break;
-		case "back":
+		case "up":
 
 			if(gp.frameCount % 60 <= 15 || (gp.frameCount % 60 > 30 && gp.frameCount % 60 <= 45)) {
 				image = back1;
@@ -195,69 +195,12 @@ public class Player {
 
 	public void movePlayer() {
 		
-		int distanceX = selX - playerX;
-		int distanceY = selY - playerY;
-		
 		if(state != "picking") {
-			if (distanceX != 0 || distanceY != 0) {
-			// calculate slope and check for dividing by zero
-			double slope;
-			try {
-				slope = (double)distanceY / (double)distanceX;
-			} catch(ArithmeticException e) {
-				slope = Double.POSITIVE_INFINITY;
-			}
+			String[] temp = gp.homeTowardDest(playerX, playerY, selX, selY, speed);
 			
-			double speedX;
-			double speedY;
-			// uses the X focused equation if the distance is more horizontal than vertical, and vice versa
-			if(Math.abs(distanceY) > Math.abs(distanceX)) {
-				speedX = (Math.round(speed / Math.sqrt(1 + slope * slope)) * Integer.signum(distanceX));
-				speedY = speed * Integer.signum(distanceY);
-			} else {
-				speedY = (Math.round(Math.abs(slope) * speed / Math.sqrt(1 + slope * slope)) * Integer.signum(distanceY));
-				speedX = speed * Integer.signum(distanceX);
-			}
-			// if both speeds are maxed, make both speeds one less
-			if(Math.abs(speedX) == speed && Math.abs(speedY) == speed && speed != 1) {
-				speedX = speedX - Integer.signum(distanceX);
-				speedY = speedY - Integer.signum(distanceY);
-			}
-	        // if the slope is infinity, speedY is maxed (prevents player from freezing)
-	        if(slope == Double.POSITIVE_INFINITY || slope == Double.NEGATIVE_INFINITY) {
-	        	speedY = speed * Integer.signum(distanceY);
-	        }
-			// if the player is right next to the tile it clips to the tile
-			if(Math.abs(speedX) > Math.abs(distanceX)) {
-				speedX = distanceX;
-			}
-			if(Math.abs(speedY) > Math.abs(distanceY)) {
-				speedY = distanceY;
-			}
-			
-			// System.out.println("playerX: " + playerX + " playerY: " + playerY + " tileX: " + tileX + " tileY: " + tileY + " distanceX: " + distanceX + " distanceY: " + distanceY + " speedX: " + speedX + " speedY: " + speedY + " slope: " + slope);
-			
-			if(Math.abs(slope) < 1.5) {
-				if(Integer.signum(distanceX) == 1) {
-					state = "right";
-				} else {
-					state = "left";
-				}
-			} else {
-				if(Integer.signum(distanceY) == 1) {
-					state = "front";
-				} else {
-					state = "back";
-				}
-			}
-			
-			
-			playerX = (int) Math.round(playerX + speedX);
-			playerY = (int) Math.round(playerY + speedY);
-			
-			} else {
-			state = "idle";
-			}
+			state = temp[0];
+			playerX = (int) Math.round(playerX + Double.parseDouble(temp[1]));
+			playerY = (int) Math.round(playerY + Double.parseDouble(temp[2]));
 		}
 		
 		
@@ -275,6 +218,7 @@ public class Player {
 				state = "idle";
 				pickTileX = -1;
 				pickTileY = -1;
+				
 				tileM.tileNums[playerY/gp.tileSize][playerX/gp.tileSize] = 8;
 				tileM.tile[playerY/gp.tileSize][playerX/gp.tileSize].pickable = false;
 				tileM.tile[playerY/gp.tileSize][playerX/gp.tileSize].isFlower = false;

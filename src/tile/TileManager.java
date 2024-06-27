@@ -259,7 +259,7 @@ public class TileManager {
 				if(tile[r][c].entityStamp == gp.frameCount) {
 					int rand = gp.generateRandom(1, 1);
 					if(rand == 1) {
-						entityM.addEntity(gp, c * gp.tileSize, r * gp.tileSize, "Butterfly");
+						entityM.addEntity(c * gp.tileSize, r * gp.tileSize, "Butterfly");
 					} else {
 						
 					}
