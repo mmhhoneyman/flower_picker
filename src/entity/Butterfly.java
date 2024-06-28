@@ -238,7 +238,7 @@ public class Butterfly extends Entity{
 		// TODO Auto-generated method stub
 		if(state == "swat") {
 			
-			double swatSpeed = gp.calculateSwatSpeed(entityX, entityY, swatX, swatY, gp.frameCount, swatStamp);
+			double swatSpeed = gp.calculateKnockbackSpeed(entityX, entityY, swatX, swatY, gp.frameCount, swatStamp);
 			String[] temp = gp.homeTowardDest(entityX, entityY, swatX, swatY, swatSpeed);
 			entityX = (int) Math.round(entityX + Double.parseDouble(temp[1]));
 			entityY = (int) Math.round(entityY + Double.parseDouble(temp[2]));
@@ -248,32 +248,6 @@ public class Butterfly extends Entity{
 		} else {
 			if(state != "picking" && state != "despawn") {
 				if(gp.frameCount % 2 == 0) {
-					
-					/*
-					if(entityX > destX) {
-						entityX -= speed;
-						state = "left";
-					}
-					if(entityX < destX) {
-						entityX += speed;
-						state = "right";
-					}
-					if(entityY > destY) {
-						entityY -= speed;
-						state = "up";
-					}
-					if(entityY < destY) {
-						entityY += speed;
-						state = "down";
-					}
-					
-					if(Math.abs(destX - entityX) < speed) {
-						entityX = destX;
-					}
-					if(Math.abs(destY - entityY) < speed) {
-						entityY = destY;
-					} */
-					
 					String[] temp = gp.homeTowardDest(entityX, entityY, destX, destY, speed);
 					state = temp[0];
 					entityX = (int) Math.round(entityX + Double.parseDouble(temp[1]));
@@ -308,8 +282,14 @@ public class Butterfly extends Entity{
 			state = "picking";
 			pickStamp = gp.frameCount + 180;
 			tileM.tile[entityTileY][entityTileX].pickable = false;
+			if(player.pickTileX == entityX && player.pickTileY == entityY) {
+				player.pickTileX = -1;
+				player.pickTileY = -1;
+			}
+			
 			
 		} else if(flowerStatus == 2) {
+			tileM.tile[entityTileY][entityTileX].pickable = false;
 			if(pickStamp == gp.frameCount) {
 				state = "up";
 				tileM.tile[entityTileY][entityTileX].isFlower = false;
@@ -367,7 +347,6 @@ public class Butterfly extends Entity{
 					return 1;
 				}
 			} else {
-				System.out.println("fighters");
 				return 3;
 			}
 		}
@@ -376,18 +355,8 @@ public class Butterfly extends Entity{
 	
 	public void checkFlower() {
 		
-		int destTileX;
-		int destTileY;
-		try {
-			destTileX = destX / gp.tileSize;
-		} catch(ArithmeticException e) {
-			destTileX = 0;
-		}
-		try {
-			destTileY = destY / gp.tileSize;
-		} catch(ArithmeticException e) {
-			destTileY = 0;
-		}
+		int destTileX = destX / gp.tileSize;
+		int destTileY = destY / gp.tileSize;
 		
 		if(!((destTileX < 0 || destTileX > gp.maxScreenCol - 1) || (destTileY < 0 || destTileY > gp.maxScreenRow - 1))) {
 			if(tileM.tile[destTileY][destTileX].isFlower == false) {

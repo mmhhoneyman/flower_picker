@@ -2,6 +2,7 @@ package entity;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -15,16 +16,24 @@ public class Player {
 	GamePanel gp;
 	MouseHandler mouseH;
 	TileManager tileM;
+	EntityManager entityM;
 	
 	public int playerX, playerY;
 	public double speed;
 	public int selX, selY;
 	public int pickTileX, pickTileY;
+	public int collisionX, collisionY; // knockback location when player collides with entity
 	
+	public BufferedImage imageBeforeCollision;
+	public BufferedImage image;
 	public BufferedImage idle1, idle2, front1, front2, front3, back1, back2, back3, right1, right2, right3, left1, left2, left3, bent1, bent2, bent3;
 	public String state; // idle, up, down, right, left, picking
-	public int timeStamp;
+	public boolean collision;
+	
+	public int pickStamp;
 	public int pickInterval;
+	public int collisionStamp;
+	public int collRefStamp; // this allows the player to have hit immunity for a while after getting hit
 
 	
 	public Player(GamePanel gp, MouseHandler mouseH) {
@@ -39,6 +48,11 @@ public class Player {
 	// exists to manage cyclic dependency with other classes (TileManager)
 	public void setTileManager(TileManager tileM) {
 		this.tileM = tileM;
+	}
+	
+	// same /\
+	public void setEntityManager(EntityManager entityM) {
+		this.entityM = entityM;
 	}
 	
 	public void setDefaultValues() {
@@ -88,10 +102,11 @@ public class Player {
 		movePlayer();
 		checkSelectedTile();
 		checkPicking();
+		checkCollision();
 		
 		String state2 = state;
 		if(state1 != state2 && state2 == "picking") {
-			timeStamp = gp.frameCount;
+			pickStamp = gp.frameCount;
 			pickInterval = gp.generateRandom(300, 360);
 			pickTileX = playerX;
 			pickTileY = playerY;
@@ -100,7 +115,27 @@ public class Player {
 	
 	public void draw(Graphics2D g2) {
 		
-		BufferedImage image = null;
+		int imageOffset = setImage();
+		
+		if(state == "collision") {
+			BufferedImage temp = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
+			RescaleOp op = new RescaleOp(20f, 0, null);
+			op.filter(image, temp);
+			g2.drawImage(temp, playerX + imageOffset, playerY, gp.tileSize, gp.tileSize, null);
+		} else {
+			if(collRefStamp > gp.frameCount) {
+				if(gp.frameCount % 15 < 7) {
+					g2.drawImage(image, playerX + imageOffset, playerY, gp.tileSize, gp.tileSize, null);
+				}
+			} else {
+				g2.drawImage(image, playerX + imageOffset, playerY, gp.tileSize, gp.tileSize, null);
+			}
+			
+		}
+	}
+	
+	// selects image to be drawn and returns imageOffset
+	public int setImage() {
 		
 		int imageOffset = 0;
 		
@@ -159,7 +194,7 @@ public class Player {
 			
 			break;
 		case "picking":
-			double percentTimeLeft = (double)(timeStamp + pickInterval - gp.frameCount) / pickInterval * 100;
+			double percentTimeLeft = (double)(pickStamp + pickInterval - gp.frameCount) / pickInterval * 100;
 			
 			if(percentTimeLeft > 97) {
 				image = back1;
@@ -189,20 +224,30 @@ public class Player {
 			
 			break;
 		}
-		g2.drawImage(image, playerX + imageOffset, playerY, gp.tileSize, gp.tileSize, null);
-		
+		return imageOffset;
 	}
 
 	public void movePlayer() {
 		
-		if(state != "picking") {
-			String[] temp = gp.homeTowardDest(playerX, playerY, selX, selY, speed);
+		if(state == "collision") {
 			
-			state = temp[0];
+			double swatSpeed = gp.calculateKnockbackSpeed(playerX, playerY, collisionX, collisionY, gp.frameCount, collisionStamp);
+			String[] temp = gp.homeTowardDest(playerX, playerY, collisionX, collisionY, swatSpeed);
 			playerX = (int) Math.round(playerX + Double.parseDouble(temp[1]));
 			playerY = (int) Math.round(playerY + Double.parseDouble(temp[2]));
+			if(playerX == collisionX && playerY == collisionY) {
+				state = "up";
+			}
+			
+		} else {
+			if(state != "picking") {
+				String[] temp = gp.homeTowardDest(playerX, playerY, selX, selY, speed);
+				
+				state = temp[0];
+				playerX = (int) Math.round(playerX + Double.parseDouble(temp[1]));
+				playerY = (int) Math.round(playerY + Double.parseDouble(temp[2]));
+			}
 		}
-		
 		
 	}
 	
@@ -212,9 +257,9 @@ public class Player {
 	}
 	
 	public void checkPicking() {
-		if((pickTileX == playerX && pickTileY == playerY) || (selX == playerX && selY == playerY) && tileM.tile[tileM.rowSelTile][tileM.colSelTile].pickable) {
+		if(((pickTileX == playerX && pickTileY == playerY) && tileM.tile[tileM.rowSelTile][tileM.colSelTile].pickable) || ((selX == playerX && selY == playerY) && tileM.tile[tileM.rowSelTile][tileM.colSelTile].pickable)) {
 			state = "picking";
-			if(timeStamp + pickInterval == gp.frameCount) {
+			if(pickStamp + pickInterval == gp.frameCount) {
 				state = "idle";
 				pickTileX = -1;
 				pickTileY = -1;
@@ -224,6 +269,74 @@ public class Player {
 				tileM.tile[playerY/gp.tileSize][playerX/gp.tileSize].isFlower = false;
 				tileM.tile[playerY/gp.tileSize][playerX/gp.tileSize].changeStamp = gp.generateRandom(180, 240) + gp.frameCount;
 			}
+		}
+	}
+	
+	public void checkCollision() {
+		
+		if(collision == false && collRefStamp < gp.frameCount) {
+			int collisionIndex = entityM.checkPlayerCollision();
+			if(collisionIndex != -1) {
+				collision = true;
+				int entityX = entityM.entities.get(collisionIndex).entityX;
+				int entityY = entityM.entities.get(collisionIndex).entityY;
+				
+				int[] temp = gp.extrapolatePointByDistance(entityX, entityY, playerX, playerY, 96);
+				collisionX = temp[0];
+				collisionY = temp[1];
+				
+				keepInBounds();
+				
+				imageBeforeCollision = image;
+				collisionStamp = gp.frameCount + 15;
+				collRefStamp = collisionStamp + 120;
+			}
+		} 
+		if(collision) {
+			collision = false;
+			state = "collision";
+		}
+	}
+	
+	// keeps the player within the bounds of the yard while being knocked back
+	public void keepInBounds() {
+		
+		boolean check = false;
+		int count = 0;
+		while(check == false) {
+			check = true;
+			
+			int collXSignum = Integer.signum(collisionX - playerX);
+			int collYSignum = Integer.signum(collisionY - playerY);
+			int altSignum = (gp.generateRandom(0, 1) * 2) - 1;
+			double inertia = 1.2;
+			if(collXSignum == 0 || count >= 10) {
+				collXSignum = altSignum;
+			}
+			if(collYSignum == 0 || count >= 10) {
+				collYSignum = altSignum;
+			}
+			if(collisionX < 0) {
+				collisionY = collisionY + (int)(((collYSignum * Math.abs(collisionX))) / inertia);
+				collisionX = 0;
+				check = false;
+			}
+			if(collisionX > gp.screenWidth - gp.tileSize) {
+				collisionY = collisionY + (int)((collYSignum * (collisionX - (gp.screenWidth - gp.tileSize))) / inertia);
+				collisionX = gp.screenWidth - gp.tileSize;
+				check = false;
+			}
+			if(collisionY < gp.skyLevel*gp.tileSize) {
+				collisionX = collisionX + (int)((collXSignum * (collisionY + gp.skyLevel*gp.tileSize)) / inertia);
+				collisionY = gp.skyLevel*gp.tileSize;
+				check = false;
+			}
+			if(collisionY > gp.screenHeight - gp.tileSize) {
+				collisionX = collisionX + (int)((collXSignum * (collisionY - (gp.screenHeight - gp.tileSize))) / inertia);
+				collisionY = gp.screenHeight - gp.tileSize;
+				check = false;
+			}
+			count++;
 		}
 	}
 	

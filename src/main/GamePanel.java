@@ -25,9 +25,10 @@ public class GamePanel extends JPanel implements Runnable{
 	public final int tileSize = originalTileSize*scale; // 48x48 tile
 	public final int maxScreenCol = 16;
 	public final int maxScreenRow = 14;
-	public final int screenWidth = tileSize*maxScreenCol; // 1536 pixels
-	public final int screenHeight = tileSize*maxScreenRow; // 960 pixels
+	public final int screenWidth = tileSize*maxScreenCol; // 768 pixels
+	public final int screenHeight = tileSize*maxScreenRow; // 672 pixels
 	public final int skyLevel = 3; // decides how far down on the screen the sky level is, this is where the fence and sky tiles are placed
+								   // top of grassline sits on y = 144
 	public final int FPS = 60;
 	
 	public int frameCount;
@@ -48,13 +49,16 @@ public class GamePanel extends JPanel implements Runnable{
 		tileM = new TileManager(this, mouseH, entityM);
 		player = new Player(this, mouseH);
 		
-		frameCount = 0;
-		
 		tileM.setPlayer(player);
+		tileM.setEntityManager(entityM);
+		
 		player.setTileManager(tileM);
+		player.setEntityManager(entityM);
 		
 		entityM.setPlayer(player);
 		entityM.setTileManager(tileM);
+		
+		frameCount = 0;
 		
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		this.setBackground(Color.gray);
@@ -92,7 +96,7 @@ public class GamePanel extends JPanel implements Runnable{
 				}
 				
 				// System.out.println(remainingTime);
-				//remainingTime = 4; // makes game faster for testing
+				remainingTime = 5; // makes game faster for testing
 				Thread.sleep((long)remainingTime);
 				
 				nextDrawTime += refreshRate;
@@ -206,6 +210,13 @@ public class GamePanel extends JPanel implements Runnable{
         // Calculate the direction vector
         int dx = x2 - x1;
         int dy = y2 - y1;
+        
+        if(dx == 0) {
+        	dx = 1;
+        }
+        if(dy == 0) {
+        	dy = 1;
+        }
 
         // Calculate the length of the direction vector
         double length = Math.sqrt(dx * dx + dy * dy);
@@ -221,7 +232,7 @@ public class GamePanel extends JPanel implements Runnable{
         return new int[]{x, y};
     }
 	
-	public double calculateSwatSpeed(int x1, int y1, int x2, int y2, int curFrame, int endStamp) {
+	public double calculateKnockbackSpeed(int x1, int y1, int x2, int y2, int curFrame, int endStamp) {
 		
 		int dx = x2 - x1;
         int dy = y2 - y1;

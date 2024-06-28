@@ -61,7 +61,6 @@ public class TileManager {
 		
 		this.gp = gp;
 		this.mouseH = mouseH;
-		this.entityM = entityM;
 		
 		tile = new Tile[gp.maxScreenRow][gp.maxScreenCol];
 		
@@ -74,6 +73,11 @@ public class TileManager {
 	// exists to manage cyclic dependency with other classes (Player)
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+	
+	// same /\
+	public void setEntityManager(EntityManager entityM) {
+		this.entityM = entityM;
 	}
 	
 	public void setDefaultValues() {

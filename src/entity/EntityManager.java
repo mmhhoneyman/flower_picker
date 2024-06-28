@@ -93,6 +93,37 @@ public class EntityManager {
 		
 	}
 	
+	// returns index of entity player is coliding with, if none then returns -1
+	public int checkPlayerCollision() {
+		int trimming = 15; // allows the player and entities to touch a little bit before triggering collision
+		int playerMinX = player.playerX;
+		int playerMaxX = player.playerX + gp.tileSize;
+		int playerMinY = player.playerY;
+		int playerMaxY = player.playerY + gp.tileSize;
+		
+		for(int i = 0; i < entities.size(); i++) {
+			int entityMinX = entities.get(i).entityX + trimming;
+			int entityMinY = entities.get(i).entityY + trimming;
+			
+			int entityMaxX;
+			int entityMaxY;
+			if(entities.get(i).getClass().toString() == "LawnMower") {
+				entityMaxX = entities.get(i).entityX + gp.tileSize*2 - trimming;
+				entityMaxY = entities.get(i).entityY + gp.tileSize*2 - trimming;
+			} else {
+				entityMaxX = entities.get(i).entityX + gp.tileSize - trimming;
+				entityMaxY = entities.get(i).entityY + gp.tileSize - trimming;
+			}
+			if((entityMinX >= playerMinX && entityMinX <= playerMaxX && entityMinY >= playerMinY && entityMinY <= playerMaxY) || // checks if top left corner of entity is inside player location
+			   (entityMinX >= playerMinX && entityMinX <= playerMaxX && entityMaxY >= playerMinY && entityMaxY <= playerMaxY) || // checks if bottom left corner of entity is inside player location
+			   (entityMaxX >= playerMinX && entityMaxX <= playerMaxX && entityMinY >= playerMinY && entityMinY <= playerMaxY) || // checks if top right corner of entity is inside player location
+			   (entityMaxX >= playerMinX && entityMaxX <= playerMaxX && entityMaxY >= playerMinY && entityMaxY <= playerMaxY)) { // checks if bottom right corner of entity is inside player location
+				return i;
+			}
+		}
+		return -1;
+	}
+	
 }
 
 
