@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import main.GamePanel;
 import main.MouseHandler;
-import tile.Tile;
 import tile.TileManager;
 
 public class EntityManager {
@@ -59,6 +58,9 @@ public class EntityManager {
 			case "Butterfly":
 				entities.add(new Butterfly(this.gp, this.mouseH, this.player, this.tileM, destX, destY));
 				break;
+			case "Ladybug":
+				entities.add(new Ladybug(this.gp, this.mouseH, this.player, this.tileM, destX, destY));
+				break;
 		}
 		
 	}
@@ -86,7 +88,7 @@ public class EntityManager {
 					}	
 				}
 				if(entityClicked) {
-					swatStamp = gp.frameCount + 60;
+					swatStamp = gp.frameCount + 40;
 				}
 			}
 		}
@@ -107,7 +109,7 @@ public class EntityManager {
 			
 			int entityMaxX;
 			int entityMaxY;
-			if(entities.get(i).getClass().toString() == "LawnMower") {
+			if(entities.get(i).getClass().getSimpleName() == "LawnMower") {
 				entityMaxX = entities.get(i).entityX + gp.tileSize*2 - trimming;
 				entityMaxY = entities.get(i).entityY + gp.tileSize*2 - trimming;
 			} else {

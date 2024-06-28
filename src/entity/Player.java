@@ -34,12 +34,15 @@ public class Player {
 	public int pickInterval;
 	public int collisionStamp;
 	public int collRefStamp; // this allows the player to have hit immunity for a while after getting hit
+	public int ladybugStamp;
 
 	
 	public Player(GamePanel gp, MouseHandler mouseH) {
 		
 		this.gp = gp;
 		this.mouseH = mouseH;
+		
+		ladybugStamp = gp.frameCount + gp.generateRandom(120, 360);
 		
 		setDefaultValues();
 		getPlayerImage();
@@ -103,6 +106,7 @@ public class Player {
 		checkSelectedTile();
 		checkPicking();
 		checkCollision();
+		checkSpawnLadybug();
 		
 		String state2 = state;
 		if(state1 != state2 && state2 == "picking") {
@@ -327,7 +331,7 @@ public class Player {
 				check = false;
 			}
 			if(collisionY < gp.skyLevel*gp.tileSize) {
-				collisionX = collisionX + (int)((collXSignum * (collisionY + gp.skyLevel*gp.tileSize)) / inertia);
+				collisionX = collisionX + (int)((collXSignum * (collisionY - gp.skyLevel*gp.tileSize)) / inertia);
 				collisionY = gp.skyLevel*gp.tileSize;
 				check = false;
 			}
@@ -337,6 +341,13 @@ public class Player {
 				check = false;
 			}
 			count++;
+		}
+	}
+	
+	public void checkSpawnLadybug() {
+		if(gp.frameCount == ladybugStamp) {
+			entityM.addEntity(playerX, playerY, "Ladybug");
+			ladybugStamp = gp.frameCount + gp.generateRandom(700, 900);
 		}
 	}
 	

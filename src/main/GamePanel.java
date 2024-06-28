@@ -96,7 +96,7 @@ public class GamePanel extends JPanel implements Runnable{
 				}
 				
 				// System.out.println(remainingTime);
-				remainingTime = 5; // makes game faster for testing
+				//remainingTime = 5; // makes game faster for testing
 				Thread.sleep((long)remainingTime);
 				
 				nextDrawTime += refreshRate;
