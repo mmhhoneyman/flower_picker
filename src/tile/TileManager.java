@@ -261,11 +261,11 @@ public class TileManager {
 				tile[r][c].image = tileSwitch(tileNums[r][c]);
 				// spawns new enemy
 				if(tile[r][c].entityStamp == gp.frameCount) {
-					int rand = gp.generateRandom(1, 1);
+					int rand = gp.generateRandom(1, 2);
 					if(rand == 1) {
 						entityM.addEntity(c * gp.tileSize, r * gp.tileSize, "Butterfly");
 					} else {
-						
+						entityM.addEntity(c * gp.tileSize, r * gp.tileSize, "Bee");
 					}
 					
 				}

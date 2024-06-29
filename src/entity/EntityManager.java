@@ -54,14 +54,20 @@ public class EntityManager {
 	
 	public void addEntity(int destX, int destY, String theClass) {
 		
-		switch(theClass) {
-			case "Butterfly":
-				entities.add(new Butterfly(this.gp, this.mouseH, this.player, this.tileM, destX, destY));
-				break;
-			case "Ladybug":
-				entities.add(new Ladybug(this.gp, this.mouseH, this.player, this.tileM, destX, destY));
-				break;
-		}
+		//if(entities.size() == 0) {
+			switch(theClass) {
+				case "Butterfly":
+					entities.add(new Butterfly(this.gp, this.mouseH, this.player, this.tileM, destX, destY));
+					break;
+				case "Ladybug":
+					entities.add(0, new Ladybug(this.gp, this.mouseH, this.player, this.tileM, destX, destY));
+					break;
+				case "Bee":
+					entities.add(new Bee(this.gp, this.mouseH, this.player, this.tileM, destX, destY));
+					break;
+			}
+		//}
+		
 		
 	}
 	

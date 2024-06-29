@@ -44,6 +44,11 @@ public class Player {
 		
 		ladybugStamp = gp.frameCount + gp.generateRandom(120, 360);
 		
+		pickTileX = -1;
+		pickTileY = -1;
+		
+		pickStamp = -1;
+		
 		setDefaultValues();
 		getPlayerImage();
 	}
@@ -263,16 +268,17 @@ public class Player {
 	public void checkPicking() {
 		if(((pickTileX == playerX && pickTileY == playerY) && tileM.tile[tileM.rowSelTile][tileM.colSelTile].pickable) || ((selX == playerX && selY == playerY) && tileM.tile[tileM.rowSelTile][tileM.colSelTile].pickable)) {
 			state = "picking";
-			if(pickStamp + pickInterval == gp.frameCount) {
-				state = "idle";
-				pickTileX = -1;
-				pickTileY = -1;
-				
-				tileM.tileNums[playerY/gp.tileSize][playerX/gp.tileSize] = 8;
-				tileM.tile[playerY/gp.tileSize][playerX/gp.tileSize].pickable = false;
-				tileM.tile[playerY/gp.tileSize][playerX/gp.tileSize].isFlower = false;
-				tileM.tile[playerY/gp.tileSize][playerX/gp.tileSize].changeStamp = gp.generateRandom(180, 240) + gp.frameCount;
-			}
+		}
+		if(pickStamp + pickInterval == gp.frameCount) {
+			state = "idle";
+			
+			tileM.tileNums[pickTileY/gp.tileSize][pickTileX/gp.tileSize] = 8;
+			tileM.tile[pickTileY/gp.tileSize][pickTileX/gp.tileSize].pickable = false;
+			tileM.tile[pickTileY/gp.tileSize][pickTileX/gp.tileSize].isFlower = false;
+			tileM.tile[pickTileY/gp.tileSize][pickTileX/gp.tileSize].changeStamp = gp.generateRandom(180, 240) + gp.frameCount;
+			
+			pickTileX = -1;
+			pickTileY = -1;
 		}
 	}
 	

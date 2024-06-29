@@ -96,7 +96,7 @@ public class GamePanel extends JPanel implements Runnable{
 				}
 				
 				// System.out.println(remainingTime);
-				//remainingTime = 5; // makes game faster for testing
+				//remainingTime = 3; // makes game faster for testing
 				Thread.sleep((long)remainingTime);
 				
 				nextDrawTime += refreshRate;
@@ -241,6 +241,65 @@ public class GamePanel extends JPanel implements Runnable{
         
         return length / (endStamp - curFrame);
 	}
+	
+	public int[] findSineDest(int x1, int y1, int x2, int y2, int entityX, int entityY, int destX, int destY, int spawnX, int spawnY, double offset) {
+		
+		int distanceX = x2 - x1;
+        int distanceY = y2 - y1;
+		
+		double distanceEntityLine = Math.sqrt(Math.pow(destX - entityX, 2) + Math.pow(destY - entityY, 2));
+		double distanceSpawnLine = Math.sqrt(Math.pow(destX - spawnX, 2) + Math.pow(destY - spawnY, 2));
+		
+		double taper = distanceEntityLine / distanceSpawnLine;
+		
+		//System.out.println(taper);
+		//System.out.println(1 - Math.abs(distanceEntityLine / distanceSpawnLine));
+		
+        double sineLocation = 50 * Math.sin((((double)frameCount * Math.PI / 100) % (2 * Math.PI)) + offset);
+        //System.out.println(sineLocation);
+       
+        int pointX = (int) (destX + distanceX * sineLocation / 100 * Math.pow(taper, 1));
+        int pointY = (int) (destY + distanceY * sineLocation / 100 * Math.pow(taper, 1));
+        
+        int trim = 5; // dont change this number
+        
+        if(pointX >= destX - trim && pointX <= destX + trim) {
+        	pointX = destX;
+        }
+        if(pointY >= destY - trim && pointY <= destY + trim) {
+        	pointY = destY;
+        }
+		
+		
+        //System.out.println(pointX + " " + pointY);
+        return new int[] {pointX, pointY};
+	}
+	
+	public int[] calculatePerpendicularPoints(int x1, int y1, int x2, int y2, int length) {
+		
+        int distanceX = x2 - x1;
+        int distanceY = y2 - y1;
+        double slopePerpendicular;
+        
+        if (distanceX == 0) {
+            slopePerpendicular = 0;
+        } else if (distanceY == 0) {
+            slopePerpendicular = Double.POSITIVE_INFINITY;
+        } else {
+            slopePerpendicular = (double)-distanceX / (double)distanceY;
+        }
+
+        double radians = Math.atan(slopePerpendicular);
+        double dx = Math.cos(radians) * ((double)length / 2);
+        double dy = Math.sin(radians) * ((double)length / 2);
+        
+        int x3 = (int)(x2 + dx);
+        int y3 = (int)(y2 + dy);
+        int x4 = (int)(x2 - dx);
+        int y4 = (int)(y2 - dy);
+        
+        return new int[] { x3, y3, x4, y4 };
+    }
 	
 }
 

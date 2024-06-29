@@ -34,7 +34,7 @@ abstract class Entity {
 		this.destX = destX;
 		this.destY = destY;
 		
-		setSpawnLocation();
+		//setSpawnLocation();
 		
 	}
 	

@@ -26,30 +26,30 @@ public class Ladybug extends Entity{
 	
 	static { // loads all images
 		try {
-			ladybug_down_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_down_1.png"));
-			ladybug_down_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_down_2.png"));
-			ladybug_down_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_down_3.png"));
-			ladybug_down_left_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_down_left_1.png"));
-			ladybug_down_left_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_down_left_2.png"));
-			ladybug_down_left_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_down_left_3.png"));
-			ladybug_down_right_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_down_right_1.png"));
-			ladybug_down_right_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_down_right_2.png"));
-			ladybug_down_right_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_down_right_3.png"));
-			ladybug_left_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_left_1.png"));
-			ladybug_left_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_left_2.png"));
-			ladybug_left_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_left_3.png"));
-			ladybug_right_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_right_1.png"));
-			ladybug_right_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_right_2.png"));
-			ladybug_right_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_right_3.png"));
-			ladybug_up_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_up_1.png"));
-			ladybug_up_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_up_2.png"));
-			ladybug_up_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_up_3.png"));
-			ladybug_up_left_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_up_left_1.png"));
-			ladybug_up_left_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_up_left_2.png"));
-			ladybug_up_left_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_up_left_3.png"));
-			ladybug_up_right_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_up_right_1.png"));
-			ladybug_up_right_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_up_right_2.png"));
-			ladybug_up_right_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/ladybug/ladybug_up_right_3.png"));
+			ladybug_down_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_1.png"));
+			ladybug_down_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_2.png"));
+			ladybug_down_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_3.png"));
+			ladybug_down_left_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_left_1.png"));
+			ladybug_down_left_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_left_2.png"));
+			ladybug_down_left_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_left_3.png"));
+			ladybug_down_right_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_right_1.png"));
+			ladybug_down_right_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_right_2.png"));
+			ladybug_down_right_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_right_3.png"));
+			ladybug_left_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_left_1.png"));
+			ladybug_left_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_left_2.png"));
+			ladybug_left_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_left_3.png"));
+			ladybug_right_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_right_1.png"));
+			ladybug_right_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_right_2.png"));
+			ladybug_right_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_right_3.png"));
+			ladybug_up_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_1.png"));
+			ladybug_up_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_2.png"));
+			ladybug_up_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_3.png"));
+			ladybug_up_left_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_left_1.png"));
+			ladybug_up_left_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_left_2.png"));
+			ladybug_up_left_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_left_3.png"));
+			ladybug_up_right_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_right_1.png"));
+			ladybug_up_right_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_right_2.png"));
+			ladybug_up_right_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_right_3.png"));
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
