@@ -5,12 +5,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import entity.EntityManager;
 import entity.Player;
+import main.Constants;
 import main.GamePanel;
 import main.ImageManager;
 import main.MouseHandler;
@@ -59,7 +57,7 @@ public class TileManager {
 		this.gp = gp;
 		this.mouseH = mouseH;
 		
-		tile = new Tile[gp.maxScreenRow][gp.maxScreenCol];
+		tile = new Tile[Constants.MAX_SCREEN_ROW][Constants.MAX_SCREEN_COL];
 		
 		generateWorldNums();
 		getInitLocations();
@@ -77,10 +75,10 @@ public class TileManager {
 	}
 	
 	public void setDefaultValues() {
-		sproutInterval = Utility.generateRandom(120, 210);
+		sproutInterval = Utility.generateRandom(Constants.TILE_PLANT_SPROUT_MIN, Constants.TILE_PLANT_SPROUT_MAX);
 		timeStamp = 0;
 		
-		rowSelTile = gp.skyLevel;
+		rowSelTile = Constants.SKY_LEVEL;
 		colSelTile = 0;
 	}
 	
@@ -92,24 +90,24 @@ public class TileManager {
 		int grass_hori_tile_num = 20;
 		
 		int count = 0;
-		int grass_hori_rand = Utility.generateRandom(1, (int) (2 * gp.maxScreenCol / 3));
+		int grass_hori_rand = Utility.generateRandom(1, (int) (2 * Constants.MAX_SCREEN_COL / 3));
 		
-		initTileNums = new int[gp.maxScreenRow][gp.maxScreenCol];
+		initTileNums = new int[Constants.MAX_SCREEN_ROW][Constants.MAX_SCREEN_COL];
 		
-		for(int r = 0; r < gp.maxScreenRow; r++) {
-			for(int c = 0; c < gp.maxScreenCol; c++) {
-				if(r + 1 < gp.skyLevel) {
+		for(int r = 0; r < Constants.MAX_SCREEN_ROW; r++) {
+			for(int c = 0; c < Constants.MAX_SCREEN_COL; c++) {
+				if(r + 1 < Constants.SKY_LEVEL) {
 					initTileNums[r][c] = sky_tile_num;
-				} else if(r + 1 == gp.skyLevel) {
+				} else if(r + 1 == Constants.SKY_LEVEL) {
 					initTileNums[r][c] = fence_tile_num;
 				} else {
 					if(count == grass_hori_rand) {
 						if(checkSurroundingTiles(r, c)) {
 							initTileNums[r][c] = grass_hori_tile_num;
-							grass_hori_rand = Utility.generateRandom((int) (gp.maxScreenCol / 2), (int) (4 * gp.maxScreenCol / 3)) + count;
+							grass_hori_rand = Utility.generateRandom((int) (Constants.MAX_SCREEN_COL / 2), (int) (4 * Constants.MAX_SCREEN_COL / 3)) + count;
 						} else {
 							initTileNums[r][c] = grass_plain_tile_num;
-							grass_hori_rand = Utility.generateRandom((int) (gp.maxScreenCol / 3), (int) (gp.maxScreenCol / 2)) + count;
+							grass_hori_rand = Utility.generateRandom((int) (Constants.MAX_SCREEN_COL / 3), (int) (Constants.MAX_SCREEN_COL / 2)) + count;
 						}
 					} else {
 						initTileNums[r][c] = grass_plain_tile_num;
@@ -120,9 +118,9 @@ public class TileManager {
 		}
 		
 		// assign the same values to tileNums
-		tileNums = new int[gp.maxScreenRow][gp.maxScreenCol];
-		for(int r = 0; r < gp.maxScreenRow; r++) {
-			for(int c = 0; c < gp.maxScreenCol; c++) {
+		tileNums = new int[Constants.MAX_SCREEN_ROW][Constants.MAX_SCREEN_COL];
+		for(int r = 0; r < Constants.MAX_SCREEN_ROW; r++) {
+			for(int c = 0; c < Constants.MAX_SCREEN_COL; c++) {
 				tileNums[r][c] = initTileNums[r][c];
 			}
 		}
@@ -139,7 +137,7 @@ public class TileManager {
 		if(c == 0) {
 			columnLeftBound = 0;
 			columnRightBound = 1;
-		} else if(c == gp.maxScreenCol - 1) {
+		} else if(c == Constants.MAX_SCREEN_COL - 1) {
 			columnLeftBound = 1;
 			columnRightBound = 0;
 		} else {
@@ -159,8 +157,8 @@ public class TileManager {
 	
 	public void getInitLocations() {
 			
-		for(int r = 0; r < gp.maxScreenRow; r++) {
-			for(int c = 0; c < gp.maxScreenCol; c++) {
+		for(int r = 0; r < Constants.MAX_SCREEN_ROW; r++) {
+			for(int c = 0; c < Constants.MAX_SCREEN_COL; c++) {
 				tile[r][c] = new Tile();
 				tile[r][c].image = tileSwitch(initTileNums[r][c]);
 				
@@ -177,22 +175,22 @@ public class TileManager {
 	}
 	
 	public void draw(Graphics2D g2) {
-		for(int r = 0; r < gp.maxScreenRow; r++) {
-			for(int c = 0; c < gp.maxScreenCol; c++) {
-				g2.drawImage(tile[r][c].image, gp.tileSize*c, gp.tileSize*r, gp.tileSize, gp.tileSize, null);
+		for(int r = 0; r < Constants.MAX_SCREEN_ROW; r++) {
+			for(int c = 0; c < Constants.MAX_SCREEN_COL; c++) {
+				g2.drawImage(tile[r][c].image, Constants.TILE_SIZE*c, Constants.TILE_SIZE*r, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
 			}
 		}
 		
-		if(player.playerX != colSelTile*gp.tileSize || player.playerY != rowSelTile*gp.tileSize) {
+		if(player.playerX != colSelTile*Constants.TILE_SIZE || player.playerY != rowSelTile*Constants.TILE_SIZE) {
 			g2.setColor(Color.white);
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f)); // transparency set to 20%
-			g2.fillRect(colSelTile*gp.tileSize,  rowSelTile*gp.tileSize,  gp.tileSize,  gp.tileSize);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Constants.SELTILE_TRANSPARENCY));
+			g2.fillRect(colSelTile*Constants.TILE_SIZE,  rowSelTile*Constants.TILE_SIZE,  Constants.TILE_SIZE,  Constants.TILE_SIZE);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
 			
-			if(gp.frameCount % 40 < 20) {
-				g2.drawImage(ImageManager.select_border_1, colSelTile*gp.tileSize, rowSelTile*gp.tileSize, gp.tileSize, gp.tileSize, null);
+			if(gp.frameCount % Constants.SELTILE_ANIMATION_FRAME_LENGTH*2 < Constants.SELTILE_ANIMATION_FRAME_LENGTH) {
+				g2.drawImage(ImageManager.select_border_1, colSelTile*Constants.TILE_SIZE, rowSelTile*Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
 			} else {
-				g2.drawImage(ImageManager.select_border_2, colSelTile*gp.tileSize, rowSelTile*gp.tileSize, gp.tileSize, gp.tileSize, null);
+				g2.drawImage(ImageManager.select_border_2, colSelTile*Constants.TILE_SIZE, rowSelTile*Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
 			}
 			
 		}
@@ -208,10 +206,10 @@ public class TileManager {
 	}
 	
 	public void updateTiles() {
-		for(int r = 0; r < gp.maxScreenRow; r++) {
-			for(int c = 0; c < gp.maxScreenCol; c++) {
+		for(int r = 0; r < Constants.MAX_SCREEN_ROW; r++) {
+			for(int c = 0; c < Constants.MAX_SCREEN_COL; c++) {
 				// changes tile type
-				if(tile[r][c].changeStamp <= gp.frameCount && (r*gp.tileSize != player.pickTileY && c*gp.tileSize != player.pickTileX)) {
+				if(tile[r][c].changeStamp <= gp.frameCount && (r*Constants.TILE_SIZE != player.pickTileY && c*Constants.TILE_SIZE != player.pickTileX)) {
 					updateTile(r, c);
 				}
 				tile[r][c].image = tileSwitch(tileNums[r][c]);
@@ -219,9 +217,9 @@ public class TileManager {
 				if(tile[r][c].entityStamp == gp.frameCount) {
 					int rand = Utility.generateRandom(1, 2);
 					if(rand == 1) {
-						entityM.addEntity(c * gp.tileSize, r * gp.tileSize, "Butterfly");
+						entityM.addEntity(c * Constants.TILE_SIZE, r * Constants.TILE_SIZE, "Butterfly");
 					} else {
-						entityM.addEntity(c * gp.tileSize, r * gp.tileSize, "Bee");
+						entityM.addEntity(c * Constants.TILE_SIZE, r * Constants.TILE_SIZE, "Bee");
 					}
 					
 				}
@@ -235,16 +233,14 @@ public class TileManager {
 			boolean tileFound = false;
 			int tryCount = 0;
 			while(!tileFound && tryCount < 10) {
-				int randCol = Utility.generateRandom(0, gp.maxScreenCol - 1);
-				int randRow = Utility.generateRandom(gp.skyLevel, gp.maxScreenRow - 1);
+				int randCol = Utility.generateRandom(0, Constants.MAX_SCREEN_COL - 1);
+				int randRow = Utility.generateRandom(Constants.SKY_LEVEL, Constants.MAX_SCREEN_ROW - 1);
 				
 				if(tileNums[randRow][randCol] == 24 || tileNums[randRow][randCol] == 20) {
 					tileNums[randRow][randCol] = 12;
-					//tile[randX][randY].nextState = "flower_sprout_2";
-					//tile[randX][randY].timeStamp = gp.frameCount;
-					tile[randRow][randCol].changeStamp = gp.frameCount + Utility.generateRandom(120, 210);
+					tile[randRow][randCol].changeStamp = gp.frameCount + Utility.generateRandom(Constants.TILE_CHANGE_FROM_SPROUT_1_MIN, Constants.TILE_CHANGE_FROM_SPROUT_1_MAX);
 					timeStamp = gp.frameCount;
-					sproutInterval = Utility.generateRandom(120, 210);
+					sproutInterval = Utility.generateRandom(Constants.TILE_PLANT_SPROUT_MIN, Constants.TILE_PLANT_SPROUT_MAX);
 					tileFound = true;
 				}
 				tryCount++;
@@ -254,21 +250,27 @@ public class TileManager {
 	
 	public void updateTile(int r, int c) {
 		
-		int minFlowerGrowth1 = 180;
-		int maxFlowerGrowth1 = 240;
+		int minFlowerGrowth1 = Constants.TILE_CHANGE_FROM_FLOWER_2_MIN;
+		int maxFlowerGrowth1 = Constants.TILE_CHANGE_FROM_FLOWER_2_MAX;
 		
-		int minSproutGrowth1 = 180;
-		int maxSproutGrowth1 = 240;
-		int minSproutGrowth2 = 180;
-		int maxSproutGrowth2 = 240;
+		int minSproutGrowth1 = Constants.TILE_CHANGE_FROM_SPROUT_2_MIN;
+		int maxSproutGrowth1 = Constants.TILE_CHANGE_FROM_SPROUT_2_MAX;
+		int minSproutGrowth2 = Constants.TILE_CHANGE_FROM_FLOWER_1_MIN;
+		int maxSproutGrowth2 = Constants.TILE_CHANGE_FROM_FLOWER_1_MAX;
 		
-		int minGrassGrowth1 = 180;
-		int maxGrassGrowth1 = 240;
-		int minGrassGrowth2 = 180;
-		int maxGrassGrowth2 = 240;
+		int minRoseGrowth1 = Constants.TILE_CHANGE_FROM_ROSE_2_MIN;
+		int maxRoseGrowth1 = Constants.TILE_CHANGE_FROM_ROSE_2_MAX;
 		
-		int minEntityStamp = 180;
-		int maxEntityStamp = 240;
+		int minRoseSproutGrowth1 = Constants.TILE_CHANGE_FROM_ROSE_1_MIN;
+		int maxRoseSproutGrowth1 = Constants.TILE_CHANGE_FROM_ROSE_1_MAX;
+		
+		int minGrassGrowth1 = Constants.TILE_CHANGE_FROM_MOWED_2_MIN;
+		int maxGrassGrowth1 = Constants.TILE_CHANGE_FROM_MOWED_2_MAX;
+		int minGrassGrowth2 = Constants.TILE_CHANGE_FROM_MOWED_3_MIN;
+		int maxGrassGrowth2 = Constants.TILE_CHANGE_FROM_MOWED_3_MAX;
+		
+		int minEntityStamp = Constants.TILE_ENTITY_STAMP_MIN;
+		int maxEntityStamp = Constants.TILE_ENTITY_STAMP_MAX;
 		
 		int max = Integer.MAX_VALUE; // used to ensure that the stamp doesn't get triggered, this is similar to infinity
 		int tileNum = tileNums[r][c];
@@ -296,7 +298,7 @@ public class TileManager {
 				break;
 			case 9: // flower_rose_1
 				tileNums[r][c] = 10;
-				tile[r][c].changeStamp = Utility.generateRandom(minFlowerGrowth1, maxFlowerGrowth1) + gp.frameCount;
+				tile[r][c].changeStamp = Utility.generateRandom(minRoseGrowth1, maxRoseGrowth1) + gp.frameCount;
 				break;
 			case 10: // flower_rose_2
 				tileNums[r][c] = 11;
@@ -330,7 +332,11 @@ public class TileManager {
 				}
 						
 				tile[r][c].pickable = true;
-				tile[r][c].changeStamp = Utility.generateRandom(minSproutGrowth2, maxSproutGrowth2) + gp.frameCount;
+				if(rand == 1) {
+					tile[r][c].changeStamp = Utility.generateRandom(minRoseSproutGrowth1, maxRoseSproutGrowth1) + gp.frameCount;
+				} else {
+					tile[r][c].changeStamp = Utility.generateRandom(minSproutGrowth2, maxSproutGrowth2) + gp.frameCount;
+				}
 				if(tile[r][c].isFlower) {
 					tile[r][c].entityStamp = Utility.generateRandom(minEntityStamp, maxEntityStamp) + gp.frameCount;
 				}
@@ -466,9 +472,9 @@ public class TileManager {
 	public void checkSelectedTile() {
 		
 		if(mouseH.leftClick == true) {
-			if(mouseH.mouseY > gp.skyLevel * gp.tileSize) { // player cannot interact with top three rows of tiles
-				colSelTile = (mouseH.mouseX - mouseH.mouseX % gp.tileSize) / gp.tileSize;
-				rowSelTile = (mouseH.mouseY - mouseH.mouseY % gp.tileSize) / gp.tileSize;
+			if(mouseH.mouseY > Constants.SKY_LEVEL * Constants.TILE_SIZE) { // player cannot interact with tiles at or above the skyline
+				colSelTile = (mouseH.mouseX - mouseH.mouseX % Constants.TILE_SIZE) / Constants.TILE_SIZE;
+				rowSelTile = (mouseH.mouseY - mouseH.mouseY % Constants.TILE_SIZE) / Constants.TILE_SIZE;
 			}
 		}
 		

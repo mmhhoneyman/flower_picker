@@ -2,7 +2,6 @@ package main;
 
 import javax.swing.JPanel;
 
-import entity.Entity;
 import entity.EntityManager;
 import entity.Player;
 import tile.TileManager;
@@ -19,18 +18,6 @@ public class GamePanel extends JPanel implements Runnable{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	// SCREEN SETTINGS
-	public final int originalTileSize = 16; // 16X16 tile... don't mess with this number
-	public final int scale = 3; // don't mess with this number
-	public final int tileSize = originalTileSize*scale; // 48x48 tile
-	public final int maxScreenCol = 16;
-	public final int maxScreenRow = 14;
-	public final int screenWidth = tileSize*maxScreenCol; // 768 pixels
-	public final int screenHeight = tileSize*maxScreenRow; // 672 pixels
-	public final int skyLevel = 3; // decides how far down on the screen the sky level is, this is where the fence and sky tiles are placed
-								   // top of grassline sits on y = 144
-	public final int FPS = 60;
 	
 	public int frameCount;
 	
@@ -61,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		frameCount = 0;
 		
-		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+		this.setPreferredSize(new Dimension(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
 		this.setBackground(Color.gray);
 		this.setDoubleBuffered(true);
 		this.addMouseListener(mouseH);
@@ -79,7 +66,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public void run() {
 		// TODO Auto-generated method stub
 		
-		double refreshRate = 1000000000/FPS; // the length of a frame in nanoseconds
+		double refreshRate = 1000000000/Constants.FPS; // the length of a frame in nanoseconds
 		double nextDrawTime = System.nanoTime() + refreshRate;
 		
 		while(gameThread != null) {

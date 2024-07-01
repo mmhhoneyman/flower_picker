@@ -132,8 +132,8 @@ public final class Utility {
         double sineLocation = 50 * Math.sin((((double)frameCount * Math.PI / 100) % (2 * Math.PI)) + offset);
         //System.out.println(sineLocation);
        
-        int pointX = (int) (destX + distanceX * sineLocation / 100 * Math.pow(taper, 1));
-        int pointY = (int) (destY + distanceY * sineLocation / 100 * Math.pow(taper, 1));
+        int pointX = (int) (destX + distanceX * sineLocation / 100 * Math.pow(taper, Constants.SINE_TAPER));
+        int pointY = (int) (destY + distanceY * sineLocation / 100 * Math.pow(taper, Constants.SINE_TAPER));
         
         int trim = 5; // dont change this number
         

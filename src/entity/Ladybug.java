@@ -3,10 +3,8 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
+import main.Constants;
 import main.GamePanel;
 import main.ImageManager;
 import main.MouseHandler;
@@ -38,20 +36,20 @@ public class Ladybug extends Entity{
 		// TODO Auto-generated method stub
 		
 		int rand = Utility.generateRandom(1, 3);
-		int randX = Utility.generateRandom(0, gp.maxScreenCol - 1) * gp.tileSize;
-		int randY = Utility.generateRandom(gp.skyLevel + 1, gp.maxScreenRow - 1) * gp.tileSize;
+		int randX = Utility.generateRandom(0, Constants.MAX_SCREEN_COL - 1) * Constants.TILE_SIZE;
+		int randY = Utility.generateRandom(Constants.SKY_LEVEL + 1, Constants.MAX_SCREEN_ROW - 1) * Constants.TILE_SIZE;
 		
 		switch(rand) {
 			case 1: // below screen
 				spawnX = randX;
-				spawnY = gp.screenHeight + gp.tileSize;
+				spawnY = Constants.SCREEN_HEIGHT + Constants.TILE_SIZE;
 				break;
 			case 2: // left of screen
-				spawnX = 0 - gp.tileSize;
+				spawnX = 0 - Constants.TILE_SIZE;
 				spawnY = randY;
 				break;
 			case 3: // right of screen
-				spawnX = gp.screenWidth + gp.tileSize;
+				spawnX = Constants.SCREEN_WIDTH + Constants.TILE_SIZE;
 				spawnY = randY;
 				break;
 		}
@@ -62,7 +60,7 @@ public class Ladybug extends Entity{
 	
 	public void setSpeed() {
 		
-		double rand = Utility.generateRandom(2, 2) / 2;
+		double rand = Utility.generateRandom(Constants.LADYBUG_SPEED_MIN, Constants.LADYBUG_SPEED_MAX) / 2;
 		
 		this.speed = rand * 2;
 	}
@@ -77,10 +75,10 @@ public class Ladybug extends Entity{
 		if(swat) {
 			imageBeforeSwat = image;
 			state = "swat";
-			int[] temp = Utility.extrapolatePointByDistance(player.playerX, player.playerY, entityX, entityY, 96);
+			int[] temp = Utility.extrapolatePointByDistance(player.playerX, player.playerY, entityX, entityY, Constants.LADYBUG_KNOCKBACK_DISTANCE);
 			swatX = temp[0];
 			swatY = temp[1];
-			swatStamp = gp.frameCount + 15;
+			swatStamp = gp.frameCount + Constants.LADYBUG_KNOCKBACK_SPEED;
 			swat = false;
 		}
 	}
@@ -95,11 +93,11 @@ public class Ladybug extends Entity{
 		
 		if(state == "swat") {
 			BufferedImage temp = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-			RescaleOp op = new RescaleOp(20f, 0, null);
+			RescaleOp op = new RescaleOp(Constants.IMAGE_HIT_BRIGHTNESS, 0, null);
 			op.filter(image, temp);
-			g2.drawImage(temp, entityX, entityY - imageOffset, gp.tileSize, gp.tileSize, null);
+			g2.drawImage(temp, entityX, entityY - imageOffset, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
 		} else {
-			g2.drawImage(image, entityX, entityY - imageOffset, gp.tileSize, gp.tileSize, null);
+			g2.drawImage(image, entityX, entityY - imageOffset, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
 		}
 		
 	}
@@ -107,12 +105,11 @@ public class Ladybug extends Entity{
 	public void setImage() {
 		BufferedImage image = null;
 		int animationFrame;
-		int frameLength = 8; // how many frames each animationFrame lasts
-		int interval = gp.frameCount % (frameLength * 4);
+		int interval = gp.frameCount % (Constants.LADYBUG_ANIMATION_FRAME_LENGTH * 4);
 		
-		if(interval <= frameLength || (interval > frameLength * 2 && interval <= frameLength * 3)) {
+		if(interval <= Constants.LADYBUG_ANIMATION_FRAME_LENGTH || (interval > Constants.LADYBUG_ANIMATION_FRAME_LENGTH * 2 && interval <= Constants.LADYBUG_ANIMATION_FRAME_LENGTH * 3)) {
 			animationFrame = 1;
-		} else if(interval > frameLength && interval <= frameLength * 2) {
+		} else if(interval > Constants.LADYBUG_ANIMATION_FRAME_LENGTH && interval <= Constants.LADYBUG_ANIMATION_FRAME_LENGTH * 2) {
 			animationFrame = 2;
 		} else {
 			animationFrame = 3;
@@ -337,14 +334,14 @@ public void keepInBounds() {
 			
 			int collXSignum = Integer.signum(entityX - swatX);
 			int altSignum = (Utility.generateRandom(0, 1) * 2) - 1;
-			double inertia = 1.2;
+			double inertia = Constants.LADYBUG_KNOCKBACK_INERTIA;
 			
 			if(collXSignum == 0) {
 				collXSignum = altSignum;
 			}
-			if(swatY < gp.skyLevel*gp.tileSize) {
-				swatX = swatX + (int)((collXSignum * (swatY - gp.skyLevel*gp.tileSize)) / inertia);
-				swatY = gp.skyLevel*gp.tileSize;
+			if(swatY < Constants.SKY_LEVEL*Constants.TILE_SIZE) {
+				swatX = swatX + (int)((collXSignum * (swatY - Constants.SKY_LEVEL*Constants.TILE_SIZE)) / inertia);
+				swatY = Constants.SKY_LEVEL*Constants.TILE_SIZE;
 			}
 	}
 }

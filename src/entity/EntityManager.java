@@ -3,6 +3,7 @@ package entity;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import main.Constants;
 import main.GamePanel;
 import main.MouseHandler;
 import main.Utility;
@@ -89,8 +90,8 @@ public class EntityManager {
 			if(swatStamp <= gp.frameCount) {
 				entityClicked = false;
 				for(int i = 0; i < entities.size(); i++) {
-					if(mouseH.mouseX <= entities.get(i).entityX + gp.tileSize && mouseH.mouseX >= entities.get(i).entityX &&
-					   mouseH.mouseY <= entities.get(i).entityY + gp.tileSize && mouseH.mouseY >= entities.get(i).entityY) {
+					if(mouseH.mouseX <= entities.get(i).entityX + Constants.TILE_SIZE && mouseH.mouseX >= entities.get(i).entityX &&
+					   mouseH.mouseY <= entities.get(i).entityY + Constants.TILE_SIZE && mouseH.mouseY >= entities.get(i).entityY) {
 						if(entities.get(i).state != "picking") {
 							entityClicked = true;
 							entities.get(i).swat = true;
@@ -98,7 +99,7 @@ public class EntityManager {
 					}	
 				}
 				if(entityClicked) {
-					swatStamp = gp.frameCount + 40;
+					swatStamp = gp.frameCount + Constants.PLAYER_SWAT_COOLDOWN;
 				}
 			}
 		}
@@ -107,24 +108,23 @@ public class EntityManager {
 	
 	// returns index of entity player is coliding with, if none then returns -1
 	public int checkPlayerCollision() {
-		int trimming = 15; // allows the player and entities to touch a little bit before triggering collision
 		int playerMinX = player.playerX;
-		int playerMaxX = player.playerX + gp.tileSize;
+		int playerMaxX = player.playerX + Constants.TILE_SIZE;
 		int playerMinY = player.playerY;
-		int playerMaxY = player.playerY + gp.tileSize;
+		int playerMaxY = player.playerY + Constants.TILE_SIZE;
 		
 		for(int i = 0; i < entities.size(); i++) {
-			int entityMinX = entities.get(i).entityX + trimming;
-			int entityMinY = entities.get(i).entityY + trimming;
+			int entityMinX = entities.get(i).entityX + Constants.PLAYER_COLLISION_TRIMMING;
+			int entityMinY = entities.get(i).entityY + Constants.PLAYER_COLLISION_TRIMMING;
 			
 			int entityMaxX;
 			int entityMaxY;
 			if(entities.get(i).getClass().getSimpleName().equals("Mower")) {
-				entityMaxX = entities.get(i).entityX + gp.tileSize*2 - trimming;
-				entityMaxY = entities.get(i).entityY + gp.tileSize*2 - trimming;
+				entityMaxX = entities.get(i).entityX + Constants.TILE_SIZE*2 - Constants.PLAYER_COLLISION_TRIMMING;
+				entityMaxY = entities.get(i).entityY + Constants.TILE_SIZE*2 - Constants.PLAYER_COLLISION_TRIMMING;
 			} else {
-				entityMaxX = entities.get(i).entityX + gp.tileSize - trimming;
-				entityMaxY = entities.get(i).entityY + gp.tileSize - trimming;
+				entityMaxX = entities.get(i).entityX + Constants.TILE_SIZE - Constants.PLAYER_COLLISION_TRIMMING;
+				entityMaxY = entities.get(i).entityY + Constants.TILE_SIZE - Constants.PLAYER_COLLISION_TRIMMING;
 			}
 			if((entityMinX >= playerMinX && entityMinX <= playerMaxX && entityMinY >= playerMinY && entityMinY <= playerMaxY) || // checks if top left corner of entity is inside player location
 			   (entityMinX >= playerMinX && entityMinX <= playerMaxX && entityMaxY >= playerMinY && entityMaxY <= playerMaxY) || // checks if bottom left corner of entity is inside player location
@@ -152,12 +152,12 @@ public class EntityManager {
 					double distanceY = entities.get(i).entityY - entities.get(mowerLocations.get(j)).entityY;
 					double distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
 					
-					if(distance <= 5 * gp.tileSize) {
+					if(distance <= Constants.MOWER_FLEE_DISTANCE * Constants.TILE_SIZE) {
 						
 						if(entities.get(i).getClass().getSimpleName().equals("Bee") || 
 								entities.get(i).getClass().getSimpleName().equals("Butterfly")) {
 							try {
-								tileM.tile[entities.get(i).destY / gp.tileSize][entities.get(i).destX / gp.tileSize].pickable = true;
+								tileM.tile[entities.get(i).destY / Constants.TILE_SIZE][entities.get(i).destX / Constants.TILE_SIZE].pickable = true;
 							} catch (ArrayIndexOutOfBoundsException e) {}
 						}
 						

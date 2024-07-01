@@ -3,10 +3,8 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
+import main.Constants;
 import main.GamePanel;
 import main.ImageManager;
 import main.MouseHandler;
@@ -29,11 +27,11 @@ public class Bee extends Entity{
 	public Bee(GamePanel gp, MouseHandler mouseH, Player player, TileManager tileM, int destX, int destY) {
 		
 		super(gp, mouseH, player, tileM, destX, destY);
-		randLength = Utility.generateRandom(500, 1000);
+		randLength = Utility.generateRandom(Constants.BEE_PERP_LINE_LENGTH_MIN, Constants.BEE_PERP_LINE_LENGTH_MAX);
 		setSpawnLocation();
 		state = "up";
 		pickStamp = 0;
-		offset = 2 * Math.PI * ((double)Utility.generateRandom(1, 60)) / 60;
+		offset = 2 * Math.PI * ((double)Utility.generateRandom(1, Constants.FPS)) / Constants.FPS;
 		
 		
 		setSpeed();
@@ -46,32 +44,32 @@ public class Bee extends Entity{
 		
 		do {
 			int rand = Utility.generateRandom(1, 4);
-			int randX = Utility.generateRandom(0, gp.maxScreenCol - 1) * gp.tileSize;
-			int randY = Utility.generateRandom(0, gp.maxScreenRow - 1) * gp.tileSize;
+			int randX = Utility.generateRandom(0, Constants.MAX_SCREEN_COL - 1) * Constants.TILE_SIZE;
+			int randY = Utility.generateRandom(0, Constants.MAX_SCREEN_ROW - 1) * Constants.TILE_SIZE;
 			
 			switch(rand) {
 				case 1: // above flower
 					spawnX = randX;
-					spawnY = 0 - gp.tileSize;
+					spawnY = 0 - Constants.TILE_SIZE;
 					endDestX = spawnX;
-					endDestY = spawnY - gp.tileSize;
+					endDestY = spawnY - Constants.TILE_SIZE;
 					break;
 				case 2: // below flower
 					spawnX = randX;
-					spawnY = gp.screenHeight + gp.tileSize;
+					spawnY = Constants.SCREEN_HEIGHT + Constants.TILE_SIZE;
 					endDestX = spawnX;
-					endDestY = spawnY + gp.tileSize;
+					endDestY = spawnY + Constants.TILE_SIZE;
 					break;
 				case 3: // left of flower
-					spawnX = 0 - gp.tileSize;
+					spawnX = 0 - Constants.TILE_SIZE;
 					spawnY = randY;
-					endDestX = spawnX - gp.tileSize;
+					endDestX = spawnX - Constants.TILE_SIZE;
 					endDestY = spawnY;
 					break;
 				case 4: // right of flower
-					spawnX = gp.screenWidth + gp.tileSize;
+					spawnX = Constants.SCREEN_WIDTH + Constants.TILE_SIZE;
 					spawnY = randY;
-					endDestX = spawnX + gp.tileSize;
+					endDestX = spawnX + Constants.TILE_SIZE;
 					endDestY = spawnY;
 					break;
 			}
@@ -85,12 +83,12 @@ public class Bee extends Entity{
 			perpLineX2 = temp[2];
 			perpLineY2 = temp[3];
 			//System.out.println("spawn: " + spawnX + " " + spawnY + " dest: " + destX + " " + destY + " line: " + perpLineX1 + " " + perpLineY1 + ", " + perpLineX2 + " " + perpLineY2);
-		} while (Math.abs(Math.sqrt(Math.pow(destX - spawnX, 2) + Math.pow(destY - spawnY, 2))) <= 10 * gp.tileSize); // bees cannot spawn 10 tiles from their destination flower
+		} while (Math.abs(Math.sqrt(Math.pow(destX - spawnX, 2) + Math.pow(destY - spawnY, 2))) <= Constants.BEE_MIN_DISTANCE_FROM_TARGET * Constants.TILE_SIZE); // bees cannot spawn 10 tiles from their destination flower
 	}
 	
 	public void setSpeed() {
 		
-		double rand = Utility.generateRandom(2, 2) / 2;
+		double rand = Utility.generateRandom(Constants.BEE_SPEED_MIN, Constants.BEE_SPEED_MAX) / 2;
 		
 		this.speed = rand * 3;
 	}
@@ -106,10 +104,10 @@ public class Bee extends Entity{
 		if(swat) {
 			imageBeforeSwat = image;
 			state = "swat";
-			int[] temp = Utility.extrapolatePointByDistance(player.playerX, player.playerY, entityX, entityY, 96);
+			int[] temp = Utility.extrapolatePointByDistance(player.playerX, player.playerY, entityX, entityY, Constants.BEE_KNOCKBACK_DISTANCE);
 			swatX = temp[0];
 			swatY = temp[1];
-			swatStamp = gp.frameCount + 15;
+			swatStamp = gp.frameCount + Constants.BEE_KNOCKBACK_SPEED;
 			swat = false;
 		}
 	}
@@ -123,11 +121,11 @@ public class Bee extends Entity{
 		if(image != null) {
 			if(state == "swat") {
 				BufferedImage temp = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-				RescaleOp op = new RescaleOp(20f, 0, null);
+				RescaleOp op = new RescaleOp(Constants.IMAGE_HIT_BRIGHTNESS, 0, null);
 				op.filter(image, temp);
-				g2.drawImage(temp, entityX + imageOffset[0], entityY - imageOffset[1], gp.tileSize, gp.tileSize, null);
+				g2.drawImage(temp, entityX + imageOffset[0], entityY - imageOffset[1], Constants.TILE_SIZE, Constants.TILE_SIZE, null);
 			} else {
-				g2.drawImage(image, entityX + imageOffset[0], entityY - imageOffset[1], gp.tileSize, gp.tileSize, null);
+				g2.drawImage(image, entityX + imageOffset[0], entityY - imageOffset[1], Constants.TILE_SIZE, Constants.TILE_SIZE, null);
 			}
 		}
 		
@@ -140,12 +138,11 @@ public class Bee extends Entity{
 		int imageOffsetX = 0;
 		int imageOffsetY = 0;
 		int animationFrame;
-		int frameLength = 2; // how many frames each animationFrame lasts
-		int interval = gp.frameCount % (frameLength * 3);
+		int interval = gp.frameCount % (Constants.BEE_ANIMATION_FRAME_LENGTH * 3);
 		
-		if(interval <= frameLength) {
+		if(interval <= Constants.BEE_ANIMATION_FRAME_LENGTH) {
 			animationFrame = 1;
-		} else if(interval > frameLength && interval <= frameLength * 2) {
+		} else if(interval > Constants.BEE_ANIMATION_FRAME_LENGTH && interval <= Constants.BEE_ANIMATION_FRAME_LENGTH * 2) {
 			animationFrame = 2;
 		} else {
 			animationFrame = 3;
@@ -304,20 +301,12 @@ public class Bee extends Entity{
 			break;
 			case "picking":
 				
-				/*if(spawnX > entityX) {
-					imageOffsetX = (18 * (180 - (pickStamp - gp.frameCount)) / 180) + 1;
-					imageOffsetY = (5 * (180 - (pickStamp - gp.frameCount)) / 180) + 1;
-				} else {
-					imageOffsetX = (-18 * (180 - (pickStamp - gp.frameCount)) / 180) + 1;
-					imageOffsetY = (5 * (180 - (pickStamp - gp.frameCount)) / 180) + 1;
-				}*/
-				
 				if(spawnX > entityX) {
-					imageOffsetX = 18;
-					imageOffsetY = 5;
+					imageOffsetX = Constants.BEE_PICK_OFFSET_X;
+					imageOffsetY = Constants.BEE_PICK_OFFSET_Y;
 				} else {
-					imageOffsetX = -18;
-					imageOffsetY = 5;
+					imageOffsetX = -Constants.BEE_PICK_OFFSET_X;
+					imageOffsetY = Constants.BEE_PICK_OFFSET_Y;
 				}
 				
 				if(pickStamp - gp.frameCount > 175) {
@@ -448,8 +437,8 @@ public class Bee extends Entity{
 	
 	public void checkPicking() {
 		
-		int entityTileX = entityX / gp.tileSize;
-		int entityTileY = entityY / gp.tileSize;
+		int entityTileX = entityX / Constants.TILE_SIZE;
+		int entityTileY = entityY / Constants.TILE_SIZE;
 		
 		if(flee) {
 			if(state == "picking") {
@@ -460,7 +449,7 @@ public class Bee extends Entity{
 			
 			if(flowerStatus == 1) {
 				state = "picking";
-				pickStamp = gp.frameCount + 180;
+				pickStamp = gp.frameCount + Constants.BEE_PICK_TIME;
 				tileM.tile[entityTileY][entityTileX].pickable = false;
 				if(player.pickTileX == entityX && player.pickTileY == entityY) {
 					player.pickTileX = -1;
@@ -472,7 +461,7 @@ public class Bee extends Entity{
 					state = "up";
 					tileM.tile[entityTileY][entityTileX].isFlower = false;
 					tileM.tileNums[entityTileY][entityTileX] = 8;
-					tileM.tile[entityTileY][entityTileX].changeStamp = Utility.generateRandom(180, 240) + gp.frameCount;
+					tileM.tile[entityTileY][entityTileX].changeStamp = Utility.generateRandom(Constants.TILE_CHANGE_FROM_PICKED_MIN, Constants.TILE_CHANGE_FROM_PICKED_MAX) + gp.frameCount;
 				}
 			} else if(flowerStatus == 3) {
 				state = "despawn";
@@ -486,12 +475,12 @@ public class Bee extends Entity{
 		int destTileX;
 		int destTileY;
 		try {
-			destTileX = destX / gp.tileSize;
+			destTileX = destX / Constants.TILE_SIZE;
 		} catch(ArithmeticException e) {
 			destTileX = 0;
 		}
 		try {
-			destTileY = destY / gp.tileSize;
+			destTileY = destY / Constants.TILE_SIZE;
 		} catch(ArithmeticException e) {
 			destTileY = 0;
 		}
@@ -499,19 +488,19 @@ public class Bee extends Entity{
 		int entityTileX;
 		int entityTileY;
 		try {
-			entityTileX = entityX / gp.tileSize;
+			entityTileX = entityX / Constants.TILE_SIZE;
 		} catch(ArithmeticException e) {
 			entityTileX = 0;
 		}
 		try {
-			entityTileY = entityY / gp.tileSize;
+			entityTileY = entityY / Constants.TILE_SIZE;
 		} catch(ArithmeticException e) {
 			entityTileY = 0;
 		}
 		
-		if((entityTileX < 0 || entityTileX > gp.maxScreenCol - 1) || (entityTileY < 0 || entityTileY > gp.maxScreenRow - 1)) {
+		if((entityTileX < 0 || entityTileX > Constants.MAX_SCREEN_COL - 1) || (entityTileY < 0 || entityTileY > Constants.MAX_SCREEN_ROW - 1)) {
 			if(destX == endDestX && destY == endDestY) {
-				if((entityTileX < 0 - gp.tileSize || entityTileX > gp.maxScreenCol - 1) || (entityTileY < 0 - gp.tileSize || entityTileY > gp.maxScreenRow - 1)) {
+				if((entityTileX < 0 - Constants.TILE_SIZE || entityTileX > Constants.MAX_SCREEN_COL - 1) || (entityTileY < 0 - Constants.TILE_SIZE || entityTileY > Constants.MAX_SCREEN_ROW - 1)) {
 					return 3;
 				}
 			}
@@ -536,12 +525,11 @@ public class Bee extends Entity{
 	
 	public void checkFlower() {
 		
-		int destTileX = destX / gp.tileSize;
-		int destTileY = destY / gp.tileSize;
+		int destTileX = destX / Constants.TILE_SIZE;
+		int destTileY = destY / Constants.TILE_SIZE;
 		
-		if(!((destTileX < 0 || destTileX > gp.maxScreenCol - 1) || (destTileY < 0 || destTileY > gp.maxScreenRow - 1))) {
+		if(!((destTileX < 0 || destTileX > Constants.MAX_SCREEN_COL - 1) || (destTileY < 0 || destTileY > Constants.MAX_SCREEN_ROW - 1))) {
 			if(tileM.tile[destTileY][destTileX].isFlower == false) {
-				//int[] temp = gp.calculatePerpendicularPoints(endDestX, endDestY, spawnX, spawnY, randLength);
 				int[] temp = Utility.calculatePerpendicularPoints(spawnX, spawnY, destX, destY, randLength / 10);
 				perpLineX1 = temp[0];
 				perpLineY1 = temp[1];

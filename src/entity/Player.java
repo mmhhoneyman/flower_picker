@@ -3,10 +3,8 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
+import main.Constants;
 import main.GamePanel;
 import main.ImageManager;
 import main.MouseHandler;
@@ -44,11 +42,11 @@ public class Player {
 		this.gp = gp;
 		this.mouseH = mouseH;
 		
-		ladybugStamp = gp.frameCount + Utility.generateRandom(240, 360);
-		mowerStamp = gp.frameCount + Utility.generateRandom(240, 360);
+		ladybugStamp = gp.frameCount + Utility.generateRandom(Constants.LADYBUG_SPAWN_MIN, Constants.LADYBUG_SPAWN_MAX);
+		mowerStamp = gp.frameCount + Utility.generateRandom(Constants.MOWER_SPAWN_MIN, Constants.MOWER_SPAWN_MAX);
 		
-		pickTileX = -1;
-		pickTileY = -1;
+		pickTileX = -Constants.TILE_SIZE;
+		pickTileY = -Constants.TILE_SIZE;
 		
 		pickStamp = -1;
 		
@@ -67,9 +65,9 @@ public class Player {
 	
 	public void setDefaultValues() {
 		
-		playerX = 0;
-		playerY = gp.tileSize * gp.skyLevel;
-		speed = 3;
+		playerX = Constants.PLAYER_SPAWN_X;
+		playerY = Constants.PLAYER_SPAWN_Y;
+		speed = Constants.PLAYER_SPEED;
 		state = "idle";
 	}
 	
@@ -87,7 +85,7 @@ public class Player {
 		String state2 = state;
 		if(state1 != state2 && state2 == "picking") {
 			pickStamp = gp.frameCount;
-			pickInterval = Utility.generateRandom(300, 360);
+			pickInterval = Utility.generateRandom(Constants.PLAYER_PICK_TIME_MIN, Constants.PLAYER_PICK_TIME_MAX);
 			pickTileX = playerX;
 			pickTileY = playerY;
 		}
@@ -99,16 +97,16 @@ public class Player {
 		
 		if(state == "collision") {
 			BufferedImage temp = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-			RescaleOp op = new RescaleOp(20f, 0, null);
+			RescaleOp op = new RescaleOp(Constants.IMAGE_HIT_BRIGHTNESS, 0, null);
 			op.filter(image, temp);
-			g2.drawImage(temp, playerX + imageOffset, playerY, gp.tileSize, gp.tileSize, null);
+			g2.drawImage(temp, playerX + imageOffset, playerY, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
 		} else {
 			if(collRefStamp > gp.frameCount) {
-				if(gp.frameCount % 15 < 7) {
-					g2.drawImage(image, playerX + imageOffset, playerY, gp.tileSize, gp.tileSize, null);
+				if(gp.frameCount % Constants.PLAYER_FLICKER_SPEED < Constants.PLAYER_FLICKER_SPEED / 2) {
+					g2.drawImage(image, playerX + imageOffset, playerY, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
 				}
 			} else {
-				g2.drawImage(image, playerX + imageOffset, playerY, gp.tileSize, gp.tileSize, null);
+				g2.drawImage(image, playerX + imageOffset, playerY, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
 			}
 			
 		}
@@ -122,18 +120,21 @@ public class Player {
 		switch(state) {
 		case "idle":
 			
-			if(gp.frameCount % 180 <= 160) { // occupies maj of 3 seconds
+			if(gp.frameCount % Constants.PLAYER_IDLE_STAND_LENGTH + Constants.PLAYER_IDLE_BLINK_LENGTH <= Constants.PLAYER_IDLE_STAND_LENGTH) {
 				image = ImageManager.idle1;
-			} else { // occupies last 20 frames every 3 seconds
+			} else {
 				image = ImageManager.idle2;
 			}
 			
 			break;
 		case "down":
 			
-			if(gp.frameCount % 60 <= 15 || (gp.frameCount % 60 > 30 && gp.frameCount % 60 <= 45)) {
+			if(gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH || 
+			  (gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) > Constants.PLAYER_WALK_FRAME_LENGTH*2 && 
+			   gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH*3)) {
 				image = ImageManager.front1;
-			} else if(gp.frameCount % 60 > 15 && gp.frameCount % 60 <= 30) {
+			} else if(gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) > Constants.PLAYER_WALK_FRAME_LENGTH && 
+					  gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH*2) {
 				image = ImageManager.front2;
 			} else {
 				image = ImageManager.front3;
@@ -142,9 +143,12 @@ public class Player {
 			break;
 		case "up":
 
-			if(gp.frameCount % 60 <= 15 || (gp.frameCount % 60 > 30 && gp.frameCount % 60 <= 45)) {
+			if(gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH || 
+			  (gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) > Constants.PLAYER_WALK_FRAME_LENGTH*2 && 
+			   gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH*3)) {
 				image = ImageManager.back1;
-			} else if(gp.frameCount % 60 > 15 && gp.frameCount % 60 <= 30) {
+			} else if(gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) > Constants.PLAYER_WALK_FRAME_LENGTH && 
+					  gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH*2) {
 				image = ImageManager.back2;
 			} else {
 				image = ImageManager.back3;
@@ -153,9 +157,12 @@ public class Player {
 			break;
 		case "right":
 			
-			if(gp.frameCount % 60 <= 15 || (gp.frameCount % 60 > 30 && gp.frameCount % 60 <= 45)) {
+			if(gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH || 
+			  (gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) > Constants.PLAYER_WALK_FRAME_LENGTH*2 && 
+			   gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH*3)) {
 				image = ImageManager.right1;
-			} else if(gp.frameCount % 60 > 15 && gp.frameCount % 60 <= 30) {
+			} else if(gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) > Constants.PLAYER_WALK_FRAME_LENGTH && 
+					  gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH*2) {
 				image = ImageManager.right2;
 			} else {
 				image = ImageManager.right3;
@@ -164,9 +171,12 @@ public class Player {
 			break;
 		case "left":
 			
-			if(gp.frameCount % 60 <= 15 || (gp.frameCount % 60 > 30 && gp.frameCount % 60 <= 45)) {
+			if(gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH || 
+			  (gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) > Constants.PLAYER_WALK_FRAME_LENGTH*2 && 
+			   gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH*3)) {
 				image = ImageManager.left1;
-			} else if(gp.frameCount % 60 > 15 && gp.frameCount % 60 <= 30) {
+			} else if(gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) > Constants.PLAYER_WALK_FRAME_LENGTH && 
+					  gp.frameCount % (Constants.PLAYER_WALK_FRAME_LENGTH*4) <= Constants.PLAYER_WALK_FRAME_LENGTH*2) {
 				image = ImageManager.left2;
 			} else {
 				image = ImageManager.left3;
@@ -232,24 +242,24 @@ public class Player {
 	}
 	
 	public void checkSelectedTile() {
-		selX = tileM.colSelTile*gp.tileSize;
-		selY = tileM.rowSelTile*gp.tileSize;
+		selX = tileM.colSelTile*Constants.TILE_SIZE;
+		selY = tileM.rowSelTile*Constants.TILE_SIZE;
 	}
 	
 	public void checkPicking() {
 		if(((pickTileX == playerX && pickTileY == playerY) && tileM.tile[tileM.rowSelTile][tileM.colSelTile].pickable) || ((selX == playerX && selY == playerY) && tileM.tile[tileM.rowSelTile][tileM.colSelTile].pickable)) {
 			state = "picking";
 		}
-		if(pickStamp + pickInterval == gp.frameCount) {
+		if(pickStamp + pickInterval == gp.frameCount && (pickTileX == playerX && pickTileY == playerY)) {
 			state = "idle";
 			
-			tileM.tileNums[pickTileY/gp.tileSize][pickTileX/gp.tileSize] = 8;
-			tileM.tile[pickTileY/gp.tileSize][pickTileX/gp.tileSize].pickable = false;
-			tileM.tile[pickTileY/gp.tileSize][pickTileX/gp.tileSize].isFlower = false;
-			tileM.tile[pickTileY/gp.tileSize][pickTileX/gp.tileSize].changeStamp = Utility.generateRandom(180, 240) + gp.frameCount;
+			tileM.tileNums[pickTileY/Constants.TILE_SIZE][pickTileX/Constants.TILE_SIZE] = 8;
+			tileM.tile[pickTileY/Constants.TILE_SIZE][pickTileX/Constants.TILE_SIZE].pickable = false;
+			tileM.tile[pickTileY/Constants.TILE_SIZE][pickTileX/Constants.TILE_SIZE].isFlower = false;
+			tileM.tile[pickTileY/Constants.TILE_SIZE][pickTileX/Constants.TILE_SIZE].changeStamp = Utility.generateRandom(Constants.TILE_CHANGE_FROM_PICKED_MIN, Constants.TILE_CHANGE_FROM_PICKED_MAX) + gp.frameCount;
 			
-			pickTileX = -1;
-			pickTileY = -1;
+			pickTileX = -Constants.TILE_SIZE;
+			pickTileY = -Constants.TILE_SIZE;
 		}
 	}
 	
@@ -259,18 +269,21 @@ public class Player {
 			int collisionIndex = entityM.checkPlayerCollision();
 			if(collisionIndex != -1) {
 				collision = true;
+				pickTileX = -Constants.TILE_SIZE;
+				pickTileY = -Constants.TILE_SIZE;
+				
 				int entityX = entityM.entities.get(collisionIndex).entityX;
 				int entityY = entityM.entities.get(collisionIndex).entityY;
 				
-				int[] temp = Utility.extrapolatePointByDistance(entityX, entityY, playerX, playerY, 96);
+				int[] temp = Utility.extrapolatePointByDistance(entityX, entityY, playerX, playerY, Constants.PLAYER_KNOCKBACK_DISTANCE);
 				collisionX = temp[0];
 				collisionY = temp[1];
 				
 				keepInBounds();
 				
 				imageBeforeCollision = image;
-				collisionStamp = gp.frameCount + 15;
-				collRefStamp = collisionStamp + 120;
+				collisionStamp = gp.frameCount + Constants.PLAYER_KNOCKBACK_SPEED;
+				collRefStamp = collisionStamp + Constants.PLAYER_KNOCKBACK_RECOVERY;
 			}
 		} 
 		if(collision) {
@@ -290,7 +303,6 @@ public class Player {
 			int collXSignum = Integer.signum(collisionX - playerX);
 			int collYSignum = Integer.signum(collisionY - playerY);
 			int altSignum = (Utility.generateRandom(0, 1) * 2) - 1;
-			double inertia = 1.2;
 			if(collXSignum == 0 || count >= 10) {
 				collXSignum = altSignum;
 			}
@@ -298,23 +310,23 @@ public class Player {
 				collYSignum = altSignum;
 			}
 			if(collisionX < 0) {
-				collisionY = collisionY + (int)(((collYSignum * Math.abs(collisionX))) / inertia);
+				collisionY = collisionY + (int)(((collYSignum * Math.abs(collisionX))) / Constants.PLAYER_KNOCKBACK_INERTIA);
 				collisionX = 0;
 				check = false;
 			}
-			if(collisionX > gp.screenWidth - gp.tileSize) {
-				collisionY = collisionY + (int)((collYSignum * (collisionX - (gp.screenWidth - gp.tileSize))) / inertia);
-				collisionX = gp.screenWidth - gp.tileSize;
+			if(collisionX > Constants.SCREEN_WIDTH - Constants.TILE_SIZE) {
+				collisionY = collisionY + (int)((collYSignum * (collisionX - (Constants.SCREEN_WIDTH - Constants.TILE_SIZE))) / Constants.PLAYER_KNOCKBACK_INERTIA);
+				collisionX = Constants.SCREEN_WIDTH - Constants.TILE_SIZE;
 				check = false;
 			}
-			if(collisionY < gp.skyLevel*gp.tileSize) {
-				collisionX = collisionX + (int)((collXSignum * (collisionY - gp.skyLevel*gp.tileSize)) / inertia);
-				collisionY = gp.skyLevel*gp.tileSize;
+			if(collisionY < Constants.SKY_LEVEL*Constants.TILE_SIZE) {
+				collisionX = collisionX + (int)((collXSignum * (collisionY - Constants.SKY_LEVEL*Constants.TILE_SIZE)) / Constants.PLAYER_KNOCKBACK_INERTIA);
+				collisionY = Constants.SKY_LEVEL*Constants.TILE_SIZE;
 				check = false;
 			}
-			if(collisionY > gp.screenHeight - gp.tileSize) {
-				collisionX = collisionX + (int)((collXSignum * (collisionY - (gp.screenHeight - gp.tileSize))) / inertia);
-				collisionY = gp.screenHeight - gp.tileSize;
+			if(collisionY > Constants.SCREEN_HEIGHT - Constants.TILE_SIZE) {
+				collisionX = collisionX + (int)((collXSignum * (collisionY - (Constants.SCREEN_HEIGHT - Constants.TILE_SIZE))) / Constants.PLAYER_KNOCKBACK_INERTIA);
+				collisionY = Constants.SCREEN_HEIGHT - Constants.TILE_SIZE;
 				check = false;
 			}
 			count++;
@@ -324,14 +336,14 @@ public class Player {
 	public void checkSpawnLadybug() {
 		if(gp.frameCount == ladybugStamp) {
 			entityM.addEntity(playerX, playerY, "Ladybug");
-			ladybugStamp = gp.frameCount + Utility.generateRandom(700, 900);
+			ladybugStamp = gp.frameCount + Utility.generateRandom(Constants.LADYBUG_SPAWN_MIN, Constants.LADYBUG_SPAWN_MAX);
 		}
 	}
 	
 	public void checkSpawnMower() {
 		if(gp.frameCount == mowerStamp) {
 			entityM.addEntity(playerX, playerY, "Mower");
-			mowerStamp = gp.frameCount + Utility.generateRandom(700, 900);
+			mowerStamp = gp.frameCount + Utility.generateRandom(Constants.MOWER_SPAWN_MIN, Constants.MOWER_SPAWN_MAX);
 		}
 	}
 	

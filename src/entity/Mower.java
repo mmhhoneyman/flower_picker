@@ -2,10 +2,8 @@ package entity;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
+import main.Constants;
 import main.GamePanel;
 import main.ImageManager;
 import main.MouseHandler;
@@ -18,9 +16,6 @@ public class Mower extends Entity{
 	
 	public int turns;
 	
-	public int spawnStamp;
-	public int leaveStamp;
-	
 	public BufferedImage image;
 	
 	public Mower(GamePanel gp, MouseHandler mouseH, Player player, TileManager tileM, int destX, int destY) {
@@ -28,13 +23,11 @@ public class Mower extends Entity{
 		super(gp, mouseH, player, tileM, destX, destY);
 		setSpawnLocation();
 		state = "up";
-		spawnStamp = gp.frameCount;
-		leaveStamp = spawnStamp + 900;
 		
 		endDestX = -1;
 		endDestY = -1;
 		
-		turns = Utility.generateRandom(1, 10);
+		turns = Utility.generateRandom(Constants.MOWER_TURNS_MIN, Constants.MOWER_TURNS_MAX);
 		
 		setSpeed();
 		
@@ -45,26 +38,26 @@ public class Mower extends Entity{
 		// TODO Auto-generated method stub
 		
 		int rand = Utility.generateRandom(1, 3);
-		int randX = Utility.generateRandom(0, gp.maxScreenCol - 2) * gp.tileSize;
-		int randY = Utility.generateRandom(gp.skyLevel + 1, gp.maxScreenRow - 2) * gp.tileSize;
-		int randDestX = Utility.generateRandom(0, gp.maxScreenCol - 2) * gp.tileSize;
-		int randDestY = Utility.generateRandom(gp.skyLevel, gp.maxScreenRow - 2) * gp.tileSize;
+		int randX = Utility.generateRandom(0, Constants.MAX_SCREEN_COL - 2) * Constants.TILE_SIZE;
+		int randY = Utility.generateRandom(Constants.SKY_LEVEL + 1, Constants.MAX_SCREEN_ROW - 2) * Constants.TILE_SIZE;
+		int randDestX = Utility.generateRandom(0, Constants.MAX_SCREEN_COL - 2) * Constants.TILE_SIZE;
+		int randDestY = Utility.generateRandom(Constants.SKY_LEVEL, Constants.MAX_SCREEN_ROW - 2) * Constants.TILE_SIZE;
 		
 		switch(rand) {
 			case 1: // below screen
 				spawnX = randX;
-				spawnY = gp.screenHeight + gp.tileSize;
+				spawnY = Constants.SCREEN_HEIGHT + Constants.TILE_SIZE;
 				destX = spawnX;
 				destY = randDestY;
 				break;
 			case 2: // left of screen
-				spawnX = 0 - gp.tileSize * 2;
+				spawnX = 0 - Constants.TILE_SIZE * 2;
 				spawnY = randY;
 				destX = randDestX;
 				destY = spawnY;
 				break;
 			case 3: // right of screen
-				spawnX = gp.screenWidth + gp.tileSize;
+				spawnX = Constants.SCREEN_WIDTH + Constants.TILE_SIZE;
 				spawnY = randY;
 				destX = randDestX;
 				destY = spawnY;
@@ -96,14 +89,14 @@ public class Mower extends Entity{
 	void draw(Graphics2D g2) {
 		// TODO Auto-generated method stub
 		
-		int imageOffset = (gp.frameCount % 8 - 4) / 4;
+		int imageOffset = (gp.frameCount % Constants.MOWER_ANIMATION_SHAKE_INTERVAL*2 - Constants.MOWER_ANIMATION_SHAKE_INTERVAL) / Constants.MOWER_ANIMATION_SHAKE_INTERVAL;
 
 		setImage();
 		
 		if(state == "up" || state == "down") {
-			g2.drawImage(image, entityX + imageOffset, entityY, gp.tileSize * 2, gp.tileSize * 2, null);
+			g2.drawImage(image, entityX + imageOffset, entityY, Constants.TILE_SIZE * 2, Constants.TILE_SIZE * 2, null);
 		} else {
-			g2.drawImage(image, entityX, entityY + imageOffset, gp.tileSize * 2, gp.tileSize * 2, null);
+			g2.drawImage(image, entityX, entityY + imageOffset, Constants.TILE_SIZE * 2, Constants.TILE_SIZE * 2, null);
 		}
 		
 	}
@@ -111,13 +104,11 @@ public class Mower extends Entity{
 	public void setImage() {
 		BufferedImage image = null;
 		int animationFrame;
-		int frameLength = 8; // how many frames each animationFrame lasts
+		int interval = gp.frameCount % (Constants.MOWER_ANIMATION_FRAME_LENGTH * 3);
 		
-		int interval = gp.frameCount % (frameLength * 3);
-		
-		if(interval <= frameLength) {
+		if(interval <= Constants.MOWER_ANIMATION_FRAME_LENGTH) {
 			animationFrame = 1;
-		} else if(interval > frameLength && interval <= frameLength * 2) {
+		} else if(interval > Constants.MOWER_ANIMATION_FRAME_LENGTH && interval <= Constants.MOWER_ANIMATION_FRAME_LENGTH * 2) {
 			animationFrame = 2;
 		} else {
 			animationFrame = 3;
@@ -239,12 +230,12 @@ public class Mower extends Entity{
 						
 						int offsetX;
 						int offsetY;
-						if(entityX / gp.tileSize - 1 < 0 || entityX / gp.tileSize + 1 > gp.maxScreenCol - 2) {
+						if(entityX / Constants.TILE_SIZE - 1 < 0 || entityX / Constants.TILE_SIZE + 1 > Constants.MAX_SCREEN_COL - 2) {
 							offsetX = 0;
 						} else {
 							offsetX = 1;
 						}
-						if(entityY / gp.tileSize + 1 > gp.maxScreenRow - 2 || gp.skyLevel > entityY / gp.tileSize - 1) {
+						if(entityY / Constants.TILE_SIZE + 1 > Constants.MAX_SCREEN_ROW - 2 || Constants.SKY_LEVEL > entityY / Constants.TILE_SIZE - 1) {
 							offsetY = 0;
 						} else {
 							offsetY = 1;
@@ -254,22 +245,22 @@ public class Mower extends Entity{
 							case 1: // down
 								testState = "vertical";
 								destX = entityX;
-								destY = Utility.generateRandom(entityY / gp.tileSize + offsetY, gp.maxScreenRow - 2) * gp.tileSize;
+								destY = Utility.generateRandom(entityY / Constants.TILE_SIZE + offsetY, Constants.MAX_SCREEN_ROW - 2) * Constants.TILE_SIZE;
 								break;
 							case 2: // left
 								testState = "horizontal";
-								destX = Utility.generateRandom(0, entityX / gp.tileSize - offsetX) * gp.tileSize;
+								destX = Utility.generateRandom(0, entityX / Constants.TILE_SIZE - offsetX) * Constants.TILE_SIZE;
 								destY = entityY;
 								break;
 							case 3: // right
 								testState = "horizontal";
-								destX = Utility.generateRandom(entityX / gp.tileSize + offsetX, gp.maxScreenCol - 2) * gp.tileSize;
+								destX = Utility.generateRandom(entityX / Constants.TILE_SIZE + offsetX, Constants.MAX_SCREEN_COL - 2) * Constants.TILE_SIZE;
 								destY = entityY;
 								break;
 							case 4: // up
 								testState = "vertical";
 								destX = entityX;
-								destY = Utility.generateRandom(gp.skyLevel, entityY / gp.tileSize - offsetY) * gp.tileSize;;
+								destY = Utility.generateRandom(Constants.SKY_LEVEL, entityY / Constants.TILE_SIZE - offsetY) * Constants.TILE_SIZE;
 								break;
 						}
 					} while(testState == testState2);
@@ -279,14 +270,14 @@ public class Mower extends Entity{
 					switch(rand) {
 						case 1: // down
 							destX = entityX;
-							destY = (gp.maxScreenRow + 1) * gp.tileSize;
+							destY = (Constants.MAX_SCREEN_ROW + 1) * Constants.TILE_SIZE;
 							break;
 						case 2: // left
-							destX = -2 * gp.tileSize;
+							destX = -2 * Constants.TILE_SIZE;
 							destY = entityY;
 							break;
 						case 3: // right
-							destX = (gp.maxScreenCol + 1) * gp.tileSize;
+							destX = (Constants.MAX_SCREEN_COL + 1) * Constants.TILE_SIZE;
 							destY = entityY;
 							break;
 					}
@@ -301,30 +292,34 @@ public class Mower extends Entity{
 	public void cutGrass() {
 		int offset = 20;
 		
-		if(entityX >= 0 - gp.tileSize && entityX <= gp.screenWidth - gp.tileSize && entityY >= 0 && entityY <= gp.screenHeight - gp.tileSize) {
+		if(entityX >= 0 - Constants.TILE_SIZE && entityX <= Constants.SCREEN_WIDTH - Constants.TILE_SIZE && entityY >= 0 && entityY <= Constants.SCREEN_HEIGHT - Constants.TILE_SIZE) {
 			if(state == "up" || state == "down") {
-				if((entityY + offset + 1) % gp.tileSize >= 0 && (entityY + offset + 1) % gp.tileSize <= 2) {
-					tileM.tile[(entityY + offset) / gp.tileSize][entityX / gp.tileSize].isFlower = false;
-					tileM.tile[(entityY + offset) / gp.tileSize][entityX / gp.tileSize].pickable = false;
-					tileM.tile[(entityY + offset) / gp.tileSize][entityX / gp.tileSize].changeStamp = Utility.generateRandom(180, 240) + gp.frameCount;
-					tileM.tileNums[(entityY + offset) / gp.tileSize][entityX / gp.tileSize] = 21;
+				if((entityY + offset + 1) % Constants.TILE_SIZE >= 0 && (entityY + offset + 1) % Constants.TILE_SIZE <= 2) {
+					tileM.tile[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE].isFlower = false;
+					tileM.tile[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE].pickable = false;
+					tileM.tile[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE].entityStamp = 0;
+					tileM.tile[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE].changeStamp = Utility.generateRandom(Constants.TILE_CHANGE_FROM_MOWED_1_MIN, Constants.TILE_CHANGE_FROM_MOWED_1_MAX) + gp.frameCount;
+					tileM.tileNums[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE] = 21;
 					
-					tileM.tile[(entityY + offset) / gp.tileSize][entityX / gp.tileSize + 1].isFlower = false;
-					tileM.tile[(entityY + offset) / gp.tileSize][entityX / gp.tileSize + 1].pickable = false;
-					tileM.tile[(entityY + offset) / gp.tileSize][entityX / gp.tileSize + 1].changeStamp = Utility.generateRandom(180, 240) + gp.frameCount;
-					tileM.tileNums[(entityY + offset) / gp.tileSize][entityX / gp.tileSize + 1] = 21;
+					tileM.tile[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE + 1].isFlower = false;
+					tileM.tile[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE + 1].pickable = false;
+					tileM.tile[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE].entityStamp = 0;
+					tileM.tile[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE + 1].changeStamp = Utility.generateRandom(Constants.TILE_CHANGE_FROM_MOWED_1_MIN, Constants.TILE_CHANGE_FROM_MOWED_1_MAX) + gp.frameCount;
+					tileM.tileNums[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE + 1] = 21;
 				}
 			} else {
-				if((entityX + offset + 1) % gp.tileSize >= 0 && (entityX + offset + 1) % gp.tileSize <= 2) {
-					tileM.tile[entityY / gp.tileSize][(entityX + offset) / gp.tileSize].isFlower = false;
-					tileM.tile[entityY / gp.tileSize][(entityX + offset) / gp.tileSize].pickable = false;
-					tileM.tile[entityY / gp.tileSize][(entityX + offset) / gp.tileSize].changeStamp = Utility.generateRandom(180, 240) + gp.frameCount;
-					tileM.tileNums[entityY / gp.tileSize][(entityX + offset) / gp.tileSize] = 21;
+				if((entityX + offset + 1) % Constants.TILE_SIZE >= 0 && (entityX + offset + 1) % Constants.TILE_SIZE <= 2) {
+					tileM.tile[entityY / Constants.TILE_SIZE][(entityX + offset) / Constants.TILE_SIZE].isFlower = false;
+					tileM.tile[entityY / Constants.TILE_SIZE][(entityX + offset) / Constants.TILE_SIZE].pickable = false;
+					tileM.tile[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE].entityStamp = 0;
+					tileM.tile[entityY / Constants.TILE_SIZE][(entityX + offset) / Constants.TILE_SIZE].changeStamp = Utility.generateRandom(Constants.TILE_CHANGE_FROM_MOWED_1_MIN, Constants.TILE_CHANGE_FROM_MOWED_1_MAX) + gp.frameCount;
+					tileM.tileNums[entityY / Constants.TILE_SIZE][(entityX + offset) / Constants.TILE_SIZE] = 21;
 					
-					tileM.tile[entityY / gp.tileSize + 1][(entityX + offset) / gp.tileSize].isFlower = false;
-					tileM.tile[entityY / gp.tileSize + 1][(entityX + offset) / gp.tileSize].pickable = false;
-					tileM.tile[entityY / gp.tileSize + 1][(entityX + offset) / gp.tileSize].changeStamp = Utility.generateRandom(180, 240) + gp.frameCount;
-					tileM.tileNums[entityY / gp.tileSize + 1][(entityX + offset) / gp.tileSize] = 21;
+					tileM.tile[entityY / Constants.TILE_SIZE + 1][(entityX + offset) / Constants.TILE_SIZE].isFlower = false;
+					tileM.tile[entityY / Constants.TILE_SIZE + 1][(entityX + offset) / Constants.TILE_SIZE].pickable = false;
+					tileM.tile[(entityY + offset) / Constants.TILE_SIZE][entityX / Constants.TILE_SIZE].entityStamp = 0;
+					tileM.tile[entityY / Constants.TILE_SIZE + 1][(entityX + offset) / Constants.TILE_SIZE].changeStamp = Utility.generateRandom(Constants.TILE_CHANGE_FROM_MOWED_1_MIN, Constants.TILE_CHANGE_FROM_MOWED_1_MAX) + gp.frameCount;
+					tileM.tileNums[entityY / Constants.TILE_SIZE + 1][(entityX + offset) / Constants.TILE_SIZE] = 21;
 				}
 			}
 		}
