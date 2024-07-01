@@ -7,9 +7,10 @@ import main.GamePanel;
 import main.MouseHandler;
 import tile.TileManager;
 
-abstract class Entity {
+public abstract class Entity {
 	
 	public int spawnX, spawnY; // spawn location
+	public int endDestX, endDestY; // end location
 	public int entityX, entityY; // actual location
 	public int destX, destY; // destination location
 	public int swatX, swatY; // swat end location
@@ -19,6 +20,7 @@ abstract class Entity {
 	public String state; // most entities will have: up, down, left, right, flee, swat
 	public int swatStamp;
 	public boolean swat;
+	public boolean flee;
 	
 	GamePanel gp;
 	MouseHandler mouseH;

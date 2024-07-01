@@ -2,6 +2,7 @@ package main;
 
 import javax.swing.JPanel;
 
+import entity.Entity;
 import entity.EntityManager;
 import entity.Player;
 import tile.TileManager;
@@ -96,7 +97,7 @@ public class GamePanel extends JPanel implements Runnable{
 				}
 				
 				// System.out.println(remainingTime);
-				//remainingTime = 3; // makes game faster for testing
+				//remainingTime = 5; // makes game faster for testing
 				Thread.sleep((long)remainingTime);
 				
 				nextDrawTime += refreshRate;
@@ -300,6 +301,49 @@ public class GamePanel extends JPanel implements Runnable{
         
         return new int[] { x3, y3, x4, y4 };
     }
+	
+	public int[] findFleeLocation(Entity entity, Entity mower) {
+		
+		int destX = 0;
+		int destY = 0;
+		
+		double distanceX = entity.entityX - mower.entityX;
+		double distanceY = entity.entityY - mower.entityY;
+		
+		double slope;
+		try {
+			slope = distanceY / distanceX;
+		} catch(ArithmeticException e) {
+			slope = Double.POSITIVE_INFINITY;
+		}
+		
+		if(Math.abs(slope) > 1) {
+			if(distanceY > 0) {
+				destY = screenHeight + 1;
+			} else {
+				destY = 0 - tileSize;
+			}
+			destX = (int) (((double)(destY - entity.entityY)) / slope + entity.entityX);
+		} else {
+			if(distanceX > 0) {
+				destX = screenWidth + 1;
+			} else {
+				destX = 0 - tileSize;
+			}
+			destY = (int) (slope * destX + entity.entityY);
+		}
+		
+		if((destY < skyLevel * tileSize) && entity.getClass().getSimpleName().equals("Ladybug")) {
+			if(slope > 0) {
+				destX = 0 - tileSize;
+			} else {
+				destX = screenWidth + 1;
+			}
+			destY = skyLevel * tileSize;
+		}
+		
+		return new int[] {destX, destY};
+	}
 	
 }
 

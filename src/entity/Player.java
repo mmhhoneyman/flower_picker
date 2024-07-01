@@ -35,6 +35,7 @@ public class Player {
 	public int collisionStamp;
 	public int collRefStamp; // this allows the player to have hit immunity for a while after getting hit
 	public int ladybugStamp;
+	public int mowerStamp;
 
 	
 	public Player(GamePanel gp, MouseHandler mouseH) {
@@ -42,7 +43,8 @@ public class Player {
 		this.gp = gp;
 		this.mouseH = mouseH;
 		
-		ladybugStamp = gp.frameCount + gp.generateRandom(120, 360);
+		ladybugStamp = gp.frameCount + gp.generateRandom(240, 360);
+		mowerStamp = gp.frameCount + gp.generateRandom(240, 360);
 		
 		pickTileX = -1;
 		pickTileY = -1;
@@ -112,6 +114,7 @@ public class Player {
 		checkPicking();
 		checkCollision();
 		checkSpawnLadybug();
+		checkSpawnMower();
 		
 		String state2 = state;
 		if(state1 != state2 && state2 == "picking") {
@@ -354,6 +357,13 @@ public class Player {
 		if(gp.frameCount == ladybugStamp) {
 			entityM.addEntity(playerX, playerY, "Ladybug");
 			ladybugStamp = gp.frameCount + gp.generateRandom(700, 900);
+		}
+	}
+	
+	public void checkSpawnMower() {
+		if(gp.frameCount == mowerStamp) {
+			entityM.addEntity(playerX, playerY, "Mower");
+			mowerStamp = gp.frameCount + gp.generateRandom(700, 900);
 		}
 	}
 	

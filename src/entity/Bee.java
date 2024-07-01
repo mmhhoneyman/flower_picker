@@ -405,10 +405,12 @@ public class Bee extends Entity{
 	@Override
 	void move() {
 		// TODO Auto-generated method stub
+		
+		String[] temp;
 		if(state == "swat") {
 			
 			double swatSpeed = gp.calculateKnockbackSpeed(entityX, entityY, swatX, swatY, gp.frameCount, swatStamp);
-			String[] temp = gp.homeTowardDest(entityX, entityY, swatX, swatY, swatSpeed);
+			temp = gp.homeTowardDest(entityX, entityY, swatX, swatY, swatSpeed);
 			entityX = (int) Math.round(entityX + Double.parseDouble(temp[1]));
 			entityY = (int) Math.round(entityY + Double.parseDouble(temp[2]));
 			if(entityX == swatX && entityY == swatY) {
@@ -418,11 +420,16 @@ public class Bee extends Entity{
 			if(state != "picking" && state != "despawn") {
 				if(gp.frameCount % 2 == 0) {
 					
-					int[] tempInt = gp.findSineDest(perpLineX1, perpLineY1, perpLineX2, perpLineY2, entityX, entityY, destX, destY, spawnX, spawnY, offset);
-					tempDestX = tempInt[0];
-					tempDestY = tempInt[1];
+					if(flee) {
+						temp = gp.homeTowardDest(entityX, entityY, destX, destY, speed);
+					} else {
+						int[] tempInt = gp.findSineDest(perpLineX1, perpLineY1, perpLineX2, perpLineY2, entityX, entityY, destX, destY, spawnX, spawnY, offset);
+						tempDestX = tempInt[0];
+						tempDestY = tempInt[1];
+						
+						temp = gp.homeTowardDest(entityX, entityY, tempDestX, tempDestY, speed);
+					}
 					
-					String[] temp = gp.homeTowardDest(entityX, entityY, tempDestX, tempDestY, speed);
 					
 					double distanceX = destX - entityX;
 					double distanceY = destY - entityY;
@@ -482,43 +489,36 @@ public class Bee extends Entity{
 	
 	public void checkPicking() {
 		
-		int entityTileX;
-		int entityTileY;
-		try {
-			entityTileX = entityX / gp.tileSize;
-		} catch(ArithmeticException e) {
-			entityTileX = 0;
-		}
-		try {
-			entityTileY = entityY / gp.tileSize;
-		} catch(ArithmeticException e) {
-			entityTileY = 0;
-		}
+		int entityTileX = entityX / gp.tileSize;
+		int entityTileY = entityY / gp.tileSize;
 		
-		int flowerStatus = onFlower();
-		
-		if(flowerStatus == 1) {
-			state = "picking";
-			pickStamp = gp.frameCount + 180;
-			tileM.tile[entityTileY][entityTileX].pickable = false;
-			if(player.pickTileX == entityX && player.pickTileY == entityY) {
-				player.pickTileX = -1;
-				player.pickTileY = -1;
-			}
-			
-			
-		} else if(flowerStatus == 2) {
-			tileM.tile[entityTileY][entityTileX].pickable = false;
-			if(pickStamp == gp.frameCount) {
+		if(flee) {
+			if(state == "picking") {
 				state = "up";
-				tileM.tile[entityTileY][entityTileX].isFlower = false;
-				tileM.tileNums[entityTileY][entityTileX] = 8;
-				tileM.tile[entityTileY][entityTileX].changeStamp = gp.generateRandom(180, 240) + gp.frameCount;
 			}
-		} else if(flowerStatus == 3) {
-			state = "despawn";
+		} else {
+			int flowerStatus = onFlower();
+			
+			if(flowerStatus == 1) {
+				state = "picking";
+				pickStamp = gp.frameCount + 180;
+				tileM.tile[entityTileY][entityTileX].pickable = false;
+				if(player.pickTileX == entityX && player.pickTileY == entityY) {
+					player.pickTileX = -1;
+					player.pickTileY = -1;
+				}
+			} else if(flowerStatus == 2) {
+				tileM.tile[entityTileY][entityTileX].pickable = false;
+				if(pickStamp == gp.frameCount) {
+					state = "up";
+					tileM.tile[entityTileY][entityTileX].isFlower = false;
+					tileM.tileNums[entityTileY][entityTileX] = 8;
+					tileM.tile[entityTileY][entityTileX].changeStamp = gp.generateRandom(180, 240) + gp.frameCount;
+				}
+			} else if(flowerStatus == 3) {
+				state = "despawn";
+			}
 		}
-		
 		
 	}
 	

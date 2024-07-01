@@ -352,15 +352,17 @@ public class Ladybug extends Entity{
 	}
 	
 	public void refreshDest() {
-		if(gp.frameCount < leaveStamp) {
-			destX = player.playerX;
-			destY = player.playerY;
-		} else {
-			destX = spawnX;
-			destY = spawnY;
-		}
-		if((destX == spawnX && entityX == destX) && (destY == spawnY && entityY == destY)){
-			state = "despawn";
+		if(!flee) {
+			if(gp.frameCount < leaveStamp) {
+				destX = player.playerX;
+				destY = player.playerY;
+			} else {
+				destX = spawnX;
+				destY = spawnY;
+			}
+			if((destX == spawnX && entityX == destX) && (destY == spawnY && entityY == destY)){
+				state = "despawn";
+			}
 		}
 		
 	}

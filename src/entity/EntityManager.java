@@ -41,6 +41,7 @@ public class EntityManager {
 		}
 		removeEntity();
 		checkSwat();
+		checkFlee();
 	}
 	
 	public void draw(Graphics2D g2) {
@@ -65,6 +66,8 @@ public class EntityManager {
 				case "Bee":
 					entities.add(new Bee(this.gp, this.mouseH, this.player, this.tileM, destX, destY));
 					break;
+				case "Mower":
+					entities.add(0, new Mower(this.gp, this.mouseH, this.player, this.tileM, destX, destY));
 			}
 		//}
 		
@@ -115,7 +118,7 @@ public class EntityManager {
 			
 			int entityMaxX;
 			int entityMaxY;
-			if(entities.get(i).getClass().getSimpleName() == "LawnMower") {
+			if(entities.get(i).getClass().getSimpleName().equals("Mower")) {
 				entityMaxX = entities.get(i).entityX + gp.tileSize*2 - trimming;
 				entityMaxY = entities.get(i).entityY + gp.tileSize*2 - trimming;
 			} else {
@@ -130,6 +133,45 @@ public class EntityManager {
 			}
 		}
 		return -1;
+	}
+	
+	public void checkFlee() {
+		
+		ArrayList<Integer> mowerLocations = new ArrayList<>();
+		for(int i = 0; i < entities.size(); i++) { // find mowers, if any
+			if(entities.get(i).getClass().getSimpleName().equals("Mower")) {
+				mowerLocations.add(i);
+			}
+		}
+		
+		for(int i = 0; i < entities.size(); i++) {
+			if(entities.get(i).getClass().getSimpleName().equals("Mower") == false) {
+				for(int j = 0; j < mowerLocations.size(); j++) {
+					double distanceX = entities.get(i).entityX - entities.get(mowerLocations.get(j)).entityX;
+					double distanceY = entities.get(i).entityY - entities.get(mowerLocations.get(j)).entityY;
+					double distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
+					
+					if(distance <= 5 * gp.tileSize) {
+						
+						if(entities.get(i).getClass().getSimpleName().equals("Bee") || 
+								entities.get(i).getClass().getSimpleName().equals("Butterfly")) {
+							try {
+								tileM.tile[entities.get(i).destY / gp.tileSize][entities.get(i).destX / gp.tileSize].pickable = true;
+							} catch (ArrayIndexOutOfBoundsException e) {}
+						}
+						
+						int[] temp = gp.findFleeLocation(entities.get(i), entities.get(mowerLocations.get(j)));
+						entities.get(i).destX = temp[0];
+						entities.get(i).destY = temp[1];
+						entities.get(i).endDestX = temp[0];
+						entities.get(i).endDestY = temp[1];
+						entities.get(i).flee = true;
+					}
+				}
+			}
+			
+		}
+		
 	}
 	
 }

@@ -276,29 +276,37 @@ public class Butterfly extends Entity{
 			entityTileY = 0;
 		}
 		
-		int flowerStatus = onFlower();
-		
-		if(flowerStatus == 1) {
-			state = "picking";
-			pickStamp = gp.frameCount + 180;
-			tileM.tile[entityTileY][entityTileX].pickable = false;
-			if(player.pickTileX == entityX && player.pickTileY == entityY) {
-				player.pickTileX = -1;
-				player.pickTileY = -1;
-			}
-			
-			
-		} else if(flowerStatus == 2) {
-			tileM.tile[entityTileY][entityTileX].pickable = false;
-			if(pickStamp == gp.frameCount) {
+		if(flee) {
+			if(state == "picking") {
 				state = "up";
-				tileM.tile[entityTileY][entityTileX].isFlower = false;
-				tileM.tileNums[entityTileY][entityTileX] = 8;
-				tileM.tile[entityTileY][entityTileX].changeStamp = gp.generateRandom(180, 240) + gp.frameCount;
 			}
-		} else if(flowerStatus == 3) {
-			state = "despawn";
+		} else {
+			int flowerStatus = onFlower();
+			
+			if(flowerStatus == 1) {
+				state = "picking";
+				pickStamp = gp.frameCount + 180;
+				tileM.tile[entityTileY][entityTileX].pickable = false;
+				if(player.pickTileX == entityX && player.pickTileY == entityY) {
+					player.pickTileX = -1;
+					player.pickTileY = -1;
+				}
+				
+				
+			} else if(flowerStatus == 2) {
+				tileM.tile[entityTileY][entityTileX].pickable = false;
+				if(pickStamp == gp.frameCount) {
+					state = "up";
+					tileM.tile[entityTileY][entityTileX].isFlower = false;
+					tileM.tileNums[entityTileY][entityTileX] = 8;
+					tileM.tile[entityTileY][entityTileX].changeStamp = gp.generateRandom(180, 240) + gp.frameCount;
+				}
+			} else if(flowerStatus == 3) {
+				state = "despawn";
+			}
 		}
+		
+		
 		
 		
 	}
