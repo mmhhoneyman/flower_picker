@@ -8,7 +8,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import main.GamePanel;
+import main.ImageManager;
 import main.MouseHandler;
+import main.Utility;
 import tile.TileManager;
 
 public class Butterfly extends Entity{
@@ -17,28 +19,6 @@ public class Butterfly extends Entity{
 	public int endDestX, endDestY;
 	public BufferedImage imageBeforeSwat;
 	public BufferedImage image;
-
-	static BufferedImage butterfly_down_1, butterfly_down_2, butterfly_down_3, butterfly_left_1, butterfly_left_2, butterfly_left_3, 
-	butterfly_right_1, butterfly_right_2, butterfly_right_3, butterfly_up_1, butterfly_up_2, butterfly_up_3;
-	
-	static { // loads all images
-		try {
-			butterfly_down_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_down_1.png"));
-			butterfly_down_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_down_2.png"));
-			butterfly_down_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_down_3.png"));
-			butterfly_left_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_left_1.png"));
-			butterfly_left_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_left_2.png"));
-			butterfly_left_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_left_3.png"));
-			butterfly_right_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_right_1.png"));
-			butterfly_right_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_right_2.png"));
-			butterfly_right_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_right_3.png"));
-			butterfly_up_1 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_up_1.png"));
-			butterfly_up_2 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_up_2.png"));
-			butterfly_up_3 = ImageIO.read(Butterfly.class.getResourceAsStream("/butterfly/butterfly_up_3.png"));
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	public Butterfly(GamePanel gp, MouseHandler mouseH, Player player, TileManager tileM, int destX, int destY) {
 		
@@ -55,7 +35,7 @@ public class Butterfly extends Entity{
 	void setSpawnLocation() {
 		// TODO Auto-generated method stub
 		
-		int rand = gp.generateRandom(1, 4);
+		int rand = Utility.generateRandom(1, 4);
 		
 		switch(rand) {
 			case 1: // above flower
@@ -90,7 +70,7 @@ public class Butterfly extends Entity{
 	
 	public void setSpeed() {
 		
-		double rand = gp.generateRandom(2, 2) / 2;
+		double rand = Utility.generateRandom(2, 2) / 2;
 		
 		this.speed = rand * 3;
 	}
@@ -106,7 +86,7 @@ public class Butterfly extends Entity{
 		if(swat) {
 			imageBeforeSwat = image;
 			state = "swat";
-			int[] temp = gp.extrapolatePointByDistance(player.playerX, player.playerY, entityX, entityY, 96);
+			int[] temp = Utility.extrapolatePointByDistance(player.playerX, player.playerY, entityX, entityY, 96);
 			swatX = temp[0];
 			swatY = temp[1];
 			swatStamp = gp.frameCount + 15;
@@ -154,13 +134,13 @@ public class Butterfly extends Entity{
 				
 				switch(animationFrame) {
 					case 1:
-						image = butterfly_left_2;
+						image = ImageManager.butterfly_left_2;
 						break;
 					case 2:
-						image = butterfly_left_1;
+						image = ImageManager.butterfly_left_1;
 						break;
 					case 3:
-						image = butterfly_left_3;
+						image = ImageManager.butterfly_left_3;
 						break;
 				}
 				
@@ -169,13 +149,13 @@ public class Butterfly extends Entity{
 
 				switch(animationFrame) {
 					case 1:
-						image = butterfly_right_2;
+						image = ImageManager.butterfly_right_2;
 						break;
 					case 2:
-						image = butterfly_right_1;
+						image = ImageManager.butterfly_right_1;
 						break;
 					case 3:
-						image = butterfly_right_3;
+						image = ImageManager.butterfly_right_3;
 						break;
 				}
 				
@@ -184,13 +164,13 @@ public class Butterfly extends Entity{
 
 				switch(animationFrame) {
 					case 1:
-						image = butterfly_up_1;
+						image = ImageManager.butterfly_up_1;
 						break;
 					case 2:
-						image = butterfly_up_2;
+						image = ImageManager.butterfly_up_2;
 						break;
 					case 3:
-						image = butterfly_up_3;
+						image = ImageManager.butterfly_up_3;
 						break;
 				}
 				
@@ -199,13 +179,13 @@ public class Butterfly extends Entity{
 
 				switch(animationFrame) {
 					case 1:
-						image = butterfly_down_1;
+						image = ImageManager.butterfly_down_1;
 						break;
 					case 2:
-						image = butterfly_down_2;
+						image = ImageManager.butterfly_down_2;
 						break;
 					case 3:
-						image = butterfly_down_3;
+						image = ImageManager.butterfly_down_3;
 						break;
 				}
 				
@@ -213,15 +193,15 @@ public class Butterfly extends Entity{
 			case "picking":
 				
 				if(pickStamp - gp.frameCount > 175) {
-					image = butterfly_up_1;
+					image = ImageManager.butterfly_up_1;
 				} else if(pickStamp - gp.frameCount > 170 && pickStamp - gp.frameCount <= 175) {
-					image = butterfly_up_2;
+					image = ImageManager.butterfly_up_2;
 				} else if(pickStamp - gp.frameCount > 10 && pickStamp - gp.frameCount <= 170) {
-					image = butterfly_up_3;
+					image = ImageManager.butterfly_up_3;
 				} else if(pickStamp - gp.frameCount > 5 && pickStamp - gp.frameCount <= 10) {
-					image = butterfly_up_2;
+					image = ImageManager.butterfly_up_2;
 				} else {
-					image = butterfly_up_1;
+					image = ImageManager.butterfly_up_1;
 				}
 				
 				break;
@@ -238,8 +218,8 @@ public class Butterfly extends Entity{
 		// TODO Auto-generated method stub
 		if(state == "swat") {
 			
-			double swatSpeed = gp.calculateKnockbackSpeed(entityX, entityY, swatX, swatY, gp.frameCount, swatStamp);
-			String[] temp = gp.homeTowardDest(entityX, entityY, swatX, swatY, swatSpeed);
+			double swatSpeed = Utility.calculateKnockbackSpeed(entityX, entityY, swatX, swatY, gp.frameCount, swatStamp);
+			String[] temp = Utility.homeTowardDest(entityX, entityY, swatX, swatY, swatSpeed);
 			entityX = (int) Math.round(entityX + Double.parseDouble(temp[1]));
 			entityY = (int) Math.round(entityY + Double.parseDouble(temp[2]));
 			if(entityX == swatX && entityY == swatY) {
@@ -248,7 +228,7 @@ public class Butterfly extends Entity{
 		} else {
 			if(state != "picking" && state != "despawn") {
 				if(gp.frameCount % 2 == 0) {
-					String[] temp = gp.homeTowardDest(entityX, entityY, destX, destY, speed);
+					String[] temp = Utility.homeTowardDest(entityX, entityY, destX, destY, speed);
 					state = temp[0];
 					entityX = (int) Math.round(entityX + Double.parseDouble(temp[1]));
 					entityY = (int) Math.round(entityY + Double.parseDouble(temp[2]));
@@ -299,7 +279,7 @@ public class Butterfly extends Entity{
 					state = "up";
 					tileM.tile[entityTileY][entityTileX].isFlower = false;
 					tileM.tileNums[entityTileY][entityTileX] = 8;
-					tileM.tile[entityTileY][entityTileX].changeStamp = gp.generateRandom(180, 240) + gp.frameCount;
+					tileM.tile[entityTileY][entityTileX].changeStamp = Utility.generateRandom(180, 240) + gp.frameCount;
 				}
 			} else if(flowerStatus == 3) {
 				state = "despawn";

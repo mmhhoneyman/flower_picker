@@ -12,7 +12,9 @@ import javax.imageio.ImageIO;
 import entity.EntityManager;
 import entity.Player;
 import main.GamePanel;
+import main.ImageManager;
 import main.MouseHandler;
+import main.Utility;
 
 public class TileManager {
 
@@ -20,11 +22,6 @@ public class TileManager {
 	MouseHandler mouseH;
 	Player player;
 	EntityManager entityM;
-	
-	BufferedImage fence, flower_blue_1, flower_blue_2, flower_blue_3, flower_orange_1, flower_orange_2, flower_orange_3, 
-	flower_picked, flower_rose_1, flower_rose_2, flower_rose_3, flower_sprout_1, flower_sprout_2, flower_white_1, flower_white_2, 
-	flower_white_3, flower_yellow_1, flower_yellow_2, flower_yellow_3, grass_hori, grass_mowed_1, grass_mowed_2, grass_mowed_3, 
-	grass_plain, grass_vert, sky, weed, select_border_1, select_border_2;
 	
 	int timeStamp; // starting frame count
 	int sproutInterval;
@@ -65,7 +62,6 @@ public class TileManager {
 		tile = new Tile[gp.maxScreenRow][gp.maxScreenCol];
 		
 		generateWorldNums();
-		getTileImage();
 		getInitLocations();
 		setDefaultValues();
 	}
@@ -81,7 +77,7 @@ public class TileManager {
 	}
 	
 	public void setDefaultValues() {
-		sproutInterval = gp.generateRandom(120, 210);
+		sproutInterval = Utility.generateRandom(120, 210);
 		timeStamp = 0;
 		
 		rowSelTile = gp.skyLevel;
@@ -96,7 +92,7 @@ public class TileManager {
 		int grass_hori_tile_num = 20;
 		
 		int count = 0;
-		int grass_hori_rand = gp.generateRandom(1, (int) (2 * gp.maxScreenCol / 3));
+		int grass_hori_rand = Utility.generateRandom(1, (int) (2 * gp.maxScreenCol / 3));
 		
 		initTileNums = new int[gp.maxScreenRow][gp.maxScreenCol];
 		
@@ -110,10 +106,10 @@ public class TileManager {
 					if(count == grass_hori_rand) {
 						if(checkSurroundingTiles(r, c)) {
 							initTileNums[r][c] = grass_hori_tile_num;
-							grass_hori_rand = gp.generateRandom((int) (gp.maxScreenCol / 2), (int) (4 * gp.maxScreenCol / 3)) + count;
+							grass_hori_rand = Utility.generateRandom((int) (gp.maxScreenCol / 2), (int) (4 * gp.maxScreenCol / 3)) + count;
 						} else {
 							initTileNums[r][c] = grass_plain_tile_num;
-							grass_hori_rand = gp.generateRandom((int) (gp.maxScreenCol / 3), (int) (gp.maxScreenCol / 2)) + count;
+							grass_hori_rand = Utility.generateRandom((int) (gp.maxScreenCol / 3), (int) (gp.maxScreenCol / 2)) + count;
 						}
 					} else {
 						initTileNums[r][c] = grass_plain_tile_num;
@@ -161,46 +157,6 @@ public class TileManager {
 		return true;
 	}
 	
-	public void getTileImage() {
-		
-		try {
-			
-			fence = ImageIO.read(getClass().getResourceAsStream("/tiles/fence.png"));
-			flower_blue_1 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_blue_1.png"));
-			flower_blue_2 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_blue_2.png"));
-			flower_blue_3 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_blue_3.png"));
-			flower_orange_1 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_orange_1.png"));
-			flower_orange_2 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_orange_2.png"));
-			flower_orange_3 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_orange_3.png"));
-			flower_picked = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_picked.png"));
-			flower_rose_1 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_rose_1.png"));
-			flower_rose_2 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_rose_2.png"));
-			flower_rose_3 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_rose_3.png"));
-			flower_sprout_1 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_sprout_1.png"));
-			flower_sprout_2 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_sprout_2.png"));
-			flower_white_1 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_white_1.png"));
-			flower_white_2 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_white_2.png"));
-			flower_white_3 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_white_3.png"));
-			flower_yellow_1 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_yellow_1.png"));
-			flower_yellow_2 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_yellow_2.png"));
-			flower_yellow_3 = ImageIO.read(getClass().getResourceAsStream("/tiles/flower_yellow_3.png"));
-			grass_hori = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_hori.png"));
-			grass_mowed_1 = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_mowed_1.png"));
-			grass_mowed_2 = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_mowed_2.png"));
-			grass_mowed_3 = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_mowed_3.png"));
-			grass_plain = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_plain.png"));
-			grass_vert = ImageIO.read(getClass().getResourceAsStream("/tiles/grass_vert.png")); // don't use, it looks terrible lol
-			sky = ImageIO.read(getClass().getResourceAsStream("/tiles/sky.png"));
-			weed = ImageIO.read(getClass().getResourceAsStream("/tiles/weed.png"));
-			select_border_1 = ImageIO.read(getClass().getResourceAsStream("/tiles/select_border_1.png"));
-			select_border_2 = ImageIO.read(getClass().getResourceAsStream("/tiles/select_border_2.png"));
-			
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		
-	}
-	
 	public void getInitLocations() {
 			
 		for(int r = 0; r < gp.maxScreenRow; r++) {
@@ -208,7 +164,7 @@ public class TileManager {
 				tile[r][c] = new Tile();
 				tile[r][c].image = tileSwitch(initTileNums[r][c]);
 				
-				if(tile[r][c].image == grass_plain || tile[r][c].image == grass_hori || tile[r][c].image == grass_vert) {
+				if(tile[r][c].image == ImageManager.grass_plain || tile[r][c].image == ImageManager.grass_hori || tile[r][c].image == ImageManager.grass_vert) {
 					tile[r][c].walkable = true;
 				} else {
 					tile[r][c].walkable = false;
@@ -234,9 +190,9 @@ public class TileManager {
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
 			
 			if(gp.frameCount % 40 < 20) {
-				g2.drawImage(select_border_1, colSelTile*gp.tileSize, rowSelTile*gp.tileSize, gp.tileSize, gp.tileSize, null);
+				g2.drawImage(ImageManager.select_border_1, colSelTile*gp.tileSize, rowSelTile*gp.tileSize, gp.tileSize, gp.tileSize, null);
 			} else {
-				g2.drawImage(select_border_2, colSelTile*gp.tileSize, rowSelTile*gp.tileSize, gp.tileSize, gp.tileSize, null);
+				g2.drawImage(ImageManager.select_border_2, colSelTile*gp.tileSize, rowSelTile*gp.tileSize, gp.tileSize, gp.tileSize, null);
 			}
 			
 		}
@@ -261,7 +217,7 @@ public class TileManager {
 				tile[r][c].image = tileSwitch(tileNums[r][c]);
 				// spawns new enemy
 				if(tile[r][c].entityStamp == gp.frameCount) {
-					int rand = gp.generateRandom(1, 2);
+					int rand = Utility.generateRandom(1, 2);
 					if(rand == 1) {
 						entityM.addEntity(c * gp.tileSize, r * gp.tileSize, "Butterfly");
 					} else {
@@ -279,16 +235,16 @@ public class TileManager {
 			boolean tileFound = false;
 			int tryCount = 0;
 			while(!tileFound && tryCount < 10) {
-				int randCol = gp.generateRandom(0, gp.maxScreenCol - 1);
-				int randRow = gp.generateRandom(gp.skyLevel, gp.maxScreenRow - 1);
+				int randCol = Utility.generateRandom(0, gp.maxScreenCol - 1);
+				int randRow = Utility.generateRandom(gp.skyLevel, gp.maxScreenRow - 1);
 				
 				if(tileNums[randRow][randCol] == 24 || tileNums[randRow][randCol] == 20) {
 					tileNums[randRow][randCol] = 12;
 					//tile[randX][randY].nextState = "flower_sprout_2";
 					//tile[randX][randY].timeStamp = gp.frameCount;
-					tile[randRow][randCol].changeStamp = gp.frameCount + gp.generateRandom(120, 210);
+					tile[randRow][randCol].changeStamp = gp.frameCount + Utility.generateRandom(120, 210);
 					timeStamp = gp.frameCount;
-					sproutInterval = gp.generateRandom(120, 210);
+					sproutInterval = Utility.generateRandom(120, 210);
 					tileFound = true;
 				}
 				tryCount++;
@@ -320,7 +276,7 @@ public class TileManager {
 		switch(tileNum) {
 			case 2: // flower_blue_1
 				tileNums[r][c] = 3;
-				tile[r][c].changeStamp = gp.generateRandom(minFlowerGrowth1, maxFlowerGrowth1) + gp.frameCount;
+				tile[r][c].changeStamp = Utility.generateRandom(minFlowerGrowth1, maxFlowerGrowth1) + gp.frameCount;
 				break;
 			case 3: // flower_blue_2
 				tileNums[r][c] = 4;
@@ -328,7 +284,7 @@ public class TileManager {
 				break;
 			case 5: // flower_orange_1
 				tileNums[r][c] = 6;
-				tile[r][c].changeStamp = gp.generateRandom(minFlowerGrowth1, maxFlowerGrowth1) + gp.frameCount;
+				tile[r][c].changeStamp = Utility.generateRandom(minFlowerGrowth1, maxFlowerGrowth1) + gp.frameCount;
 				break;
 			case 6: // flower_orange_2
 				tileNums[r][c] = 7;
@@ -340,7 +296,7 @@ public class TileManager {
 				break;
 			case 9: // flower_rose_1
 				tileNums[r][c] = 10;
-				tile[r][c].changeStamp = gp.generateRandom(minFlowerGrowth1, maxFlowerGrowth1) + gp.frameCount;
+				tile[r][c].changeStamp = Utility.generateRandom(minFlowerGrowth1, maxFlowerGrowth1) + gp.frameCount;
 				break;
 			case 10: // flower_rose_2
 				tileNums[r][c] = 11;
@@ -348,11 +304,11 @@ public class TileManager {
 				break;
 			case 12: // flower_sprout_1
 				tileNums[r][c] = 13;
-				tile[r][c].changeStamp = gp.generateRandom(minSproutGrowth1, maxSproutGrowth1) + gp.frameCount;
+				tile[r][c].changeStamp = Utility.generateRandom(minSproutGrowth1, maxSproutGrowth1) + gp.frameCount;
 				break;
 			case 13: // flower_sprout_2
 				
-				int rand = gp.generateRandom(1, 41);
+				int rand = Utility.generateRandom(1, 41);
 				
 				if(rand == 1) {
 					tileNums[r][c] = 9;
@@ -374,14 +330,14 @@ public class TileManager {
 				}
 						
 				tile[r][c].pickable = true;
-				tile[r][c].changeStamp = gp.generateRandom(minSproutGrowth2, maxSproutGrowth2) + gp.frameCount;
+				tile[r][c].changeStamp = Utility.generateRandom(minSproutGrowth2, maxSproutGrowth2) + gp.frameCount;
 				if(tile[r][c].isFlower) {
-					tile[r][c].entityStamp = gp.generateRandom(minEntityStamp, maxEntityStamp) + gp.frameCount;
+					tile[r][c].entityStamp = Utility.generateRandom(minEntityStamp, maxEntityStamp) + gp.frameCount;
 				}
 				break;
 			case 14: // flower_white_1
 				tileNums[r][c] = 15;
-				tile[r][c].changeStamp = gp.generateRandom(minFlowerGrowth1, maxFlowerGrowth1) + gp.frameCount;
+				tile[r][c].changeStamp = Utility.generateRandom(minFlowerGrowth1, maxFlowerGrowth1) + gp.frameCount;
 				break;
 			case 15: // flower_white_2
 				tileNums[r][c] = 16;
@@ -389,7 +345,7 @@ public class TileManager {
 				break;
 			case 17: // flower_yellow_1
 				tileNums[r][c] = 18;
-				tile[r][c].changeStamp = gp.generateRandom(minFlowerGrowth1, maxFlowerGrowth1) + gp.frameCount;
+				tile[r][c].changeStamp = Utility.generateRandom(minFlowerGrowth1, maxFlowerGrowth1) + gp.frameCount;
 				break;
 			case 18: // flower_yellow_2
 				tileNums[r][c] = 19;
@@ -397,11 +353,11 @@ public class TileManager {
 				break;
 			case 21: // grass_mowed_1
 				tileNums[r][c] = 22;
-				tile[r][c].changeStamp = gp.generateRandom(minGrassGrowth1, maxGrassGrowth1) + gp.frameCount;
+				tile[r][c].changeStamp = Utility.generateRandom(minGrassGrowth1, maxGrassGrowth1) + gp.frameCount;
 				break;
 			case 22: // grass_mowed_2
 				tileNums[r][c] = 23;
-				tile[r][c].changeStamp = gp.generateRandom(minGrassGrowth2, maxGrassGrowth2) + gp.frameCount;
+				tile[r][c].changeStamp = Utility.generateRandom(minGrassGrowth2, maxGrassGrowth2) + gp.frameCount;
 				break;
 			case 23: // grass_mowed_3
 				tileNums[r][c] = initTileNums[r][c];
@@ -418,91 +374,91 @@ public class TileManager {
 		BufferedImage image = null;
 		switch(num) {
 			case 1:
-				image = fence;
+				image = ImageManager.fence;
 				break;
 			case 2:
-				image = flower_blue_1;
+				image = ImageManager.flower_blue_1;
 				break;
 			case 3:
-				image = flower_blue_2;
+				image = ImageManager.flower_blue_2;
 				break;
 			case 4:
-				image = flower_blue_3;
+				image = ImageManager.flower_blue_3;
 				break;
 			case 5:
-				image = flower_orange_1;
+				image = ImageManager.flower_orange_1;
 				break;
 			case 6:
-				image = flower_orange_2;
+				image = ImageManager.flower_orange_2;
 				break;
 			case 7:
-				image = flower_orange_3;
+				image = ImageManager.flower_orange_3;
 				break;
 			case 8:
-				image = flower_picked;
+				image = ImageManager.flower_picked;
 				break;
 			case 9:
-				image = flower_rose_1;
+				image = ImageManager.flower_rose_1;
 				break;
 			case 10:
-				image = flower_rose_2;
+				image = ImageManager.flower_rose_2;
 				break;
 			case 11:
-				image = flower_rose_3;
+				image = ImageManager.flower_rose_3;
 				break;
 			case 12:
-				image = flower_sprout_1;
+				image = ImageManager.flower_sprout_1;
 				break;
 			case 13:
-				image = flower_sprout_2;
+				image = ImageManager.flower_sprout_2;
 				break;
 			case 14:
-				image = flower_white_1;
+				image = ImageManager.flower_white_1;
 				break;
 			case 15:
-				image = flower_white_2;
+				image = ImageManager.flower_white_2;
 				break;
 			case 16:
-				image = flower_white_3;
+				image = ImageManager.flower_white_3;
 				break;
 			case 17:
-				image = flower_yellow_1;
+				image = ImageManager.flower_yellow_1;
 				break;
 			case 18:
-				image = flower_yellow_2;
+				image = ImageManager.flower_yellow_2;
 				break;
 			case 19:
-				image = flower_yellow_3;
+				image = ImageManager.flower_yellow_3;
 				break;
 			case 20:
-				image = grass_hori;
+				image = ImageManager.grass_hori;
 				break;
 			case 21:
-				image = grass_mowed_1;
+				image = ImageManager.grass_mowed_1;
 				break;
 			case 22:
-				image = grass_mowed_2;
+				image = ImageManager.grass_mowed_2;
 				break;
 			case 23:
-				image = grass_mowed_3;
+				image = ImageManager.grass_mowed_3;
 				break;
 			case 24:
-				image = grass_plain;
+				image = ImageManager.grass_plain;
 				break;
 			case 25:
-				image = grass_vert;
+				image = ImageManager.grass_vert;
 				break;
 			case 26:
-				image = sky;
+				image = ImageManager.sky;
 				break;
 			case 27:
-				image = weed;
+				image = ImageManager.weed;
 				break;
 			case 28:
-				image = select_border_1;
+				image = ImageManager.select_border_1;
 				break;
 			case 29:
-				image = select_border_2;
+				image = ImageManager.select_border_2;
 				break;
 		}
 		return image;

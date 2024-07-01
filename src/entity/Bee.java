@@ -8,7 +8,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import main.GamePanel;
+import main.ImageManager;
 import main.MouseHandler;
+import main.Utility;
 import tile.TileManager;
 
 public class Bee extends Entity{
@@ -23,58 +25,15 @@ public class Bee extends Entity{
 	int randLength;
 	
 	double offset;
-
-	static BufferedImage bee_down_left_1, bee_down_left_2, bee_down_left_3, bee_down_leftwing_1, bee_down_leftwing_2, 
-	bee_down_leftwing_3, bee_down_right_1, bee_down_right_2, bee_down_right_3, bee_down_rightwing_1, bee_down_rightwing_2, 
-	bee_down_rightwing_3, bee_left_1, bee_left_2, bee_left_3, bee_right_1, bee_right_2, bee_right_3, bee_up_left_1, 
-	bee_up_left_2, bee_up_left_3, bee_up_leftwing_1, bee_up_leftwing_2, bee_up_leftwing_3, bee_up_right_1, bee_up_right_2, 
-	bee_up_right_3, bee_up_rightwing_1, bee_up_rightwing_2, bee_up_rightwing_3;
-	
-	static { // loads all images
-		try {
-			bee_down_left_1 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_left_1.png"));
-			bee_down_left_2 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_left_2.png"));
-			bee_down_left_3 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_left_3.png"));
-			bee_down_leftwing_1 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_leftwing_1.png"));
-			bee_down_leftwing_2 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_leftwing_2.png"));
-			bee_down_leftwing_3 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_leftwing_3.png"));
-			bee_down_right_1 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_right_1.png"));
-			bee_down_right_2 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_right_2.png"));
-			bee_down_right_3 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_right_3.png"));
-			bee_down_rightwing_1 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_rightwing_1.png"));
-			bee_down_rightwing_2 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_rightwing_2.png"));
-			bee_down_rightwing_3 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_down_rightwing_3.png"));
-			bee_left_1 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_left_1.png"));
-			bee_left_2 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_left_2.png"));
-			bee_left_3 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_left_3.png"));
-			bee_right_1 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_right_1.png"));
-			bee_right_2 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_right_2.png"));
-			bee_right_3 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_right_3.png"));
-			bee_up_left_1 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_left_1.png"));
-			bee_up_left_2 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_left_2.png"));
-			bee_up_left_3 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_left_3.png"));
-			bee_up_leftwing_1 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_leftwing_1.png"));
-			bee_up_leftwing_2 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_leftwing_2.png"));
-			bee_up_leftwing_3 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_leftwing_3.png"));
-			bee_up_right_1 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_right_1.png"));
-			bee_up_right_2 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_right_2.png"));
-			bee_up_right_3 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_right_3.png"));
-			bee_up_rightwing_1 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_rightwing_1.png"));
-			bee_up_rightwing_2 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_rightwing_2.png"));
-			bee_up_rightwing_3 = ImageIO.read(Bee.class.getResourceAsStream("/bee/bee_up_rightwing_3.png"));
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	public Bee(GamePanel gp, MouseHandler mouseH, Player player, TileManager tileM, int destX, int destY) {
 		
 		super(gp, mouseH, player, tileM, destX, destY);
-		randLength = gp.generateRandom(500, 1000);
+		randLength = Utility.generateRandom(500, 1000);
 		setSpawnLocation();
 		state = "up";
 		pickStamp = 0;
-		offset = 2 * Math.PI * ((double)gp.generateRandom(1, 60)) / 60;
+		offset = 2 * Math.PI * ((double)Utility.generateRandom(1, 60)) / 60;
 		
 		
 		setSpeed();
@@ -86,9 +45,9 @@ public class Bee extends Entity{
 		// TODO Auto-generated method stub
 		
 		do {
-			int rand = gp.generateRandom(1, 4);
-			int randX = gp.generateRandom(0, gp.maxScreenCol - 1) * gp.tileSize;
-			int randY = gp.generateRandom(0, gp.maxScreenRow - 1) * gp.tileSize;
+			int rand = Utility.generateRandom(1, 4);
+			int randX = Utility.generateRandom(0, gp.maxScreenCol - 1) * gp.tileSize;
+			int randY = Utility.generateRandom(0, gp.maxScreenRow - 1) * gp.tileSize;
 			
 			switch(rand) {
 				case 1: // above flower
@@ -120,7 +79,7 @@ public class Bee extends Entity{
 			entityY = spawnY;
 			
 			//int[] temp = gp.calculatePerpendicularPoints(spawnX, spawnY, destX, destY, 1000);
-			int[] temp = gp.calculatePerpendicularPoints(endDestX, endDestY, spawnX, spawnY, randLength);
+			int[] temp = Utility.calculatePerpendicularPoints(endDestX, endDestY, spawnX, spawnY, randLength);
 			perpLineX1 = temp[0];
 			perpLineY1 = temp[1];
 			perpLineX2 = temp[2];
@@ -131,7 +90,7 @@ public class Bee extends Entity{
 	
 	public void setSpeed() {
 		
-		double rand = gp.generateRandom(2, 2) / 2;
+		double rand = Utility.generateRandom(2, 2) / 2;
 		
 		this.speed = rand * 3;
 	}
@@ -147,7 +106,7 @@ public class Bee extends Entity{
 		if(swat) {
 			imageBeforeSwat = image;
 			state = "swat";
-			int[] temp = gp.extrapolatePointByDistance(player.playerX, player.playerY, entityX, entityY, 96);
+			int[] temp = Utility.extrapolatePointByDistance(player.playerX, player.playerY, entityX, entityY, 96);
 			swatX = temp[0];
 			swatY = temp[1];
 			swatStamp = gp.frameCount + 15;
@@ -197,13 +156,13 @@ public class Bee extends Entity{
 			
 			switch(animationFrame) {
 				case 1:
-					image = bee_left_1;
+					image = ImageManager.bee_left_1;
 					break;
 				case 2:
-					image = bee_left_2;
+					image = ImageManager.bee_left_2;
 					break;
 				case 3:
-					image = bee_left_3;
+					image = ImageManager.bee_left_3;
 					break;
 			}
 			
@@ -212,13 +171,13 @@ public class Bee extends Entity{
 
 			switch(animationFrame) {
 				case 1:
-					image = bee_right_1;
+					image = ImageManager.bee_right_1;
 					break;
 				case 2:
-					image = bee_right_2;
+					image = ImageManager.bee_right_2;
 					break;
 				case 3:
-					image = bee_right_3;
+					image = ImageManager.bee_right_3;
 					break;
 			}
 			
@@ -227,13 +186,13 @@ public class Bee extends Entity{
 
 			switch(animationFrame) {
 				case 1:
-					image = bee_up_leftwing_1;
+					image = ImageManager.bee_up_leftwing_1;
 					break;
 				case 2:
-					image = bee_up_leftwing_2;
+					image = ImageManager.bee_up_leftwing_2;
 					break;
 				case 3:
-					image = bee_up_leftwing_3;
+					image = ImageManager.bee_up_leftwing_3;
 					break;
 			}
 			
@@ -242,13 +201,13 @@ public class Bee extends Entity{
 
 			switch(animationFrame) {
 				case 1:
-					image = bee_up_rightwing_1;
+					image = ImageManager.bee_up_rightwing_1;
 					break;
 				case 2:
-					image = bee_up_rightwing_2;
+					image = ImageManager.bee_up_rightwing_2;
 					break;
 				case 3:
-					image = bee_up_rightwing_3;
+					image = ImageManager.bee_up_rightwing_3;
 					break;
 			}
 			
@@ -257,13 +216,13 @@ public class Bee extends Entity{
 
 			switch(animationFrame) {
 				case 1:
-					image = bee_down_leftwing_1;
+					image = ImageManager.bee_down_leftwing_1;
 					break;
 				case 2:
-					image = bee_down_leftwing_2;
+					image = ImageManager.bee_down_leftwing_2;
 					break;
 				case 3:
-					image = bee_down_leftwing_3;
+					image = ImageManager.bee_down_leftwing_3;
 					break;
 			}
 			
@@ -272,13 +231,13 @@ public class Bee extends Entity{
 
 			switch(animationFrame) {
 				case 1:
-					image = bee_down_rightwing_1;
+					image = ImageManager.bee_down_rightwing_1;
 					break;
 				case 2:
-					image = bee_down_rightwing_2;
+					image = ImageManager.bee_down_rightwing_2;
 					break;
 				case 3:
-					image = bee_down_rightwing_3;
+					image = ImageManager.bee_down_rightwing_3;
 					break;
 			}
 			
@@ -287,13 +246,13 @@ public class Bee extends Entity{
 
 			switch(animationFrame) {
 				case 1:
-					image = bee_up_left_1;
+					image = ImageManager.bee_up_left_1;
 					break;
 				case 2:
-					image = bee_up_left_2;
+					image = ImageManager.bee_up_left_2;
 					break;
 				case 3:
-					image = bee_up_left_3;
+					image = ImageManager.bee_up_left_3;
 					break;
 			}
 			
@@ -302,13 +261,13 @@ public class Bee extends Entity{
 
 			switch(animationFrame) {
 				case 1:
-					image = bee_down_left_1;
+					image = ImageManager.bee_down_left_1;
 					break;
 				case 2:
-					image = bee_down_left_2;
+					image = ImageManager.bee_down_left_2;
 					break;
 				case 3:
-					image = bee_down_left_3;
+					image = ImageManager.bee_down_left_3;
 					break;
 			}
 			
@@ -317,13 +276,13 @@ public class Bee extends Entity{
 
 			switch(animationFrame) {
 				case 1:
-					image = bee_up_right_1;
+					image = ImageManager.bee_up_right_1;
 					break;
 				case 2:
-					image = bee_up_right_2;
+					image = ImageManager.bee_up_right_2;
 					break;
 				case 3:
-					image = bee_up_right_3;
+					image = ImageManager.bee_up_right_3;
 					break;
 			}
 			
@@ -332,13 +291,13 @@ public class Bee extends Entity{
 
 			switch(animationFrame) {
 				case 1:
-					image = bee_down_right_1;
+					image = ImageManager.bee_down_right_1;
 					break;
 				case 2:
-					image = bee_down_right_2;
+					image = ImageManager.bee_down_right_2;
 					break;
 				case 3:
-					image = bee_down_right_3;
+					image = ImageManager.bee_down_right_3;
 					break;
 			}
 			
@@ -363,33 +322,33 @@ public class Bee extends Entity{
 				
 				if(pickStamp - gp.frameCount > 175) {
 					if(spawnX > entityX) {
-						image = bee_up_left_1;
+						image = ImageManager.bee_up_left_1;
 					} else {
-						image = bee_up_right_1;
+						image = ImageManager.bee_up_right_1;
 					}
 				} else if(pickStamp - gp.frameCount > 170 && pickStamp - gp.frameCount <= 175) {
 					if(spawnX > entityX) {
-						image = bee_up_left_2;
+						image = ImageManager.bee_up_left_2;
 					} else {
-						image = bee_up_right_2;
+						image = ImageManager.bee_up_right_2;
 					}
 				} else if(pickStamp - gp.frameCount > 10 && pickStamp - gp.frameCount <= 170) {
 					if(spawnX > entityX) {
-						image = bee_up_left_3;
+						image = ImageManager.bee_up_left_3;
 					} else {
-						image = bee_up_right_3;
+						image = ImageManager.bee_up_right_3;
 					}
 				} else if(pickStamp - gp.frameCount > 5 && pickStamp - gp.frameCount <= 10) {
 					if(spawnX > entityX) {
-						image = bee_up_left_2;
+						image = ImageManager.bee_up_left_2;
 					} else {
-						image = bee_up_right_2;
+						image = ImageManager.bee_up_right_2;
 					}
 				} else {
 					if(spawnX > entityX) {
-						image = bee_up_left_1;
+						image = ImageManager.bee_up_left_1;
 					} else {
-						image = bee_up_right_1;
+						image = ImageManager.bee_up_right_1;
 					}
 				}
 				
@@ -409,8 +368,8 @@ public class Bee extends Entity{
 		String[] temp;
 		if(state == "swat") {
 			
-			double swatSpeed = gp.calculateKnockbackSpeed(entityX, entityY, swatX, swatY, gp.frameCount, swatStamp);
-			temp = gp.homeTowardDest(entityX, entityY, swatX, swatY, swatSpeed);
+			double swatSpeed = Utility.calculateKnockbackSpeed(entityX, entityY, swatX, swatY, gp.frameCount, swatStamp);
+			temp = Utility.homeTowardDest(entityX, entityY, swatX, swatY, swatSpeed);
 			entityX = (int) Math.round(entityX + Double.parseDouble(temp[1]));
 			entityY = (int) Math.round(entityY + Double.parseDouble(temp[2]));
 			if(entityX == swatX && entityY == swatY) {
@@ -421,13 +380,13 @@ public class Bee extends Entity{
 				if(gp.frameCount % 2 == 0) {
 					
 					if(flee) {
-						temp = gp.homeTowardDest(entityX, entityY, destX, destY, speed);
+						temp = Utility.homeTowardDest(entityX, entityY, destX, destY, speed);
 					} else {
-						int[] tempInt = gp.findSineDest(perpLineX1, perpLineY1, perpLineX2, perpLineY2, entityX, entityY, destX, destY, spawnX, spawnY, offset);
+						int[] tempInt = Utility.findSineDest(perpLineX1, perpLineY1, perpLineX2, perpLineY2, entityX, entityY, destX, destY, spawnX, spawnY, offset, gp.frameCount);
 						tempDestX = tempInt[0];
 						tempDestY = tempInt[1];
 						
-						temp = gp.homeTowardDest(entityX, entityY, tempDestX, tempDestY, speed);
+						temp = Utility.homeTowardDest(entityX, entityY, tempDestX, tempDestY, speed);
 					}
 					
 					
@@ -513,7 +472,7 @@ public class Bee extends Entity{
 					state = "up";
 					tileM.tile[entityTileY][entityTileX].isFlower = false;
 					tileM.tileNums[entityTileY][entityTileX] = 8;
-					tileM.tile[entityTileY][entityTileX].changeStamp = gp.generateRandom(180, 240) + gp.frameCount;
+					tileM.tile[entityTileY][entityTileX].changeStamp = Utility.generateRandom(180, 240) + gp.frameCount;
 				}
 			} else if(flowerStatus == 3) {
 				state = "despawn";
@@ -583,7 +542,7 @@ public class Bee extends Entity{
 		if(!((destTileX < 0 || destTileX > gp.maxScreenCol - 1) || (destTileY < 0 || destTileY > gp.maxScreenRow - 1))) {
 			if(tileM.tile[destTileY][destTileX].isFlower == false) {
 				//int[] temp = gp.calculatePerpendicularPoints(endDestX, endDestY, spawnX, spawnY, randLength);
-				int[] temp = gp.calculatePerpendicularPoints(spawnX, spawnY, destX, destY, randLength / 10);
+				int[] temp = Utility.calculatePerpendicularPoints(spawnX, spawnY, destX, destY, randLength / 10);
 				perpLineX1 = temp[0];
 				perpLineY1 = temp[1];
 				perpLineX2 = temp[2];

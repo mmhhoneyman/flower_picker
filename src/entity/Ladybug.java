@@ -8,7 +8,9 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import main.GamePanel;
+import main.ImageManager;
 import main.MouseHandler;
+import main.Utility;
 import tile.TileManager;
 
 public class Ladybug extends Entity{
@@ -18,42 +20,6 @@ public class Ladybug extends Entity{
 	
 	public BufferedImage imageBeforeSwat;
 	public BufferedImage image;
-
-	static BufferedImage ladybug_down_1, ladybug_down_2, ladybug_down_3, ladybug_down_left_1, ladybug_down_left_2, 
-	ladybug_down_left_3, ladybug_down_right_1, ladybug_down_right_2, ladybug_down_right_3, ladybug_left_1, ladybug_left_2, 
-	ladybug_left_3, ladybug_right_1, ladybug_right_2, ladybug_right_3, ladybug_up_1, ladybug_up_2, ladybug_up_3, 
-	ladybug_up_left_1, ladybug_up_left_2, ladybug_up_left_3, ladybug_up_right_1, ladybug_up_right_2, ladybug_up_right_3;
-	
-	static { // loads all images
-		try {
-			ladybug_down_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_1.png"));
-			ladybug_down_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_2.png"));
-			ladybug_down_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_3.png"));
-			ladybug_down_left_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_left_1.png"));
-			ladybug_down_left_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_left_2.png"));
-			ladybug_down_left_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_left_3.png"));
-			ladybug_down_right_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_right_1.png"));
-			ladybug_down_right_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_right_2.png"));
-			ladybug_down_right_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_down_right_3.png"));
-			ladybug_left_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_left_1.png"));
-			ladybug_left_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_left_2.png"));
-			ladybug_left_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_left_3.png"));
-			ladybug_right_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_right_1.png"));
-			ladybug_right_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_right_2.png"));
-			ladybug_right_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_right_3.png"));
-			ladybug_up_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_1.png"));
-			ladybug_up_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_2.png"));
-			ladybug_up_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_3.png"));
-			ladybug_up_left_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_left_1.png"));
-			ladybug_up_left_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_left_2.png"));
-			ladybug_up_left_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_left_3.png"));
-			ladybug_up_right_1 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_right_1.png"));
-			ladybug_up_right_2 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_right_2.png"));
-			ladybug_up_right_3 = ImageIO.read(Ladybug.class.getResourceAsStream("/ladybug/ladybug_up_right_3.png"));
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	public Ladybug(GamePanel gp, MouseHandler mouseH, Player player, TileManager tileM, int destX, int destY) {
 		
@@ -71,9 +37,9 @@ public class Ladybug extends Entity{
 	void setSpawnLocation() {
 		// TODO Auto-generated method stub
 		
-		int rand = gp.generateRandom(1, 3);
-		int randX = gp.generateRandom(0, gp.maxScreenCol - 1) * gp.tileSize;
-		int randY = gp.generateRandom(gp.skyLevel + 1, gp.maxScreenRow - 1) * gp.tileSize;
+		int rand = Utility.generateRandom(1, 3);
+		int randX = Utility.generateRandom(0, gp.maxScreenCol - 1) * gp.tileSize;
+		int randY = Utility.generateRandom(gp.skyLevel + 1, gp.maxScreenRow - 1) * gp.tileSize;
 		
 		switch(rand) {
 			case 1: // below screen
@@ -96,7 +62,7 @@ public class Ladybug extends Entity{
 	
 	public void setSpeed() {
 		
-		double rand = gp.generateRandom(2, 2) / 2;
+		double rand = Utility.generateRandom(2, 2) / 2;
 		
 		this.speed = rand * 2;
 	}
@@ -111,7 +77,7 @@ public class Ladybug extends Entity{
 		if(swat) {
 			imageBeforeSwat = image;
 			state = "swat";
-			int[] temp = gp.extrapolatePointByDistance(player.playerX, player.playerY, entityX, entityY, 96);
+			int[] temp = Utility.extrapolatePointByDistance(player.playerX, player.playerY, entityX, entityY, 96);
 			swatX = temp[0];
 			swatY = temp[1];
 			swatStamp = gp.frameCount + 15;
@@ -157,13 +123,13 @@ public class Ladybug extends Entity{
 				
 				switch(animationFrame) {
 					case 1:
-						image = ladybug_left_1;
+						image = ImageManager.ladybug_left_1;
 						break;
 					case 2:
-						image = ladybug_left_2;
+						image = ImageManager.ladybug_left_2;
 						break;
 					case 3:
-						image = ladybug_left_3;
+						image = ImageManager.ladybug_left_3;
 						break;
 				}
 				
@@ -172,13 +138,13 @@ public class Ladybug extends Entity{
 
 				switch(animationFrame) {
 					case 1:
-						image = ladybug_right_1;
+						image = ImageManager.ladybug_right_1;
 						break;
 					case 2:
-						image = ladybug_right_2;
+						image = ImageManager.ladybug_right_2;
 						break;
 					case 3:
-						image = ladybug_right_3;
+						image = ImageManager.ladybug_right_3;
 						break;
 				}
 				
@@ -187,13 +153,13 @@ public class Ladybug extends Entity{
 
 				switch(animationFrame) {
 					case 1:
-						image = ladybug_up_1;
+						image = ImageManager.ladybug_up_1;
 						break;
 					case 2:
-						image = ladybug_up_2;
+						image = ImageManager.ladybug_up_2;
 						break;
 					case 3:
-						image = ladybug_up_3;
+						image = ImageManager.ladybug_up_3;
 						break;
 				}
 				
@@ -202,13 +168,13 @@ public class Ladybug extends Entity{
 
 				switch(animationFrame) {
 					case 1:
-						image = ladybug_down_1;
+						image = ImageManager.ladybug_down_1;
 						break;
 					case 2:
-						image = ladybug_down_2;
+						image = ImageManager.ladybug_down_2;
 						break;
 					case 3:
-						image = ladybug_down_3;
+						image = ImageManager.ladybug_down_3;
 						break;
 				}
 				
@@ -217,13 +183,13 @@ public class Ladybug extends Entity{
 
 				switch(animationFrame) {
 					case 1:
-						image = ladybug_up_left_1;
+						image = ImageManager.ladybug_up_left_1;
 						break;
 					case 2:
-						image = ladybug_up_left_2;
+						image = ImageManager.ladybug_up_left_2;
 						break;
 					case 3:
-						image = ladybug_up_left_3;
+						image = ImageManager.ladybug_up_left_3;
 						break;
 				}
 				
@@ -232,13 +198,13 @@ public class Ladybug extends Entity{
 
 				switch(animationFrame) {
 					case 1:
-						image = ladybug_down_left_1;
+						image = ImageManager.ladybug_down_left_1;
 						break;
 					case 2:
-						image = ladybug_down_left_2;
+						image = ImageManager.ladybug_down_left_2;
 						break;
 					case 3:
-						image = ladybug_down_left_3;
+						image = ImageManager.ladybug_down_left_3;
 						break;
 				}
 				
@@ -247,13 +213,13 @@ public class Ladybug extends Entity{
 
 				switch(animationFrame) {
 					case 1:
-						image = ladybug_up_right_1;
+						image = ImageManager.ladybug_up_right_1;
 						break;
 					case 2:
-						image = ladybug_up_right_2;
+						image = ImageManager.ladybug_up_right_2;
 						break;
 					case 3:
-						image = ladybug_up_right_3;
+						image = ImageManager.ladybug_up_right_3;
 						break;
 				}
 				
@@ -262,13 +228,13 @@ public class Ladybug extends Entity{
 
 				switch(animationFrame) {
 					case 1:
-						image = ladybug_down_right_1;
+						image = ImageManager.ladybug_down_right_1;
 						break;
 					case 2:
-						image = ladybug_down_right_2;
+						image = ImageManager.ladybug_down_right_2;
 						break;
 					case 3:
-						image = ladybug_down_right_3;
+						image = ImageManager.ladybug_down_right_3;
 						break;
 				}
 				
@@ -277,7 +243,7 @@ public class Ladybug extends Entity{
 				image = imageBeforeSwat;
 				break;
 			case "idle":
-				image = ladybug_up_1;
+				image = ImageManager.ladybug_up_1;
 				break;
 		}
 		this.image = image;
@@ -288,8 +254,8 @@ public class Ladybug extends Entity{
 		// TODO Auto-generated method stub
 		if(state == "swat") {
 			
-			double swatSpeed = gp.calculateKnockbackSpeed(entityX, entityY, swatX, swatY, gp.frameCount, swatStamp);
-			String[] temp = gp.homeTowardDest(entityX, entityY, swatX, swatY, swatSpeed);
+			double swatSpeed = Utility.calculateKnockbackSpeed(entityX, entityY, swatX, swatY, gp.frameCount, swatStamp);
+			String[] temp = Utility.homeTowardDest(entityX, entityY, swatX, swatY, swatSpeed);
 			
 			keepInBounds();
 			
@@ -301,7 +267,7 @@ public class Ladybug extends Entity{
 		} else {
 			if(state != "despawn") {
 				if(gp.frameCount % 2 == 0) {
-					String[] temp = gp.homeTowardDest(entityX, entityY, destX, destY, speed);
+					String[] temp = Utility.homeTowardDest(entityX, entityY, destX, destY, speed);
 					
 					double distanceX = destX - entityX;
 					double distanceY = destY - entityY;
@@ -370,7 +336,7 @@ public class Ladybug extends Entity{
 public void keepInBounds() {
 			
 			int collXSignum = Integer.signum(entityX - swatX);
-			int altSignum = (gp.generateRandom(0, 1) * 2) - 1;
+			int altSignum = (Utility.generateRandom(0, 1) * 2) - 1;
 			double inertia = 1.2;
 			
 			if(collXSignum == 0) {

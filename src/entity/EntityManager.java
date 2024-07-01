@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import main.GamePanel;
 import main.MouseHandler;
+import main.Utility;
 import tile.TileManager;
 
 public class EntityManager {
@@ -160,7 +161,7 @@ public class EntityManager {
 							} catch (ArrayIndexOutOfBoundsException e) {}
 						}
 						
-						int[] temp = gp.findFleeLocation(entities.get(i), entities.get(mowerLocations.get(j)));
+						int[] temp = Utility.findFleeLocation(entities.get(i), entities.get(mowerLocations.get(j)));
 						entities.get(i).destX = temp[0];
 						entities.get(i).destY = temp[1];
 						entities.get(i).endDestX = temp[0];
