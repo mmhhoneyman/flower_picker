@@ -3,6 +3,7 @@ package main;
 public final class Constants {
 	
 	// SCREEN SETTINGS
+	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final int ORIGINAL_TILE_SIZE = 16; // 16X16 tile... don't mess with this number
 	public static final int SCALE = 3; // don't mess with this number
 	public static final int TILE_SIZE = ORIGINAL_TILE_SIZE*SCALE; // 48x48 tile
@@ -16,6 +17,7 @@ public final class Constants {
 		
 	
 	// PLAYER
+	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final int PLAYER_SPAWN_X = 0;
 	public static final int PLAYER_SPAWN_Y = TILE_SIZE * SKY_LEVEL;
 	
@@ -42,6 +44,7 @@ public final class Constants {
 	
 	
 	// BEE
+	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final int BEE_PERP_LINE_LENGTH_MIN = 500;
 	public static final int BEE_PERP_LINE_LENGTH_MAX = 1000;
 	
@@ -64,6 +67,7 @@ public final class Constants {
 	
 	
 	// BUTTERFLY
+	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final int BUTTERFLY_SPEED_MIN = 2;
 	public static final int BUTTERFLY_SPEED_MAX = 2;
 	
@@ -78,6 +82,7 @@ public final class Constants {
 	
 	
 	// LADYBUG
+	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final int LADYBUG_SPAWN_MIN = 240;
 	public static final int LADYBUG_SPAWN_MAX = 360;
 	
@@ -92,6 +97,7 @@ public final class Constants {
 	
 	
 	// MOWER
+	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final int MOWER_SPAWN_MIN = 600;
 	public static final int MOWER_SPAWN_MAX = 900;
 	
@@ -108,6 +114,7 @@ public final class Constants {
 	
 	
 	// TILEMANAGER
+	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final float SELTILE_TRANSPARENCY = 0.2f; // transparency set to 20%
 	public static final int SELTILE_ANIMATION_FRAME_LENGTH = 20;
 	
@@ -144,6 +151,7 @@ public final class Constants {
 	
 	
 	// IMAGES
+	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final float IMAGE_HIT_BRIGHTNESS = 20f;
 	
 }

@@ -219,6 +219,125 @@ public final class ImageManager {
 		}
 	}
 	
+	
+	
+	
+	
+	
+	public static BufferedImage birt_1, birt_2, birt_3, birt_4, birt_5, birt_6, birt_7;
+	
+	static {
+		try {
+			birt_1 = ImageIO.read(TileManager.class.getResourceAsStream("/birt/birt_1.png"));
+			birt_2 = ImageIO.read(TileManager.class.getResourceAsStream("/birt/birt_2.png"));
+			birt_3 = ImageIO.read(TileManager.class.getResourceAsStream("/birt/birt_3.png"));
+			birt_4 = ImageIO.read(TileManager.class.getResourceAsStream("/birt/birt_4.png"));
+			birt_5 = ImageIO.read(TileManager.class.getResourceAsStream("/birt/birt_5.png"));
+			birt_6 = ImageIO.read(TileManager.class.getResourceAsStream("/birt/birt_6.png"));
+			birt_7 = ImageIO.read(TileManager.class.getResourceAsStream("/birt/birt_7.png"));
+			
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static BufferedImage callout_image, not_easter_egg, play_button_flicker, play_button_neutral, play_button_push;
+	
+	static {
+		try {
+			callout_image = ImageIO.read(TileManager.class.getResourceAsStream("/other/callout_image.png"));
+			not_easter_egg = ImageIO.read(TileManager.class.getResourceAsStream("/other/not_easter_egg.png"));
+			play_button_flicker = ImageIO.read(TileManager.class.getResourceAsStream("/other/play_button_flicker.png"));
+			play_button_neutral = ImageIO.read(TileManager.class.getResourceAsStream("/other/play_button_neutral.png"));
+			play_button_push = ImageIO.read(TileManager.class.getResourceAsStream("/other/play_button_push.png"));
+			
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static BufferedImage flower_projectile_1, flower_projectile_2, flower_projectile_3, flower_projectile_4;
+	
+	static {
+		try {
+			flower_projectile_1 = ImageIO.read(TileManager.class.getResourceAsStream("/projectile/flower_projectile_1.png"));
+			flower_projectile_2 = ImageIO.read(TileManager.class.getResourceAsStream("/projectile/flower_projectile_2.png"));
+			flower_projectile_3 = ImageIO.read(TileManager.class.getResourceAsStream("/projectile/flower_projectile_3.png"));
+			flower_projectile_4 = ImageIO.read(TileManager.class.getResourceAsStream("/projectile/flower_projectile_4.png"));
+			
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static BufferedImage bedroom_1, bedroom_2, bedroom_3, bedroom_4, bedroom_5, bedroom_6, calendar_1, calendar_2, credit_image_1, 
+	credit_image_2, eating_1, eating_2, eating_3, shock, title_image, title_screen_ground, title_screen_sky, tutorial_screen_1, 
+	tutorial_screen_2;
+	
+	static {
+		try {
+			bedroom_1 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/bedroom_1.png"));
+			bedroom_2 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/bedroom_2.png"));
+			bedroom_3 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/bedroom_3.png"));
+			bedroom_4 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/bedroom_4.png"));
+			bedroom_5 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/bedroom_5.png"));
+			bedroom_6 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/bedroom_6.png"));
+			calendar_1 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/calendar_1.png"));
+			calendar_2 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/calendar_2.png"));
+			credit_image_1 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/credit_image_1.png"));
+			credit_image_2 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/credit_image_2.png"));
+			eating_1 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/eating_1.png"));
+			eating_2 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/eating_2.png"));
+			eating_3 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/eating_3.png"));
+			shock = ImageIO.read(TileManager.class.getResourceAsStream("/screens/shock.png"));
+			title_image = ImageIO.read(TileManager.class.getResourceAsStream("/screens/title_image.png"));
+			title_screen_ground = ImageIO.read(TileManager.class.getResourceAsStream("/screens/title_screen_ground.png"));
+			title_screen_sky = ImageIO.read(TileManager.class.getResourceAsStream("/screens/title_screen_sky.png"));
+			tutorial_screen_1 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/tutorial_screen_1.png"));
+			tutorial_screen_2 = ImageIO.read(TileManager.class.getResourceAsStream("/screens/tutorial_screen_2.png"));
+			
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static BufferedImage points_largeF, points_largeR, points_mediumF, points_mediumR, points_score, points_smallF, points_smallR, 
+	points_weeds, time_number_0, time_number_1, time_number_2, time_number_3, time_number_4, time_number_5, time_number_6, time_number_7, 
+	time_number_8, time_number_9, time_number_colon;
+		
+	static {
+		try {
+			points_largeF = ImageIO.read(TileManager.class.getResourceAsStream("/text/points_largeF.png"));
+			points_largeR = ImageIO.read(TileManager.class.getResourceAsStream("/text/points_largeR.png"));
+			points_mediumF = ImageIO.read(TileManager.class.getResourceAsStream("/text/points_mediumF.png"));
+			points_mediumR = ImageIO.read(TileManager.class.getResourceAsStream("/text/points_mediumR.png"));
+			points_score = ImageIO.read(TileManager.class.getResourceAsStream("/text/points_score.png"));
+			points_smallF = ImageIO.read(TileManager.class.getResourceAsStream("/text/points_smallF.png"));
+			points_smallR = ImageIO.read(TileManager.class.getResourceAsStream("/text/points_smallR.png"));
+			points_weeds = ImageIO.read(TileManager.class.getResourceAsStream("/text/points_weeds.png"));
+			time_number_0 = ImageIO.read(TileManager.class.getResourceAsStream("/text/time_number_0.png"));
+			time_number_1 = ImageIO.read(TileManager.class.getResourceAsStream("/text/time_number_1.png"));
+			time_number_2 = ImageIO.read(TileManager.class.getResourceAsStream("/text/time_number_2.png"));
+			time_number_3 = ImageIO.read(TileManager.class.getResourceAsStream("/text/time_number_3.png"));
+			time_number_4 = ImageIO.read(TileManager.class.getResourceAsStream("/text/time_number_4.png"));
+			time_number_5 = ImageIO.read(TileManager.class.getResourceAsStream("/text/time_number_5.png"));
+			time_number_6 = ImageIO.read(TileManager.class.getResourceAsStream("/text/time_number_6.png"));
+			time_number_7 = ImageIO.read(TileManager.class.getResourceAsStream("/text/time_number_7.png"));
+			time_number_8 = ImageIO.read(TileManager.class.getResourceAsStream("/text/time_number_8.png"));
+			time_number_9 = ImageIO.read(TileManager.class.getResourceAsStream("/text/time_number_9.png"));
+			time_number_colon = ImageIO.read(TileManager.class.getResourceAsStream("/text/time_number_colon.png"));
+			
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
 
 

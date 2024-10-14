@@ -33,7 +33,7 @@ public class TileManager {
 	public int[][] tileNums;
 	
 	
-	// only works if the max screen columns are 16 and rows are 14 or smaller (not recommended)
+	// only works if the max screen columns are 16 and rows are 14 or smaller (use is not recommended)
 	/* public int[][] tileNums = {
 			{26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26},
 			{26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26, 26},
