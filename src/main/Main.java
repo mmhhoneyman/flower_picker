@@ -2,6 +2,8 @@ package main;
 
 import javax.swing.JFrame;
 
+import scene.ScenePanel;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -15,12 +17,23 @@ public class Main {
 		window.setVisible(true);
 		
 		GamePanel gamePanel = new GamePanel();
-		window.add(gamePanel);
+		ScenePanel scenePanel = new ScenePanel("credits");
 		
-		window.pack();
-		
-		
-		gamePanel.startGameThread();
+		//while(1==1) {
+			window.add(scenePanel);
+			
+			window.pack();
+			
+			scenePanel.startGameThread();
+			
+			scenePanel.isActive(() -> {
+	            window.remove(scenePanel);
+	            window.add(gamePanel);
+	            window.revalidate();
+	            window.repaint();
+	            gamePanel.startGameThread();
+	        });
+		//}
 	}
 
 }
