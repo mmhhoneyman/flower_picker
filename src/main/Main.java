@@ -12,28 +12,39 @@ public class Main {
 		JFrame window = new JFrame();
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(false);
-		window.setTitle("Flower Picker");
+		window.setTitle("Mother's Day");
 		//window.setLocationRelativeTo(null);
 		window.setVisible(true);
 		
-		GamePanel gamePanel = new GamePanel();
-		ScenePanel scenePanel = new ScenePanel("credits");
-		
-		//while(1==1) {
+		while(1==1) { // im sure this won't cause problems
+			
+			GamePanel gamePanel = new GamePanel();
+			ScenePanel scenePanel = new ScenePanel("credits");
+			
 			window.add(scenePanel);
-			
 			window.pack();
-			
 			scenePanel.startGameThread();
 			
-			scenePanel.isActive(() -> {
-	            window.remove(scenePanel);
-	            window.add(gamePanel);
-	            window.revalidate();
-	            window.repaint();
-	            gamePanel.startGameThread();
-	        });
-		//}
+			try {
+				scenePanel.sceneThread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+            window.remove(scenePanel);
+            window.add(gamePanel);
+            window.revalidate();
+            window.repaint();
+            gamePanel.startGameThread();
+            
+            try {
+				gamePanel.gameThread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	MouseHandler mouseH;
 	TileManager tileM;
-	Thread gameThread;
+	public Thread gameThread;
 	Player player;
 	EntityManager entityM;
 	Random random;
@@ -95,6 +95,10 @@ public class GamePanel extends JPanel implements Runnable{
 			}
 			
 			frameCount++;
+			
+			if(frameCount == 100) {
+				//gameThread = null;
+			}
 			
 		}
 		
