@@ -28,8 +28,6 @@ public class ScenePanel extends JPanel implements Runnable{
 	public int postStamp;
 	public int timeLeft;
 	
-	public Runnable active;
-	
 	MouseHandler mouseH;
 	public Thread sceneThread;
 	Random random;
@@ -70,10 +68,6 @@ public ScenePanel(String state) {
 		sceneThread = new Thread(this);
 		sceneThread.start();
 	
-	}
-	
-	public void isActive(Runnable active) {
-		this.active =  active;
 	}
 	
 	@Override
@@ -160,8 +154,6 @@ public ScenePanel(String state) {
 				g2.drawImage(ImageManager.credit_image_2, 20, 20, Constants.SCREEN_WIDTH - 40, Constants.SCREEN_HEIGHT - 40, null);
 			} else if(timeLeft == 0) {
 				state = "opening";
-				//sceneThread = null;
-				//System.out.println("foo");
 			} else if(interval - timeLeft < 4 * interval / 5) {
 				g2.drawImage(ImageManager.credit_image_2, 20, 20, Constants.SCREEN_WIDTH - 40, Constants.SCREEN_HEIGHT - 40, null);
 				
@@ -305,7 +297,126 @@ public ScenePanel(String state) {
 	}
 	
 	public void bedroomScene(Graphics2D g2) {
+		// bedroom scene
+		int interval1_1 = 300;
+		int interval1_2 = interval1_1 + 400;
+		int interval1_3 = interval1_2 + 400;
 		
+		// calendar mid-zoom
+		int interval2_1 = interval1_3 + 300;
+		int interval2_2 = interval2_1 + 300;
+		int interval2_3 = interval2_2 + 300;
+		int interval2_4 = interval2_3 + 50;
+		
+		// calendar, boy, fade-out
+		int interval3_1 = interval2_4 + 200;
+		int interval3_2 = interval3_1 + 200;
+		int interval3_3 = interval3_2 + 300;
+		int interval3_4 = interval3_3 + 200;
+		
+		if(state == nextState) {
+			nextState = "tutorial";
+			postStamp = frameCount + interval3_4;
+		}
+		
+		if(timeLeft + interval1_1 >= interval3_4) {
+			if(frameCount % 240 <= 40 * 1) {
+				g2.drawImage(ImageManager.bedroom_1, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			} else if(frameCount % 240 <= 40 * 2) {
+				g2.drawImage(ImageManager.bedroom_2, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			} else if(frameCount % 240 <= 40 * 3) {
+				g2.drawImage(ImageManager.bedroom_3, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			} else if(frameCount % 240 <= 40 * 4) {
+				g2.drawImage(ImageManager.bedroom_4, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			} else if(frameCount % 240 <= 40 * 5) {
+				g2.drawImage(ImageManager.bedroom_5, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			} else if(frameCount % 240 <= 40 * 6) {
+				g2.drawImage(ImageManager.bedroom_6, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			}
+			
+			float transparency = ((float)(timeLeft) - (interval3_4 - interval1_1)) / (float)(interval1_1);
+			g2.setColor(Color.black);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
+		} else if(timeLeft + interval1_3 >= interval3_4) {
+			
+			double zoom = (double)(interval3_4 - timeLeft - interval1_1) / (interval1_3 - interval1_1) + 1;
+			
+			int imgSizeX = (int)(Constants.SCREEN_WIDTH * zoom);
+			int imgSizeY = (int)(Constants.SCREEN_HEIGHT * zoom);
+			int imgLocX = (int)((double)(Constants.SCREEN_WIDTH - imgSizeX) * 1.34 / 2);
+			int imgLocY = (int)((double)(Constants.SCREEN_HEIGHT - imgSizeY) / 2);
+			
+			if(frameCount % 240 <= 40 * 1) {
+				g2.drawImage(ImageManager.bedroom_1, imgLocX, imgLocY, imgSizeX, imgSizeY, null);
+			} else if(frameCount % 240 <= 40 * 2) {
+				g2.drawImage(ImageManager.bedroom_2, imgLocX, imgLocY, imgSizeX, imgSizeY, null);
+			} else if(frameCount % 240 <= 40 * 3) {
+				g2.drawImage(ImageManager.bedroom_3, imgLocX, imgLocY, imgSizeX, imgSizeY, null);
+			} else if(frameCount % 240 <= 40 * 4) {
+				g2.drawImage(ImageManager.bedroom_4, imgLocX, imgLocY, imgSizeX, imgSizeY, null);
+			} else if(frameCount % 240 <= 40 * 5) {
+				g2.drawImage(ImageManager.bedroom_5, imgLocX, imgLocY, imgSizeX, imgSizeY, null);
+			} else if(frameCount % 240 <= 40 * 6) {
+				g2.drawImage(ImageManager.bedroom_6, imgLocX, imgLocY, imgSizeX, imgSizeY, null);
+			}
+			
+			if(!(timeLeft + interval1_2 >= interval3_4)) {
+				float transparency = (float)(interval3_4 - timeLeft - interval1_2) / (float)(interval1_3 - interval1_2);
+				g2.setColor(Color.black);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+				g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
+			}
+		} else if(timeLeft + interval2_3 >= interval3_4) {
+			
+			double zoom = (double)(interval3_4 - timeLeft - interval1_3) / (interval2_3 - interval1_3) + 1;
+			
+			int imgSizeX = (int)(Constants.SCREEN_WIDTH * zoom);
+			int imgSizeY = (int)(Constants.SCREEN_HEIGHT * zoom);
+			int imgLocX = (int)((double)(Constants.SCREEN_WIDTH - imgSizeX) * 0.3 / 2);
+			int imgLocY = (int)((double)(Constants.SCREEN_HEIGHT - imgSizeY) * 1.5 / 2);
+			
+			g2.drawImage(ImageManager.calendar_1, imgLocX, imgLocY, imgSizeX, imgSizeY, null);
+			
+			if(timeLeft + interval2_1 >= interval3_4) {
+				float transparency = ((float)(timeLeft) - (interval3_4 - interval2_1)) / (float)(interval2_1 - interval1_3);
+				g2.setColor(Color.black);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+				g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
+			} else if(!(timeLeft + interval2_2 >= interval3_4)) {
+				float transparency = ((float)(interval3_4 - timeLeft - interval2_2)) / (float)(interval2_3 - interval2_2);
+				g2.setColor(Color.black);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+				g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
+			}
+		} else if(timeLeft + interval2_4 >= interval3_4) {
+			g2.setColor(Color.black);
+			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+		}
+		else if(timeLeft + interval3_3 >= interval3_4) {
+			if(timeLeft + interval3_1 >= interval3_4) {
+				g2.drawImage(ImageManager.calendar_2, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			} else if(timeLeft + interval3_2 >= interval3_4) {
+				g2.drawImage(ImageManager.shock, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			} else if(timeLeft + interval3_3 >= interval3_4) {
+				g2.drawImage(ImageManager.shock, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+				float transparency = (float)(interval3_4 - timeLeft - interval3_2) / (float)(interval3_3 - interval3_2);
+				g2.setColor(Color.black);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+				g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
+			} else if(timeLeft + interval3_3 >= interval3_4) {
+				g2.setColor(Color.black);
+				g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+			}
+		}
+		if(timeLeft == 0) {
+			state = "tutorial";
+			sceneThread = null;
+		}
 	}
-	
 }

@@ -35,6 +35,8 @@ public class Player {
 	public int collRefStamp; // this allows the player to have hit immunity for a while after getting hit
 	public int ladybugStamp;
 	public int mowerStamp;
+	
+	public int offset;
 
 	
 	public Player(GamePanel gp, MouseHandler mouseH) {
@@ -49,6 +51,8 @@ public class Player {
 		pickTileY = -Constants.TILE_SIZE;
 		
 		pickStamp = -1;
+		
+		offset = 0;
 		
 		setDefaultValues();
 	}
@@ -89,11 +93,12 @@ public class Player {
 			pickTileX = playerX;
 			pickTileY = playerY;
 		}
+		
+		offset = setImage();
 	}
 	
 	public void draw(Graphics2D g2) {
-		
-		int imageOffset = setImage();
+		int imageOffset = offset;
 		
 		if(state == "collision") {
 			BufferedImage temp = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
@@ -108,7 +113,6 @@ public class Player {
 			} else {
 				g2.drawImage(image, playerX + imageOffset, playerY, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
 			}
-			
 		}
 	}
 	
@@ -213,6 +217,9 @@ public class Player {
 			}
 			
 			break;
+		}
+		if(!gp.state.equals("game")) {
+			image = ImageManager.idle1;
 		}
 		return imageOffset;
 	}

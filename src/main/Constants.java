@@ -18,8 +18,8 @@ public final class Constants {
 	
 	// PLAYER
 	//------------------------------------------------------------------------------------------------------------------------------------------------------
-	public static final int PLAYER_SPAWN_X = 0;
-	public static final int PLAYER_SPAWN_Y = TILE_SIZE * SKY_LEVEL;
+	public static final int PLAYER_SPAWN_X = TILE_SIZE * MAX_SCREEN_COL / 2;
+	public static final int PLAYER_SPAWN_Y = TILE_SIZE * ((MAX_SCREEN_ROW + SKY_LEVEL) / 2);
 	
 	public static final int PLAYER_SPEED = 3;
 	

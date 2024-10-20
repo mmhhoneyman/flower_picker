@@ -78,8 +78,8 @@ public class TileManager {
 		sproutInterval = Utility.generateRandom(Constants.TILE_PLANT_SPROUT_MIN, Constants.TILE_PLANT_SPROUT_MAX);
 		timeStamp = 0;
 		
-		rowSelTile = Constants.SKY_LEVEL;
-		colSelTile = 0;
+		rowSelTile = Constants.PLAYER_SPAWN_Y / Constants.TILE_SIZE;
+		colSelTile = Constants.PLAYER_SPAWN_X / Constants.TILE_SIZE;
 	}
 	
 	public void generateWorldNums() {
@@ -181,18 +181,19 @@ public class TileManager {
 			}
 		}
 		
-		if(player.playerX != colSelTile*Constants.TILE_SIZE || player.playerY != rowSelTile*Constants.TILE_SIZE) {
-			g2.setColor(Color.white);
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Constants.SELTILE_TRANSPARENCY));
-			g2.fillRect(colSelTile*Constants.TILE_SIZE,  rowSelTile*Constants.TILE_SIZE,  Constants.TILE_SIZE,  Constants.TILE_SIZE);
-			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
-			
-			if(gp.frameCount % Constants.SELTILE_ANIMATION_FRAME_LENGTH*2 < Constants.SELTILE_ANIMATION_FRAME_LENGTH) {
-				g2.drawImage(ImageManager.select_border_1, colSelTile*Constants.TILE_SIZE, rowSelTile*Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
-			} else {
-				g2.drawImage(ImageManager.select_border_2, colSelTile*Constants.TILE_SIZE, rowSelTile*Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
+		if(gp.state.equals("game")) {
+			if(player.playerX != colSelTile*Constants.TILE_SIZE || player.playerY != rowSelTile*Constants.TILE_SIZE) {
+				g2.setColor(Color.white);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Constants.SELTILE_TRANSPARENCY));
+				g2.fillRect(colSelTile*Constants.TILE_SIZE,  rowSelTile*Constants.TILE_SIZE,  Constants.TILE_SIZE,  Constants.TILE_SIZE);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
+				
+				if(gp.frameCount % Constants.SELTILE_ANIMATION_FRAME_LENGTH*2 < Constants.SELTILE_ANIMATION_FRAME_LENGTH) {
+					g2.drawImage(ImageManager.select_border_1, colSelTile*Constants.TILE_SIZE, rowSelTile*Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
+				} else {
+					g2.drawImage(ImageManager.select_border_2, colSelTile*Constants.TILE_SIZE, rowSelTile*Constants.TILE_SIZE, Constants.TILE_SIZE, Constants.TILE_SIZE, null);
+				}
 			}
-			
 		}
 		
 	}

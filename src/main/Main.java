@@ -19,14 +19,14 @@ public class Main {
 		while(1==1) { // im sure this won't cause problems
 			
 			GamePanel gamePanel = new GamePanel();
-			ScenePanel scenePanel = new ScenePanel("title");
+			ScenePanel scenePanel = new ScenePanel("credits");
 			
-			window.add(scenePanel);
+			window.add(gamePanel);
 			window.pack();
-			scenePanel.startGameThread();
+			gamePanel.startGameThread();
 			
 			try {
-				scenePanel.sceneThread.join();
+				gamePanel.gameThread.join();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
