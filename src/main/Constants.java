@@ -154,6 +154,28 @@ public final class Constants {
 	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final float IMAGE_HIT_BRIGHTNESS = 20f;
 	
+	
+	// SCENES
+	//------------------------------------------------------------------------------------------------------------------------------------------------------
+	public static final int TUTORIAL_INT_1 = 200;
+	public static final int TUTORIAL_INT_2 = TUTORIAL_INT_1 + 500;
+	public static final int TUTORIAL_INT_3 = TUTORIAL_INT_2 + 150;
+	
+	public static final int COUNTDOWN_INT_1 = 60;
+	public static final int COUNTDOWN_INT_2 = COUNTDOWN_INT_1 + 60;
+	public static final int COUNTDOWN_INT_3 = COUNTDOWN_INT_2 + 60;
+	
+	public static final int PREGAME_TIMER = TUTORIAL_INT_3 + COUNTDOWN_INT_3;
+	
+	public static final int SUPPER_TIME_INT_1 = 60;
+	public static final int SUPPER_TIME_INT_2 = SUPPER_TIME_INT_1 + 60;
+	public static final int SUPPER_TIME_INT_3 = SUPPER_TIME_INT_2 + 120;
+	public static final int SUPPER_TIME_INT_4 = SUPPER_TIME_INT_3 + 60;
+	
+	public static final int POSTGAME_TIMER = SUPPER_TIME_INT_4;
+	
+	public static final int TOTAL_GAME_TIME = 36 * 2 + PREGAME_TIMER + POSTGAME_TIMER; // 2 minutes plus pregame and postgame
+	
 }
 
 

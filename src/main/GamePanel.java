@@ -104,21 +104,18 @@ public class GamePanel extends JPanel implements Runnable{
 			}
 			
 			frameCount++;
-			
-			if(frameCount == 100) {
-				//gameThread = null;
-			}
-			
 		}
 		
 	}
 	
 	public void update() {
 		
-		if(state.equals("game") || frameCount == 0) {
+		if((state.equals("game") || frameCount == 0) && frameCount < Constants.TOTAL_GAME_TIME - Constants.POSTGAME_TIMER) {
 			tileM.update();
 			player.update();
 			entityM.update();
+		} else if(!(frameCount < Constants.TOTAL_GAME_TIME - Constants.POSTGAME_TIMER)) {
+			state = "supper time!";
 		}
 		timeLeft = postStamp - frameCount;
 	}
@@ -139,20 +136,23 @@ public class GamePanel extends JPanel implements Runnable{
 			case "countdown":
 				countdownScene(g2);
 				break;
-			case "game":
-				tileM.draw(g2);
-				player.draw(g2);
-				entityM.draw(g2);
+			case "supper time!":
+				supperTimeScene(g2);
 				break;
+		}
+		
+		if(frameCount == 0) {
+			g2.setColor(Color.black);
+			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 		}
 		
 		g2.dispose();
 	}
 	
 	public void tutorialScene(Graphics2D g2) {
-		int interval1 = 200;
-		int interval2 = interval1 + 500;
-		int interval3 = interval2 + 200;
+		int interval1 = Constants.TUTORIAL_INT_1;
+		int interval2 = Constants.TUTORIAL_INT_2;
+		int interval3 = Constants.TUTORIAL_INT_3;
 		
 		if(state == nextState) {
 			nextState = "countdown";
@@ -198,7 +198,7 @@ public class GamePanel extends JPanel implements Runnable{
 			int imgLocX = (int)((double)(Constants.SCREEN_WIDTH - imgSizeX) / 2);
 			int imgLocY = (int)((double)(Constants.SCREEN_HEIGHT - imgSizeY) / 2);
 			
-			g2.drawImage(ImageManager.tutorial_screen_2, imgLocX + swipe, imgLocY, imgSizeX, imgSizeY, null);
+			g2.drawImage(ImageManager.tutorial_screen_2, imgLocX + swipe + (offset - interval2), imgLocY, imgSizeX, imgSizeY, null);
 		}
 		if(timeLeft == 0) {
 			state = "countdown";
@@ -206,7 +206,78 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	public void countdownScene(Graphics2D g2) {
+		int interval1 = 60;
+		int interval2 = interval1 + 60;
+		int interval3 = interval2 + 60;
 		
+		if(state == nextState) {
+			nextState = "game";
+			postStamp = frameCount + interval3;
+		}
+		if(timeLeft + interval1 >= interval3) {
+			double zoom = (double)(timeLeft - (interval3 - interval1)) / (interval1) + 1;
+			
+			int imgSizeX = (int)(8 * 15 * zoom);
+			int imgSizeY = (int)(10 * 15 * zoom);
+			int imgLocX = (int)((double)(Constants.SCREEN_WIDTH - imgSizeX) / 2);
+			int imgLocY = (int)((double)(Constants.SCREEN_HEIGHT - imgSizeY) / 2);
+			
+			g2.drawImage(ImageManager.time_number_3, imgLocX, imgLocY, imgSizeX, imgSizeY, null);
+		} else if(timeLeft + interval2 >= interval3) {
+			double zoom = (double)(timeLeft - (interval3 - interval2)) / (interval2 - interval1) + 1;
+			
+			int imgSizeX = (int)(8 * 15 * zoom);
+			int imgSizeY = (int)(10 * 15 * zoom);
+			int imgLocX = (int)((double)(Constants.SCREEN_WIDTH - imgSizeX) / 2);
+			int imgLocY = (int)((double)(Constants.SCREEN_HEIGHT - imgSizeY) / 2);
+			
+			g2.drawImage(ImageManager.time_number_2, imgLocX, imgLocY, imgSizeX, imgSizeY, null);
+		} else if(timeLeft + interval3 >= interval3) {
+			double zoom = (double)(timeLeft) / (interval3 - interval2) + 1;
+			
+			int imgSizeX = (int)(8 * 15 * zoom);
+			int imgSizeY = (int)(10 * 15 * zoom);
+			int imgLocX = (int)((double)(Constants.SCREEN_WIDTH - imgSizeX) / 2);
+			int imgLocY = (int)((double)(Constants.SCREEN_HEIGHT - imgSizeY) / 2);
+			
+			g2.drawImage(ImageManager.time_number_1, imgLocX, imgLocY, imgSizeX, imgSizeY, null);
+		}
+		if(timeLeft == 0) {
+			state = "game";
+			nextState = "supper time!";
+		}
+	}
+	
+	public void supperTimeScene(Graphics2D g2) {
+		int interval1 = Constants.SUPPER_TIME_INT_1;
+		int interval2 = Constants.SUPPER_TIME_INT_2;
+		int interval3 = Constants.SUPPER_TIME_INT_3;
+		int interval4 = Constants.SUPPER_TIME_INT_4;
+		
+		if(state == nextState) {
+			nextState = null;
+			postStamp = Constants.TOTAL_GAME_TIME;
+		}
+		if(timeLeft + interval1 >= interval4) {
+			int offset = (frameCount / 4 % 2) * 10;
+			g2.drawImage(ImageManager.callout_image, Constants.SCREEN_WIDTH / 4 + offset, Constants.SCREEN_HEIGHT - 48 * 4, 48 * 4, 48 * 4, null);
+		} else if(timeLeft + interval2 >= interval4) {
+			g2.drawImage(ImageManager.callout_image, Constants.SCREEN_WIDTH / 4, Constants.SCREEN_HEIGHT - 48 * 4, 48 * 4, 48 * 4, null);
+		} else if(timeLeft + interval3 >= interval4) {
+			g2.drawImage(ImageManager.callout_image, Constants.SCREEN_WIDTH / 4, Constants.SCREEN_HEIGHT - 48 * 4, 48 * 4, 48 * 4, null);
+			
+			float transparency = (float)(interval4 - interval2 - timeLeft) / (float)(interval3 - interval2);
+			g2.setColor(Color.black);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
+		} else if(timeLeft + interval4 >= interval4) {
+			g2.setColor(Color.black);
+			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+		}
+		if(timeLeft == 0) {
+			gameThread = null;
+		}
 	}
 	
 }

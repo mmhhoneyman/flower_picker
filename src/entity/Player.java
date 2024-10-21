@@ -44,8 +44,8 @@ public class Player {
 		this.gp = gp;
 		this.mouseH = mouseH;
 		
-		ladybugStamp = gp.frameCount + Utility.generateRandom(Constants.LADYBUG_SPAWN_MIN, Constants.LADYBUG_SPAWN_MAX);
-		mowerStamp = gp.frameCount + Utility.generateRandom(Constants.MOWER_SPAWN_MIN, Constants.MOWER_SPAWN_MAX);
+		ladybugStamp = gp.frameCount + Constants.PREGAME_TIMER + Utility.generateRandom(Constants.LADYBUG_SPAWN_MIN, Constants.LADYBUG_SPAWN_MAX);
+		mowerStamp = gp.frameCount + Constants.PREGAME_TIMER + Utility.generateRandom(Constants.MOWER_SPAWN_MIN, Constants.MOWER_SPAWN_MAX);
 		
 		pickTileX = -Constants.TILE_SIZE;
 		pickTileY = -Constants.TILE_SIZE;
