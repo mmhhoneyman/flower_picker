@@ -42,6 +42,8 @@ public final class Constants {
 	
 	public static final int PLAYER_COLLISION_TRIMMING = 15; // allows the player and entities to touch a little bit before triggering collision
 	
+	public static final int PROJECTILE_LENGTH = 180;
+	
 	
 	// BEE
 	//------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -157,9 +159,32 @@ public final class Constants {
 	
 	// SCENES
 	//------------------------------------------------------------------------------------------------------------------------------------------------------
-	public static final int TUTORIAL_INT_1 = 200;
-	public static final int TUTORIAL_INT_2 = TUTORIAL_INT_1 + 500;
-	public static final int TUTORIAL_INT_3 = TUTORIAL_INT_2 + 150;
+	public static final int CREDITS_INT = 420; // 7 seconds
+	
+	public static final int OPENING_INT = 1400;
+	
+	public static final int TITLE_INT_1 = 180; // 3 seconds
+	public static final int TITLE_INT_2 = 300; // 5 seconds
+	
+	
+	public static final int BEDROOM_INT_1_1 = 300;
+	public static final int BEDROOM_INT_1_2 = BEDROOM_INT_1_1 + 400;
+	public static final int BEDROOM_INT_1_3 = BEDROOM_INT_1_2 + 400;
+	
+	public static final int BEDROOM_INT_2_1 = BEDROOM_INT_1_3 + 300;
+	public static final int BEDROOM_INT_2_2 = BEDROOM_INT_2_1 + 300;
+	public static final int BEDROOM_INT_2_3 = BEDROOM_INT_2_2 + 300;
+	public static final int BEDROOM_INT_2_4 = BEDROOM_INT_2_3 + 50;
+	
+	public static final int BEDROOM_INT_3_1 = BEDROOM_INT_2_4 + 200;
+	public static final int BEDROOM_INT_3_2 = BEDROOM_INT_3_1 + 200;
+	public static final int BEDROOM_INT_3_3 = BEDROOM_INT_3_2 + 300;
+	public static final int BEDROOM_INT_3_4 = BEDROOM_INT_3_3 + 200;
+	
+	
+	public static final int TUTORIAL_INT_1 = 2;
+	public static final int TUTORIAL_INT_2 = TUTORIAL_INT_1 + 5;
+	public static final int TUTORIAL_INT_3 = TUTORIAL_INT_2 + 15;
 	
 	public static final int COUNTDOWN_INT_1 = 60;
 	public static final int COUNTDOWN_INT_2 = COUNTDOWN_INT_1 + 60;
@@ -174,7 +199,7 @@ public final class Constants {
 	
 	public static final int POSTGAME_TIMER = SUPPER_TIME_INT_4;
 	
-	public static final int TOTAL_GAME_TIME = 36 * 2 + PREGAME_TIMER + POSTGAME_TIMER; // 2 minutes plus pregame and postgame
+	public static final int TOTAL_GAME_TIME = 3600 * 2 + PREGAME_TIMER + POSTGAME_TIMER; // 2 minutes plus pregame and postgame
 	
 }
 

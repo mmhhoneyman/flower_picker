@@ -1,6 +1,7 @@
 package entity;
 
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
@@ -23,9 +24,11 @@ public class Player {
 	public int selX, selY;
 	public int pickTileX, pickTileY;
 	public int collisionX, collisionY; // knockback location when player collides with entity
+	public int projectileX, projectileY;
 	
 	public BufferedImage imageBeforeCollision;
 	public BufferedImage image;
+	public BufferedImage projectile;
 	public String state; // idle, up, down, right, left, picking
 	public boolean collision;
 	
@@ -35,9 +38,34 @@ public class Player {
 	public int collRefStamp; // this allows the player to have hit immunity for a while after getting hit
 	public int ladybugStamp;
 	public int mowerStamp;
+	public int projectileStamp;
 	
 	public int offset;
 
+	public int projectileRotation;
+	
+	public int blueFlowerCountS;
+	public int blueFlowerCountM;
+	public int blueFlowerCountL;
+	
+	public int orangeFlowerCountS;
+	public int orangeFlowerCountM;
+	public int orangeFlowerCountL;
+	
+	public int roseFlowerCountS;
+	public int roseFlowerCountM;
+	public int roseFlowerCountL;
+	
+	public int whiteFlowerCountS;
+	public int whiteFlowerCountM;
+	public int whiteFlowerCountL;
+	
+	public int yellowFlowerCountS;
+	public int yellowFlowerCountM;
+	public int yellowFlowerCountL;
+	
+	public int weedCount;
+	
 	
 	public Player(GamePanel gp, MouseHandler mouseH) {
 		
@@ -73,6 +101,28 @@ public class Player {
 		playerY = Constants.PLAYER_SPAWN_Y;
 		speed = Constants.PLAYER_SPEED;
 		state = "idle";
+		
+		blueFlowerCountS = 1;
+		blueFlowerCountM = 0;
+		blueFlowerCountL = 0;
+		
+		orangeFlowerCountS = 0;
+		orangeFlowerCountM = 0;
+		orangeFlowerCountL = 0;
+		
+		roseFlowerCountS = 0;
+		roseFlowerCountM = 0;
+		roseFlowerCountL = 0;
+		
+		whiteFlowerCountS = 0;
+		whiteFlowerCountM = 0;
+		whiteFlowerCountL = 0;
+		
+		yellowFlowerCountS = 0;
+		yellowFlowerCountM = 0;
+		yellowFlowerCountL = 0;
+		
+		weedCount = 0;
 	}
 	
 	public void update() {
@@ -100,6 +150,15 @@ public class Player {
 	public void draw(Graphics2D g2) {
 		int imageOffset = offset;
 		
+		
+		if(projectileStamp >= gp.frameCount) { // drops flower projectile
+			AffineTransform old = g2.getTransform();  // Save the current transform
+			g2.rotate(Math.toRadians(projectileRotation), projectileX, projectileY);
+			g2.drawImage(projectile, projectileX, projectileY, 9 * 3, 3 * 3, null);
+			g2.setTransform(old);
+		} else {
+			//projectile = null;
+		}
 		if(state == "collision") {
 			BufferedImage temp = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
 			RescaleOp op = new RescaleOp(Constants.IMAGE_HIT_BRIGHTNESS, 0, null);
@@ -234,6 +293,10 @@ public class Player {
 			playerY = (int) Math.round(playerY + Double.parseDouble(temp[2]));
 			if(playerX == collisionX && playerY == collisionY) {
 				state = "up";
+				projectileStamp = gp.frameCount + Constants.PROJECTILE_LENGTH;
+				projectileX = playerX;
+				projectileY = playerY;
+				projectileRotation = Utility.generateRandom(1, 360);
 			}
 			
 		} else {
@@ -260,10 +323,62 @@ public class Player {
 		if(pickStamp + pickInterval == gp.frameCount && (pickTileX == playerX && pickTileY == playerY)) {
 			state = "idle";
 			
+			int tileNum = tileM.tileNums[pickTileY/Constants.TILE_SIZE][pickTileX/Constants.TILE_SIZE];
 			tileM.tileNums[pickTileY/Constants.TILE_SIZE][pickTileX/Constants.TILE_SIZE] = 8;
 			tileM.tile[pickTileY/Constants.TILE_SIZE][pickTileX/Constants.TILE_SIZE].pickable = false;
 			tileM.tile[pickTileY/Constants.TILE_SIZE][pickTileX/Constants.TILE_SIZE].isFlower = false;
 			tileM.tile[pickTileY/Constants.TILE_SIZE][pickTileX/Constants.TILE_SIZE].changeStamp = Utility.generateRandom(Constants.TILE_CHANGE_FROM_PICKED_MIN, Constants.TILE_CHANGE_FROM_PICKED_MAX) + gp.frameCount;
+			
+			switch(tileNum) {
+				case 2:
+					blueFlowerCountS++;
+					break;
+				case 3:
+					blueFlowerCountM++;
+					break;
+				case 4:
+					blueFlowerCountL++;
+					break;
+				case 5:
+					orangeFlowerCountS++;
+					break;
+				case 6:
+					orangeFlowerCountM++;
+					break;
+				case 7:
+					orangeFlowerCountM++;
+					break;
+				case 9:
+					roseFlowerCountS++;
+					break;
+				case 10:
+					roseFlowerCountM++;
+					break;
+				case 11:
+					roseFlowerCountL++;
+					break;
+				case 14:
+					whiteFlowerCountS++;
+					break;
+				case 15:
+					whiteFlowerCountM++;
+					break;
+				case 16:
+					whiteFlowerCountL++;
+					break;
+				case 17:
+					yellowFlowerCountS++;
+					break;
+				case 18:
+					yellowFlowerCountM++;
+					break;
+				case 19:
+					yellowFlowerCountL++;
+					break;
+				case 27:
+					weedCount++;
+					break;
+			}
 			
 			pickTileX = -Constants.TILE_SIZE;
 			pickTileY = -Constants.TILE_SIZE;
@@ -296,8 +411,71 @@ public class Player {
 		if(collision) {
 			collision = false;
 			state = "collision";
+			
+			int[] lostFlower = { blueFlowerCountS, blueFlowerCountM, blueFlowerCountL, orangeFlowerCountS, orangeFlowerCountM, 
+					orangeFlowerCountL, whiteFlowerCountS, whiteFlowerCountM, whiteFlowerCountL, yellowFlowerCountS, 
+					yellowFlowerCountM, yellowFlowerCountL };
+			int rLost = Utility.generateRandom(0, lostFlower.length - 1);
+
+			for(int i = 0; i < lostFlower.length; i++) {
+				if(lostFlower[(rLost + i) % lostFlower.length] > 0) {
+					switch((rLost + i) % lostFlower.length) {
+						case 0:
+							blueFlowerCountS--;
+							projectile = ImageManager.flower_projectile_2;
+							break;
+						case 1:
+							blueFlowerCountM--;
+							projectile = ImageManager.flower_projectile_2;
+							break;
+						case 2:
+							blueFlowerCountL--;
+							projectile = ImageManager.flower_projectile_2;
+							break;
+						case 3:
+							orangeFlowerCountS--;
+							projectile = ImageManager.flower_projectile_1;
+							break;
+						case 4:
+							orangeFlowerCountM--;
+							projectile = ImageManager.flower_projectile_1;
+							break;
+						case 5:
+							orangeFlowerCountL--;
+							projectile = ImageManager.flower_projectile_1;
+							break;
+						case 6:
+							whiteFlowerCountS--;
+							projectile = ImageManager.flower_projectile_3;
+							break;
+						case 7:
+							whiteFlowerCountM--;
+							projectile = ImageManager.flower_projectile_3;
+							break;
+						case 8:
+							whiteFlowerCountL--;
+							projectile = ImageManager.flower_projectile_3;
+							break;
+						case 9:
+							yellowFlowerCountS--;
+							projectile = ImageManager.flower_projectile_4;
+							break;
+						case 10:
+							yellowFlowerCountM--;
+							projectile = ImageManager.flower_projectile_4;
+							break;
+						case 11:
+							yellowFlowerCountL--;
+							projectile = ImageManager.flower_projectile_4;
+							break;
+						}
+					break;
+				} else if(i == lostFlower.length - 1) {
+					projectile = null;
+				}
+			}
 		}
-	}
+	} 
 	
 	// keeps the player within the bounds of the yard while being knocked back
 	public void keepInBounds() {

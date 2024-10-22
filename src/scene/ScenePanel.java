@@ -30,7 +30,6 @@ public class ScenePanel extends JPanel implements Runnable{
 	
 	MouseHandler mouseH;
 	public Thread sceneThread;
-	Random random;
 	
 	boolean playButtonClicked, openingSkipped, bedroomSkipped;
 	int playButtonClicks;
@@ -40,7 +39,6 @@ public class ScenePanel extends JPanel implements Runnable{
 	
 public ScenePanel(String state) {
 		
-		random = new Random(System.currentTimeMillis());
 		mouseH = new MouseHandler();
 		
 		this.state = state;
@@ -139,7 +137,7 @@ public ScenePanel(String state) {
 	
 	public void creditsScene(Graphics2D g2) {
 		
-		int interval = 420; // 7 seconds
+		int interval = Constants.CREDITS_INT; // 7 seconds
 		
 		if(state == nextState) {
 			nextState = "opening";
@@ -172,7 +170,7 @@ public ScenePanel(String state) {
 	
 	public void openingScene(Graphics2D g2) {
 		
-		int interval = 1500;
+		int interval = Constants.OPENING_INT;
 		
 		if(state == nextState) {
 			nextState = "title";
@@ -211,8 +209,8 @@ public ScenePanel(String state) {
 	}
 	
 	public void titleScene(Graphics2D g2) {
-		int interval = 180; // 3 seconds
-		int interval2 = 300; // 5 seconds
+		int interval = Constants.TITLE_INT_1; // 3 seconds
+		int interval2 = Constants.TITLE_INT_2; // 5 seconds
 		
 		g2.drawImage(ImageManager.title_screen_ground, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
 		g2.drawImage(ImageManager.title_image, Constants.SCREEN_WIDTH / 2 - 72 * Constants.SCALE, Constants.SCREEN_HEIGHT / 3 - 38 * Constants.SCALE, 72 * Constants.SCALE * 2, 38 * Constants.SCALE * 2, null);
@@ -298,21 +296,21 @@ public ScenePanel(String state) {
 	
 	public void bedroomScene(Graphics2D g2) {
 		// bedroom scene
-		int interval1_1 = 300;
-		int interval1_2 = interval1_1 + 400;
-		int interval1_3 = interval1_2 + 400;
+		int interval1_1 = Constants.BEDROOM_INT_1_1;
+		int interval1_2 = Constants.BEDROOM_INT_1_2;
+		int interval1_3 = Constants.BEDROOM_INT_1_3;
 		
 		// calendar mid-zoom
-		int interval2_1 = interval1_3 + 300;
-		int interval2_2 = interval2_1 + 300;
-		int interval2_3 = interval2_2 + 300;
-		int interval2_4 = interval2_3 + 50;
+		int interval2_1 = Constants.BEDROOM_INT_2_1;
+		int interval2_2 = Constants.BEDROOM_INT_2_2;
+		int interval2_3 = Constants.BEDROOM_INT_2_3;
+		int interval2_4 = Constants.BEDROOM_INT_2_4;
 		
 		// calendar, boy, fade-out
-		int interval3_1 = interval2_4 + 200;
-		int interval3_2 = interval3_1 + 200;
-		int interval3_3 = interval3_2 + 300;
-		int interval3_4 = interval3_3 + 200;
+		int interval3_1 = Constants.BEDROOM_INT_3_1;
+		int interval3_2 = Constants.BEDROOM_INT_3_2;
+		int interval3_3 = Constants.BEDROOM_INT_3_3;
+		int interval3_4 = Constants.BEDROOM_INT_3_4;
 		
 		if(state == nextState) {
 			nextState = "tutorial";

@@ -128,6 +128,7 @@ public class GamePanel extends JPanel implements Runnable{
 		tileM.draw(g2);
 		player.draw(g2);
 		entityM.draw(g2);
+		skyDarken(g2);
 		
 		switch(state) {
 			case "tutorial":
@@ -206,9 +207,9 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 	
 	public void countdownScene(Graphics2D g2) {
-		int interval1 = 60;
-		int interval2 = interval1 + 60;
-		int interval3 = interval2 + 60;
+		int interval1 = Constants.COUNTDOWN_INT_1;
+		int interval2 = Constants.COUNTDOWN_INT_2;
+		int interval3 = Constants.COUNTDOWN_INT_3;
 		
 		if(state == nextState) {
 			nextState = "game";
@@ -277,6 +278,22 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 		if(timeLeft == 0) {
 			gameThread = null;
+		}
+	}
+	
+	public void skyDarken(Graphics2D g2) {
+		if(frameCount > Constants.PREGAME_TIMER) {
+			float transparency;
+			if(frameCount < Constants.TOTAL_GAME_TIME - Constants.POSTGAME_TIMER) {
+				transparency = (float)(frameCount - Constants.PREGAME_TIMER) / (Constants.TOTAL_GAME_TIME - Constants.PREGAME_TIMER - Constants.POSTGAME_TIMER) / 3.0f;
+			} else {
+				transparency = 0.33333334f;
+			}
+			
+			g2.setColor(new Color(5, 15, 45));
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
 		}
 	}
 	
