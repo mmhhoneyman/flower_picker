@@ -44,6 +44,8 @@ public class Player {
 
 	public int projectileRotation;
 	
+	public int hitCount;
+	
 	public int blueFlowerCountS;
 	public int blueFlowerCountM;
 	public int blueFlowerCountL;
@@ -102,27 +104,29 @@ public class Player {
 		speed = Constants.PLAYER_SPEED;
 		state = "idle";
 		
+		hitCount = 1;
+		
 		blueFlowerCountS = 1;
-		blueFlowerCountM = 0;
-		blueFlowerCountL = 0;
+		blueFlowerCountM = 1;
+		blueFlowerCountL = 1;
 		
-		orangeFlowerCountS = 0;
-		orangeFlowerCountM = 0;
-		orangeFlowerCountL = 0;
+		orangeFlowerCountS = 1;
+		orangeFlowerCountM = 1;
+		orangeFlowerCountL = 1;
 		
-		roseFlowerCountS = 0;
-		roseFlowerCountM = 0;
-		roseFlowerCountL = 0;
+		roseFlowerCountS = 1;
+		roseFlowerCountM = 1;
+		roseFlowerCountL = 1;
 		
-		whiteFlowerCountS = 0;
-		whiteFlowerCountM = 0;
-		whiteFlowerCountL = 0;
+		whiteFlowerCountS = 1;
+		whiteFlowerCountM = 1;
+		whiteFlowerCountL = 1;
 		
-		yellowFlowerCountS = 0;
-		yellowFlowerCountM = 0;
-		yellowFlowerCountL = 0;
+		yellowFlowerCountS = 1;
+		yellowFlowerCountM = 1;
+		yellowFlowerCountL = 1;
 		
-		weedCount = 0;
+		weedCount = 1;
 	}
 	
 	public void update() {
@@ -469,6 +473,7 @@ public class Player {
 							projectile = ImageManager.flower_projectile_4;
 							break;
 						}
+					hitCount++;
 					break;
 				} else if(i == lostFlower.length - 1) {
 					projectile = null;

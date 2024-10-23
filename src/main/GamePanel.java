@@ -9,6 +9,7 @@ import tile.TileManager;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -33,6 +34,9 @@ public class GamePanel extends JPanel implements Runnable{
 	int postStamp;
 	int timeLeft;
 	
+	int startTimeMin; // the ten minute mark on the timer
+	int startTimeHour;
+	
 	public GamePanel() {
 		
 		random = new Random(System.currentTimeMillis());
@@ -54,6 +58,9 @@ public class GamePanel extends JPanel implements Runnable{
 		postStamp = 1;
 		timeLeft = 0;
 		
+		startTimeMin = 0;
+		startTimeHour = 10;
+		
 		state = "tutorial";
 		nextState = state;
 		
@@ -68,7 +75,6 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		gameThread = new Thread(this);
 		gameThread.start();
-		
 	}
 	
 	@Override
@@ -129,6 +135,7 @@ public class GamePanel extends JPanel implements Runnable{
 		player.draw(g2);
 		entityM.draw(g2);
 		skyDarken(g2);
+		displayTimer(g2);
 		
 		switch(state) {
 			case "tutorial":
@@ -295,6 +302,100 @@ public class GamePanel extends JPanel implements Runnable{
 			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
 		}
+	}
+	
+	public void displayTimer(Graphics2D g2) {
+		int numSizeX = 8 * 3;
+		int numSizeY = 10 * 3;
+		int colonSizeX = 3 * 3;
+		int spacing = 1;
+		if(frameCount > Constants.PREGAME_TIMER) {
+			if(frameCount < Constants.TOTAL_GAME_TIME - Constants.POSTGAME_TIMER) {
+				int currTime = frameCount - Constants.PREGAME_TIMER;
+				double gameTime = Constants.TOTAL_GAME_TIME - Constants.PREGAME_TIMER - Constants.POSTGAME_TIMER;
+				boolean[] hourConditions = { currTime < gameTime * 1.0 / 8, currTime < gameTime * 2.0 / 8, currTime < gameTime * 3.0 / 8, currTime < gameTime * 4.0 / 8, 
+						currTime < gameTime * 5.0 / 8, currTime < gameTime * 6.0 / 8, currTime < gameTime * 7.0 / 8, currTime < gameTime * 8.0 / 8 };
+				int hour = 0;
+				
+				for(int i = 0; i < hourConditions.length; i++) {
+					if(hourConditions[i]) {
+						hour = i;
+						break;
+					}
+				}
+				
+				switch(hour) {
+					case 0:
+						g2.drawImage(ImageManager.time_number_1, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 5 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+						g2.drawImage(ImageManager.time_number_0, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 4 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+						break;
+					case 1:
+						g2.drawImage(ImageManager.time_number_1, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 5 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+						g2.drawImage(ImageManager.time_number_1, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 4 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+						break;
+					case 2:
+						g2.drawImage(ImageManager.time_number_1, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 5 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+						g2.drawImage(ImageManager.time_number_2, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 4 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+						break;
+					case 3:
+						g2.drawImage(ImageManager.time_number_1, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 4 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+						break;
+					case 4:
+						g2.drawImage(ImageManager.time_number_2, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 4 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+						break;
+					case 5:
+						g2.drawImage(ImageManager.time_number_3, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 4 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+						break;
+					case 6:
+						g2.drawImage(ImageManager.time_number_4, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 4 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+						break;
+					case 7:
+						g2.drawImage(ImageManager.time_number_5, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 4 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+						break;
+				}
+				
+				boolean[] minuteConditions = { currTime % (gameTime / 8) < gameTime / 8.0 * 1.0 / 6, currTime % (gameTime / 8) < gameTime / 8.0 * 2.0 / 6, currTime % (gameTime / 8) < gameTime / 8.0 * 3.0 / 6, 
+						currTime % (gameTime / 8) < gameTime / 8.0 * 4.0 / 6, currTime % (gameTime / 8) < gameTime / 8.0 * 5.0 / 6, currTime % (gameTime / 8) < gameTime / 8.0 * 6.0 / 6 };
+				int minute = 0;
+				
+				for(int i = 0; i < minuteConditions.length; i++) {
+					if(minuteConditions[i]) {
+						minute = i;
+						break;
+					}
+				}
+				
+				switch(minute) {
+				case 0:
+					g2.drawImage(ImageManager.time_number_0, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 3, numSizeY, numSizeX, numSizeY, null);
+					break;
+				case 1:
+					g2.drawImage(ImageManager.time_number_1, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 3, numSizeY, numSizeX, numSizeY, null);
+					break;
+				case 2:
+					g2.drawImage(ImageManager.time_number_2, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 3, numSizeY, numSizeX, numSizeY, null);
+					break;
+				case 3:
+					g2.drawImage(ImageManager.time_number_3, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 3, numSizeY, numSizeX, numSizeY, null);
+					break;
+				case 4:
+					g2.drawImage(ImageManager.time_number_4, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 3, numSizeY, numSizeX, numSizeY, null);
+					break;
+				case 5:
+					g2.drawImage(ImageManager.time_number_5, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 3, numSizeY, numSizeX, numSizeY, null);
+					break;
+			}
+				
+				g2.drawImage(ImageManager.time_number_colon, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 4 + colonSizeX, numSizeY, numSizeX, numSizeY, null);
+				g2.drawImage(ImageManager.time_number_0, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 2, numSizeY, numSizeX, numSizeY, null);
+			} else {
+				g2.drawImage(ImageManager.time_number_6, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 4 - colonSizeX, numSizeY, numSizeX, numSizeY, null);
+				g2.drawImage(ImageManager.time_number_colon, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 4 + colonSizeX, numSizeY, numSizeX, numSizeY, null);
+				g2.drawImage(ImageManager.time_number_0, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 3, numSizeY, numSizeX, numSizeY, null);
+				g2.drawImage(ImageManager.time_number_0, Constants.SCREEN_WIDTH - (numSizeX + spacing) * 2, numSizeY, numSizeX, numSizeY, null);
+			}
+		}
+		
 	}
 	
 }

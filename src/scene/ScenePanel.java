@@ -2,6 +2,7 @@ package scene;
 
 import javax.swing.JPanel;
 
+import entity.Player;
 import main.Constants;
 import main.MouseHandler;
 import main.Utility;
@@ -36,16 +37,24 @@ public class ScenePanel extends JPanel implements Runnable{
 	int sunClicks;
 	boolean eggActivate;
 	
+	int score;
 	
-public ScenePanel(String state) {
+	public Player player;
+	
+	
+public ScenePanel(String state, Player player) {
 		
 		mouseH = new MouseHandler();
+		
+		this.player = player;
 		
 		this.state = state;
 		this.nextState = state;
 		
 		frameCount = 0;
 		postStamp = 1;
+		
+		score = 0;
 		
 		playButtonClicked = false;
 		openingSkipped = false;
@@ -129,6 +138,12 @@ public ScenePanel(String state) {
 				break;
 			case "bedroom":
 				bedroomScene(g2);
+				break;
+			case "eating":
+				eatingScene(g2);
+				break;
+			case "giving":
+				givingScene(g2);
 				break;
 		}
 		
@@ -416,5 +431,141 @@ public ScenePanel(String state) {
 			state = "tutorial";
 			sceneThread = null;
 		}
+	}
+	
+	public void eatingScene(Graphics2D g2) {
+		int interval1 = Constants.EATING_INT_1;
+		int interval2 = Constants.EATING_INT_2;
+		int interval3 = Constants.EATING_INT_3;
+		int interval4 = Constants.EATING_INT_4;
+		int interval5 = Constants.EATING_INT_5;
+		int pointsInt = 60;
+		
+		int numSizeX = 8 * 3;
+		int numSizeY = 10 * 3;
+		int textSizeX = 60 * 5;
+		int textSizeY = 7 * 5;
+		int textSpacing = 35;
+		int textShiftY = 2;
+		int spacingX = 1;
+		int spacingY = 10;
+		
+		if(state == nextState) {
+			nextState = "giving";
+			postStamp = frameCount + interval5;
+		}
+		if(frameCount % 30 <= 10 * 1) {
+			g2.drawImage(ImageManager.eating_1, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+		} else if(frameCount % 30 <= 10 * 2) {
+			g2.drawImage(ImageManager.eating_2, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+		} else if(frameCount % 30 <= 10 * 3) {
+			g2.drawImage(ImageManager.eating_3, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+		}
+		
+		if(timeLeft + interval1 >= interval5) {
+			float transparency = (float)(timeLeft - (interval5 - interval1)) / (float)interval1;
+
+			g2.setColor(Color.black);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
+		} else if(timeLeft + interval4 >= interval5) {
+			if(timeLeft < interval5 - interval1) {
+				BufferedImage[] images = pickNumImage(player.blueFlowerCountS + player.orangeFlowerCountS + 
+						player.whiteFlowerCountS + player.yellowFlowerCountS);
+				g2.drawImage(ImageManager.points_smallF, (Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2 - textSpacing - 20, ((numSizeY + spacingY) * 1) + textShiftY, textSizeX, textSizeY, null);
+				g2.drawImage(images[0], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - 20, (numSizeY + spacingY) * 1, numSizeX, numSizeY, null);
+				g2.drawImage(images[1], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing + spacingX + numSizeX - 20, (numSizeY + spacingY) * 1, numSizeX, numSizeY, null);
+			}
+			if(timeLeft < interval5 - interval1 - pointsInt * 1) {
+				BufferedImage[] images = pickNumImage(player.blueFlowerCountM + player.orangeFlowerCountM + 
+						player.whiteFlowerCountM + player.yellowFlowerCountM);
+				g2.drawImage(ImageManager.points_mediumF, (Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2 - textSpacing - 20, ((numSizeY + spacingY) * 2) + textShiftY, textSizeX, textSizeY, null);
+				g2.drawImage(images[0], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - 20, (numSizeY + spacingY) * 2, numSizeX, numSizeY, null);
+				g2.drawImage(images[1], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing + spacingX + numSizeX - 20, (numSizeY + spacingY) * 2, numSizeX, numSizeY, null);
+			}
+			if(timeLeft < interval5 - interval1 - pointsInt * 2) {
+				BufferedImage[] images = pickNumImage(player.blueFlowerCountL + player.orangeFlowerCountL + 
+						player.whiteFlowerCountL + player.yellowFlowerCountL);
+				g2.drawImage(ImageManager.points_largeF, (Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2 - textSpacing - 20, ((numSizeY + spacingY) * 3) + textShiftY, textSizeX, textSizeY, null);
+				g2.drawImage(images[0], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - 20, (numSizeY + spacingY) * 3, numSizeX, numSizeY, null);
+				g2.drawImage(images[1], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing + spacingX + numSizeX - 20, (numSizeY + spacingY) * 3, numSizeX, numSizeY, null);
+			}
+			if(timeLeft < interval5 - interval1 - pointsInt * 3) {
+				BufferedImage[] images = pickNumImage(player.roseFlowerCountS);
+				g2.drawImage(ImageManager.points_smallR, (Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2 - textSpacing - 20, ((numSizeY + spacingY) * 4) + textShiftY, textSizeX, textSizeY, null);
+				g2.drawImage(images[0], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - 20, (numSizeY + spacingY) * 4, numSizeX, numSizeY, null);
+				g2.drawImage(images[1], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing + spacingX + numSizeX - 20, (numSizeY + spacingY) * 4, numSizeX, numSizeY, null);
+			}
+			if(timeLeft < interval5 - interval1 - pointsInt * 4) {
+				BufferedImage[] images = pickNumImage(player.roseFlowerCountM);
+				g2.drawImage(ImageManager.points_mediumR, (Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2 - textSpacing - 20, ((numSizeY + spacingY) * 5) + textShiftY, textSizeX, textSizeY, null);
+				g2.drawImage(images[0], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - 20, (numSizeY + spacingY) * 5, numSizeX, numSizeY, null);
+				g2.drawImage(images[1], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing + spacingX + numSizeX - 20, (numSizeY + spacingY) * 5, numSizeX, numSizeY, null);
+			}
+			if(timeLeft < interval5 - interval1 - pointsInt * 5) {
+				BufferedImage[] images = pickNumImage(player.roseFlowerCountL);
+				g2.drawImage(ImageManager.points_largeR, (Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2 - textSpacing - 20, ((numSizeY + spacingY) * 6) + textShiftY, textSizeX, textSizeY, null);
+				g2.drawImage(images[0], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - 20, (numSizeY + spacingY) * 6, numSizeX, numSizeY, null);
+				g2.drawImage(images[1], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing + spacingX + numSizeX - 20, (numSizeY + spacingY) * 6, numSizeX, numSizeY, null);
+			}
+			if(timeLeft < interval5 - interval1 - pointsInt * 6) {
+				BufferedImage[] images = pickNumImage(player.weedCount);
+				g2.drawImage(ImageManager.points_weeds, (Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2 - textSpacing - 20, ((numSizeY + spacingY) * 7) + textShiftY, textSizeX, textSizeY, null);
+				g2.drawImage(images[0], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - 20, (numSizeY + spacingY) * 7, numSizeX, numSizeY, null);
+				g2.drawImage(images[1], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing + spacingX + numSizeX - 20, (numSizeY + spacingY) * 7, numSizeX, numSizeY, null);
+			}
+			if(timeLeft < interval5 - interval1 - pointsInt * 7) {
+				score = ((player.blueFlowerCountS + player.orangeFlowerCountS + player.whiteFlowerCountS + player.yellowFlowerCountS) * 10) 
+						+ ((player.blueFlowerCountM + player.orangeFlowerCountM + player.whiteFlowerCountM + player.yellowFlowerCountM) * 20) 
+						+ ((player.blueFlowerCountL + player.orangeFlowerCountL + player.whiteFlowerCountL + player.yellowFlowerCountL) * 30) 
+						+ (player.roseFlowerCountS * 30) + (player.roseFlowerCountM * 60) + (player.roseFlowerCountL * 90) 
+						- (player.weedCount * 20);
+				if(player.hitCount == 0) {
+					score = score * 2;
+				}
+				BufferedImage[] images1 = pickNumImage(score % 1000 / 10);
+				BufferedImage[] images2 = pickNumImage(score / 100);
+				g2.drawImage(ImageManager.points_score, (Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2 - textSpacing - 20, ((numSizeY + spacingY) * 9) + textShiftY, textSizeX, textSizeY, null);
+				g2.drawImage(images2[0], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - spacingX*2 - numSizeX*2 - 20, (numSizeY + spacingY) * 9, numSizeX, numSizeY, null);
+				g2.drawImage(images1[0], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - spacingX - numSizeX - 20, (numSizeY + spacingY) * 9, numSizeX, numSizeY, null);
+				g2.drawImage(images1[1], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - 20, (numSizeY + spacingY) * 9, numSizeX, numSizeY, null);
+				g2.drawImage(ImageManager.time_number_0, ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing + spacingX + numSizeX - 20, (numSizeY + spacingY) * 9, numSizeX, numSizeY, null);
+			}
+			if(timeLeft < interval5 - interval3) {
+				float transparency = (float)((interval5 - interval3 - timeLeft)) / (float)(interval4 - interval3);
+
+				g2.setColor(Color.black);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+				g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
+			}
+		} else if(timeLeft + interval5 >= interval5) {
+			g2.setColor(Color.black);
+			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+		}
+		if(timeLeft == 0) {
+			state = "giving";
+		}
+	}
+	
+	public BufferedImage[] pickNumImage(int numFlowers) {
+		int numOnes = numFlowers % 10;
+		int numTens = numFlowers / 10;
+		
+		BufferedImage[] numImages = { ImageManager.time_number_0, ImageManager.time_number_1, ImageManager.time_number_2, ImageManager.time_number_3, 
+				ImageManager.time_number_4, ImageManager.time_number_5, ImageManager.time_number_6, ImageManager.time_number_7, 
+				ImageManager.time_number_8, ImageManager.time_number_9 };
+		
+		BufferedImage[] output = { numImages[numTens], numImages[numOnes] };
+		if(numTens == 0) {
+			output[0] = null;
+		}
+
+		return output;
+	}
+	
+	public void givingScene(Graphics2D g2) {
+		
 	}
 }
