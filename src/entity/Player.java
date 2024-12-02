@@ -104,7 +104,7 @@ public class Player {
 		speed = Constants.PLAYER_SPEED;
 		state = "idle";
 		
-		hitCount = 1;
+		hitCount = 0;
 		
 		blueFlowerCountS = 1;
 		blueFlowerCountM = 1;
@@ -321,7 +321,8 @@ public class Player {
 	}
 	
 	public void checkPicking() {
-		if(((pickTileX == playerX && pickTileY == playerY) && tileM.tile[tileM.rowSelTile][tileM.colSelTile].pickable) || ((selX == playerX && selY == playerY) && tileM.tile[tileM.rowSelTile][tileM.colSelTile].pickable)) {
+		if(((pickTileX == playerX && pickTileY == playerY) && tileM.tile[tileM.rowSelTile][tileM.colSelTile].pickable) || ((selX == playerX && selY == playerY) && tileM.tile[tileM.rowSelTile][tileM.colSelTile].pickable)
+				&& state != "collision" && collRefStamp < gp.frameCount) {
 			state = "picking";
 		}
 		if(pickStamp + pickInterval == gp.frameCount && (pickTileX == playerX && pickTileY == playerY)) {

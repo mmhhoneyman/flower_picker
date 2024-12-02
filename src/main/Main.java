@@ -21,18 +21,18 @@ public class Main {
 			GamePanel gamePanel = new GamePanel();
 			ScenePanel scenePanel = new ScenePanel("eating", gamePanel.player);
 			
-			window.add(scenePanel);
-			window.pack();
-			scenePanel.startGameThread();
-			
-			try {
-				scenePanel.sceneThread.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-            window.remove(scenePanel);
+//			window.add(scenePanel);
+//			window.pack();
+//			scenePanel.startGameThread();
+//			
+//			try {
+//				scenePanel.sceneThread.join();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			
+//            window.remove(scenePanel);
             window.add(gamePanel);
             	window.pack();
             window.revalidate();

@@ -199,7 +199,7 @@ public final class Constants {
 	
 	public static final int POSTGAME_TIMER = SUPPER_TIME_INT_4;
 	
-	public static final int TOTAL_GAME_TIME = 36 * 2 + PREGAME_TIMER + POSTGAME_TIMER; // 2 minutes plus pregame and postgame
+	public static final int TOTAL_GAME_TIME = 360 * 2 + PREGAME_TIMER + POSTGAME_TIMER; // 2 minutes plus pregame and postgame
 	
 	public static final int EATING_INT_1 = 200;
 	public static final int EATING_INT_2 = EATING_INT_1 + 600;
