@@ -3,6 +3,7 @@ package scene;
 import javax.swing.JPanel;
 
 import entity.Player;
+import main.Audio;
 import main.Constants;
 import main.MouseHandler;
 import main.Utility;
@@ -41,6 +42,13 @@ public class ScenePanel extends JPanel implements Runnable{
 	
 	public Player player;
 	
+	Audio tick_se = new Audio("res/se/Tick_SE.wav", false);
+	Audio tick_sp_se = new Audio("res/se/Tick_Sp_SE.wav", false);
+	Audio celestial_cascade = new Audio("res/music/Celestial_Cascade.wav", false);
+	Audio vine_boom_se = new Audio("res/se/Vine_Boom_SE.wav", false);
+	Audio play_se = new Audio("res/se/Play_SE.wav", false);
+	Audio morning_mood = new Audio("res/music/Morning_Mood.wav", false);
+	Audio interruption_se = new Audio("res/se/Interruption_SE.wav", false);
 	
 public ScenePanel(String state, Player player) {
 		
@@ -161,8 +169,14 @@ public ScenePanel(String state, Player player) {
 			if(interval - timeLeft < interval / 5) {
 				g2.setColor(Color.black);
 				g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+				if(interval - timeLeft + 8 == interval / 5) {
+					tick_se.play();
+				}
 			} else if(interval - timeLeft < 2 * interval / 5) {
 				g2.drawImage(ImageManager.credit_image_1, 20, 20, Constants.SCREEN_WIDTH - 40, Constants.SCREEN_HEIGHT - 40, null);
+				if(interval - timeLeft + 6 == 2 * interval / 5) {
+					tick_sp_se.play();
+				}
 			} else if(interval - timeLeft < 3 * interval / 5) {
 				g2.drawImage(ImageManager.credit_image_2, 20, 20, Constants.SCREEN_WIDTH - 40, Constants.SCREEN_HEIGHT - 40, null);
 			} else if(timeLeft == 0) {
@@ -190,11 +204,16 @@ public ScenePanel(String state, Player player) {
 		if(state == nextState) {
 			nextState = "title";
 			postStamp = frameCount + interval;
+			celestial_cascade.setVolume(0.0f);
+			celestial_cascade.play();
 		} else {
 			int offset = (int)(((double)(interval - timeLeft) / (interval * 5.0 / 7.0)) * Constants.SCREEN_HEIGHT);
 			if(interval - timeLeft < 3 * interval / 7) {
 				g2.drawImage(ImageManager.title_screen_sky, 0, 0 - offset, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
 				g2.drawImage(ImageManager.title_screen_ground, 0, 0 + Constants.SCREEN_HEIGHT - offset, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+				
+				float volume = 0.5f + 0.2f * (float)(interval - timeLeft) / (float)(3 * interval / 7);
+				celestial_cascade.setVolume(volume);
 				
 				float transparency = ((float)(timeLeft) - (4 * interval / 7)) / (float)(3 * interval / 7);
 				g2.setColor(Color.black);
@@ -269,6 +288,7 @@ public ScenePanel(String state, Player player) {
 			sunClicks++;
 			eggActivate = true;
 			postStamp = frameCount + interval;
+			vine_boom_se.play();
 		}
 		
 		if(eggActivate == true) {
@@ -290,9 +310,18 @@ public ScenePanel(String state, Player player) {
 		if(playButtonClicked && playButtonClicks == 1) {
 			postStamp = frameCount + interval2;
 			playButtonClicks++;
+			play_se.setVolume(0.75f);
+			play_se.play();
 		}
 		
 		if(playButtonClicked) {
+			eggActivate = false;
+			float volume = (float)(timeLeft) / (float)(interval2);
+			if(volume > 0.7f || volume < 0f) {
+				volume = 0.7f;
+			}
+			celestial_cascade.setVolume(volume);
+			
 				float transparency = (float)(interval2 - timeLeft) / (float)(interval2);
 				if(transparency > 1.0f || transparency < 0f) {
 					transparency = 0f;
@@ -305,6 +334,7 @@ public ScenePanel(String state, Player player) {
 			
 			if(timeLeft == 0) {
 				state = "bedroom";
+				celestial_cascade.close();
 			}
 		}
 	}
@@ -330,6 +360,8 @@ public ScenePanel(String state, Player player) {
 		if(state == nextState) {
 			nextState = "tutorial";
 			postStamp = frameCount + interval3_4;
+			morning_mood.setVolume(0.0f);
+			morning_mood.play();
 		}
 		
 		if(timeLeft + interval1_1 >= interval3_4) {
@@ -346,6 +378,9 @@ public ScenePanel(String state, Player player) {
 			} else if(frameCount % 240 <= 40 * 6) {
 				g2.drawImage(ImageManager.bedroom_6, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
 			}
+			
+			float volume = 0.6f + 0.2f * ((float)(interval3_4 - timeLeft)) / (float)(interval1_1);
+			morning_mood.setVolume(volume);
 			
 			float transparency = ((float)(timeLeft) - (interval3_4 - interval1_1)) / (float)(interval1_1);
 			g2.setColor(Color.black);
@@ -412,6 +447,9 @@ public ScenePanel(String state, Player player) {
 		}
 		else if(timeLeft + interval3_3 >= interval3_4) {
 			if(timeLeft + interval3_1 >= interval3_4) {
+				interruption_se.setVolume(0.75f);
+				interruption_se.play();
+				morning_mood.close();
 				g2.drawImage(ImageManager.calendar_2, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
 			} else if(timeLeft + interval3_2 >= interval3_4) {
 				g2.drawImage(ImageManager.shock, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
@@ -470,6 +508,17 @@ public ScenePanel(String state, Player player) {
 			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
 		} else if(timeLeft + interval4 >= interval5) {
+			if(		timeLeft + 1 == interval5 - interval1 ||
+					timeLeft == interval5 - interval1 - pointsInt * 1 || 
+					timeLeft == interval5 - interval1 - pointsInt * 2 || 
+					timeLeft == interval5 - interval1 - pointsInt * 3 || 
+					timeLeft == interval5 - interval1 - pointsInt * 4 || 
+					timeLeft == interval5 - interval1 - pointsInt * 5 || 
+					timeLeft == interval5 - interval1 - pointsInt * 6) {
+				tick_se.play();
+			} else if(timeLeft == interval5 - interval1 - pointsInt * 7) {
+				tick_sp_se.play();
+			}
 			if(timeLeft < interval5 - interval1) {
 				BufferedImage[] images = pickNumImage(player.blueFlowerCountS + player.orangeFlowerCountS + 
 						player.whiteFlowerCountS + player.yellowFlowerCountS);
