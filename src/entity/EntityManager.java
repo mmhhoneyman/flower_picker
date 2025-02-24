@@ -3,6 +3,7 @@ package entity;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
+import main.Audio;
 import main.Constants;
 import main.GamePanel;
 import main.MouseHandler;
@@ -20,6 +21,12 @@ public class EntityManager {
 	public boolean entityClicked;
 	
 	public ArrayList<Entity> entities;
+	
+	Audio bee_se = new Audio("res/se/Bee_SE.wav", false);
+	Audio butterfly_se = new Audio("res/se/Butterfly_SE.wav", false);
+	Audio flower_se = new Audio("res/se/Flower_SE.wav", false);
+	Audio hit_se = new Audio("res/se/Hit_SE.wav", false);
+	Audio ladybug_se = new Audio("res/se/Ladybug_SE.wav", false);
 	
 	public EntityManager (GamePanel gp, MouseHandler mouseH) {
 		
@@ -95,6 +102,7 @@ public class EntityManager {
 						if(entities.get(i).state != "picking") {
 							entityClicked = true;
 							entities.get(i).swat = true;
+							playSwatSound(entities.get(i));
 						}
 					}	
 				}
@@ -106,7 +114,26 @@ public class EntityManager {
 		
 	}
 	
-	// returns index of entity player is coliding with, if none then returns -1
+	public void playSwatSound(Entity e) {
+		String temp = e.getClass().getSimpleName();
+		
+		switch(temp) {
+			case "Bee":
+				bee_se.setVolume(0.75f);
+				bee_se.play();
+				break;
+			case "Butterfly":
+				butterfly_se.setVolume(0.75f);
+				butterfly_se.play();
+				break;
+			case "Ladybug":
+				ladybug_se.setVolume(0.75f);
+				ladybug_se.play();
+				break;
+		}
+	}
+	
+	// returns index of entity player is colliding with, if none then returns -1
 	public int checkPlayerCollision() {
 		int playerMinX = player.playerX;
 		int playerMaxX = player.playerX + Constants.TILE_SIZE;
@@ -130,6 +157,8 @@ public class EntityManager {
 			   (entityMinX >= playerMinX && entityMinX <= playerMaxX && entityMaxY >= playerMinY && entityMaxY <= playerMaxY) || // checks if bottom left corner of entity is inside player location
 			   (entityMaxX >= playerMinX && entityMaxX <= playerMaxX && entityMinY >= playerMinY && entityMinY <= playerMaxY) || // checks if top right corner of entity is inside player location
 			   (entityMaxX >= playerMinX && entityMaxX <= playerMaxX && entityMaxY >= playerMinY && entityMaxY <= playerMaxY)) { // checks if bottom right corner of entity is inside player location
+				hit_se.setVolume(0.75f);
+				hit_se.play();
 				return i;
 			}
 		}

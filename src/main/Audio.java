@@ -24,13 +24,14 @@ public class Audio {
             
             clip.setFramePosition(0);
             clip.addLineListener(event -> {
-                if (event.getType() == LineEvent.Type.STOP && loop) {
+                if (event.getType() == LineEvent.Type.STOP) {
+                    clip.stop();
+                    clip.flush();
                     clip.setFramePosition(0);
-                    clip.start();
-                } else if (event.getType() == LineEvent.Type.STOP && loop == false) {
-                	//close();
-                	clip.setFramePosition(0);
-                	System.out.println("foo");
+
+                    if (loop) {
+                        clip.start();
+                    }
                 }
             });
             
@@ -40,9 +41,12 @@ public class Audio {
     }
 
     public void play() {
-        if (clip != null) {
-            clip.start();
+        if (clip.isRunning()) {
+            clip.stop();
+            clip.flush();
+            clip.setFramePosition(0);
         }
+        clip.start();
     }
 
     public void stop() {

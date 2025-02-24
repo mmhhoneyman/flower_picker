@@ -5,6 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
+import main.Audio;
 import main.Constants;
 import main.GamePanel;
 import main.ImageManager;
@@ -67,6 +68,8 @@ public class Player {
 	public int yellowFlowerCountL;
 	
 	public int weedCount;
+	
+	Audio flower_se = new Audio("res/se/Flower_SE.wav", false);
 	
 	
 	public Player(GamePanel gp, MouseHandler mouseH) {
@@ -327,6 +330,9 @@ public class Player {
 		}
 		if(pickStamp + pickInterval == gp.frameCount && (pickTileX == playerX && pickTileY == playerY)) {
 			state = "idle";
+			
+			flower_se.setVolume(0.75f);
+			flower_se.play();
 			
 			int tileNum = tileM.tileNums[pickTileY/Constants.TILE_SIZE][pickTileX/Constants.TILE_SIZE];
 			tileM.tileNums[pickTileY/Constants.TILE_SIZE][pickTileX/Constants.TILE_SIZE] = 8;

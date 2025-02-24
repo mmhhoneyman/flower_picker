@@ -126,7 +126,6 @@ public ScenePanel(String state, Player player) {
 		
 		timeLeft = postStamp - frameCount;;
 		//System.out.println(timeLeft);
-		
 	}
 		
 	public void paintComponent(Graphics g) {
@@ -447,9 +446,11 @@ public ScenePanel(String state, Player player) {
 		}
 		else if(timeLeft + interval3_3 >= interval3_4) {
 			if(timeLeft + interval3_1 >= interval3_4) {
-				interruption_se.setVolume(0.75f);
-				interruption_se.play();
-				morning_mood.close();
+				if(timeLeft + interval2_4 + 1 == interval3_4) {
+					interruption_se.setVolume(0.75f);
+					interruption_se.play();
+					morning_mood.stop();
+				}
 				g2.drawImage(ImageManager.calendar_2, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
 			} else if(timeLeft + interval3_2 >= interval3_4) {
 				g2.drawImage(ImageManager.shock, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
@@ -515,8 +516,10 @@ public ScenePanel(String state, Player player) {
 					timeLeft == interval5 - interval1 - pointsInt * 4 || 
 					timeLeft == interval5 - interval1 - pointsInt * 5 || 
 					timeLeft == interval5 - interval1 - pointsInt * 6) {
+				tick_se.setVolume(0.75f);
 				tick_se.play();
 			} else if(timeLeft == interval5 - interval1 - pointsInt * 7) {
+				tick_sp_se.setVolume(0.75f);
 				tick_sp_se.play();
 			}
 			if(timeLeft < interval5 - interval1) {
@@ -615,6 +618,11 @@ public ScenePanel(String state, Player player) {
 	}
 	
 	public void givingScene(Graphics2D g2) {
+		if(state == nextState) {
+			nextState = "credits";
+		}
 		
+		g2.drawImage(ImageManager.kitchen, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, this);
+		g2.drawImage(ImageManager.kitchen1.getImage(), 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, this);
 	}
 }

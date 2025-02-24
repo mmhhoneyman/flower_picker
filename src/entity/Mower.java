@@ -3,6 +3,7 @@ package entity;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import main.Audio;
 import main.Constants;
 import main.GamePanel;
 import main.ImageManager;
@@ -18,6 +19,8 @@ public class Mower extends Entity{
 	
 	public BufferedImage image;
 	
+	Audio lawn_mower_se = new Audio("res/se/Lawn_Mower_SE.wav", true);
+	
 	public Mower(GamePanel gp, MouseHandler mouseH, Player player, TileManager tileM, int destX, int destY) {
 		
 		super(gp, mouseH, player, tileM, destX, destY);
@@ -31,6 +34,8 @@ public class Mower extends Entity{
 		
 		setSpeed();
 		
+		lawn_mower_se.setVolume(0.65f);
+		lawn_mower_se.play();
 	}
 	
 	@Override
@@ -215,6 +220,7 @@ public class Mower extends Entity{
 		if(entityX == destX && entityY == destY) {
 			if(destX == endDestX || destY == endDestY) {
 				state = "despawn";
+				lawn_mower_se.close();
 			} else {
 				if(turns > 1) {
 					String testState = "";

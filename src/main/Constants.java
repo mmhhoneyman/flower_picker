@@ -182,13 +182,13 @@ public final class Constants {
 	public static final int BEDROOM_INT_3_4 = BEDROOM_INT_3_3 + 200;
 	
 	
-	public static final int TUTORIAL_INT_1 = 2;
-	public static final int TUTORIAL_INT_2 = TUTORIAL_INT_1 + 5;
-	public static final int TUTORIAL_INT_3 = TUTORIAL_INT_2 + 15;
+	public static final int TUTORIAL_INT_1 = 290;
+	public static final int TUTORIAL_INT_2 = TUTORIAL_INT_1 + 50;
+	public static final int TUTORIAL_INT_3 = TUTORIAL_INT_2 + 150;
 	
-	public static final int COUNTDOWN_INT_1 = 60;
-	public static final int COUNTDOWN_INT_2 = COUNTDOWN_INT_1 + 60;
-	public static final int COUNTDOWN_INT_3 = COUNTDOWN_INT_2 + 60;
+	public static final int COUNTDOWN_INT_1 = 40;
+	public static final int COUNTDOWN_INT_2 = COUNTDOWN_INT_1 + 45;
+	public static final int COUNTDOWN_INT_3 = COUNTDOWN_INT_2 + 45;
 	
 	public static final int PREGAME_TIMER = TUTORIAL_INT_3 + COUNTDOWN_INT_3;
 	
@@ -199,7 +199,7 @@ public final class Constants {
 	
 	public static final int POSTGAME_TIMER = SUPPER_TIME_INT_4;
 	
-	public static final int TOTAL_GAME_TIME = 360 * 2 + PREGAME_TIMER + POSTGAME_TIMER; // 2 minutes plus pregame and postgame
+	public static final int TOTAL_GAME_TIME = 3600 * 2 + PREGAME_TIMER + POSTGAME_TIMER; // 2 minutes plus pregame and postgame
 	
 	public static final int EATING_INT_1 = 200;
 	public static final int EATING_INT_2 = EATING_INT_1 + 600;

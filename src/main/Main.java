@@ -19,7 +19,7 @@ public class Main {
 		while(1==1) { // im sure this won't cause problems
 			
 			GamePanel gamePanel = new GamePanel();
-			ScenePanel scenePanel = new ScenePanel("eating", gamePanel.player);
+			ScenePanel scenePanel = new ScenePanel("giving", gamePanel.player);
 			
 			window.add(scenePanel);
 			window.pack();

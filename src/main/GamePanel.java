@@ -37,6 +37,10 @@ public class GamePanel extends JPanel implements Runnable{
 	int startTimeMin; // the ten minute mark on the timer
 	int startTimeHour;
 	
+	Audio supper_time_se = new Audio("res/se/Supper_Time_SE.wav", false);
+	
+	Audio flower_picker = new Audio("res/music/Flower_Picker.wav", false);
+	
 	public GamePanel() {
 		
 		random = new Random(System.currentTimeMillis());
@@ -165,6 +169,8 @@ public class GamePanel extends JPanel implements Runnable{
 		if(state == nextState) {
 			nextState = "countdown";
 			postStamp = frameCount + interval3;
+			flower_picker.setVolume(0.75f);
+			flower_picker.play();
 		}
 		if(timeLeft + interval2 >= interval3) {
 			int offset = interval3 - timeLeft;
@@ -273,6 +279,12 @@ public class GamePanel extends JPanel implements Runnable{
 			g2.drawImage(ImageManager.callout_image, Constants.SCREEN_WIDTH / 4, Constants.SCREEN_HEIGHT - 48 * 4, 48 * 4, 48 * 4, null);
 		} else if(timeLeft + interval3 >= interval4) {
 			g2.drawImage(ImageManager.callout_image, Constants.SCREEN_WIDTH / 4, Constants.SCREEN_HEIGHT - 48 * 4, 48 * 4, 48 * 4, null);
+			
+			float volume = (float)(timeLeft - (interval4 - interval3)) / (float)(interval3 - interval2);
+			if(volume > 0.7f || volume < 0f) {
+				volume = 0.7f;
+			}
+			flower_picker.setVolume(volume);
 			
 			float transparency = (float)(interval4 - interval2 - timeLeft) / (float)(interval3 - interval2);
 			g2.setColor(Color.black);
