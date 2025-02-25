@@ -1,5 +1,7 @@
 package scene;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import entity.Player;
@@ -12,13 +14,25 @@ import main.ImageManager;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 
 
 public class ScenePanel extends JPanel implements Runnable{
+
+	ImageIcon kitchen1 = new ImageIcon("res/screens/kitchen1.gif");
+	ImageIcon kitchen2 = new ImageIcon("res/screens/kitchen2.gif");
+	ImageIcon kitchen3 = new ImageIcon("res/screens/kitchen3.gif");
+	
+	Image kitchen1t = kitchen1.getImage();
+	Image kitchen2t = kitchen2.getImage();
+	Image kitchen3t = kitchen3.getImage();
+
 
 	private static final long serialVersionUID = 1L;
 	
@@ -33,10 +47,11 @@ public class ScenePanel extends JPanel implements Runnable{
 	MouseHandler mouseH;
 	public Thread sceneThread;
 	
-	boolean playButtonClicked, openingSkipped, bedroomSkipped;
+	boolean playButtonClicked;
 	int playButtonClicks;
 	int sunClicks;
 	boolean eggActivate;
+	int skipButtonClicks;
 	
 	int score;
 	
@@ -49,6 +64,7 @@ public class ScenePanel extends JPanel implements Runnable{
 	Audio play_se = new Audio("res/se/Play_SE.wav", false);
 	Audio morning_mood = new Audio("res/music/Morning_Mood.wav", false);
 	Audio interruption_se = new Audio("res/se/Interruption_SE.wav", false);
+	Audio giver = new Audio("res/music/Giver.wav", false);
 	
 public ScenePanel(String state, Player player) {
 		
@@ -62,13 +78,12 @@ public ScenePanel(String state, Player player) {
 		frameCount = 0;
 		postStamp = 1;
 		
-		score = 0;
+		score = -1;
 		
 		playButtonClicked = false;
-		openingSkipped = false;
-		bedroomSkipped = false;
 		playButtonClicks = 0;
 		sunClicks = 0;
+		skipButtonClicks = 0;
 		
 		this.setPreferredSize(new Dimension(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
 		this.setBackground(Color.black);
@@ -125,7 +140,6 @@ public ScenePanel(String state, Player player) {
 	public void update() {
 		
 		timeLeft = postStamp - frameCount;;
-		//System.out.println(timeLeft);
 	}
 		
 	public void paintComponent(Graphics g) {
@@ -150,7 +164,12 @@ public ScenePanel(String state, Player player) {
 				eatingScene(g2);
 				break;
 			case "giving":
+			try {
 				givingScene(g2);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 				break;
 		}
 		
@@ -169,11 +188,13 @@ public ScenePanel(String state, Player player) {
 				g2.setColor(Color.black);
 				g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 				if(interval - timeLeft + 8 == interval / 5) {
+					tick_se.setVolume(0.75f);
 					tick_se.play();
 				}
 			} else if(interval - timeLeft < 2 * interval / 5) {
 				g2.drawImage(ImageManager.credit_image_1, 20, 20, Constants.SCREEN_WIDTH - 40, Constants.SCREEN_HEIGHT - 40, null);
 				if(interval - timeLeft + 6 == 2 * interval / 5) {
+					tick_sp_se.setVolume(0.75f);
 					tick_sp_se.play();
 				}
 			} else if(interval - timeLeft < 3 * interval / 5) {
@@ -202,10 +223,22 @@ public ScenePanel(String state, Player player) {
 		
 		if(state == nextState) {
 			nextState = "title";
+			skipButtonClicks = 0;
 			postStamp = frameCount + interval;
 			celestial_cascade.setVolume(0.0f);
 			celestial_cascade.play();
 		} else {
+			
+			if(mouseH.mouseX >= Constants.SKIP_B_X && mouseH.mouseX <= Constants.SCREEN_WIDTH
+					&& mouseH.mouseY >= Constants.SKIP_B_Y && mouseH.mouseY <= Constants.SCREEN_HEIGHT) {
+				if(mouseH.leftClick && skipButtonClicks == 0) {
+					skipButtonClicks++;
+				}
+			}
+			if(skipButtonClicks > 0) {
+				state = nextState;
+			}
+			
 			int offset = (int)(((double)(interval - timeLeft) / (interval * 5.0 / 7.0)) * Constants.SCREEN_HEIGHT);
 			if(interval - timeLeft < 3 * interval / 7) {
 				g2.drawImage(ImageManager.title_screen_sky, 0, 0 - offset, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
@@ -234,6 +267,11 @@ public ScenePanel(String state, Player player) {
 				}
 			}
 		}
+		
+		if(skipButtonClicks == 0) {
+			g2.drawImage(ImageManager.skip_b, Constants.SKIP_B_X, Constants.SKIP_B_Y, Constants.SKIP_B_WIDTH, Constants.SKIP_B_HEIGHT, this);
+		}
+		
 		if(timeLeft == 0) {
 			g2.drawImage(ImageManager.title_screen_ground, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
 			g2.drawImage(ImageManager.title_image, Constants.SCREEN_WIDTH / 2 - 72 * Constants.SCALE, Constants.SCREEN_HEIGHT / 3 - 38 * Constants.SCALE, 72 * Constants.SCALE * 2, 38 * Constants.SCALE * 2, null);
@@ -358,9 +396,22 @@ public ScenePanel(String state, Player player) {
 		
 		if(state == nextState) {
 			nextState = "tutorial";
+			skipButtonClicks = 0;
 			postStamp = frameCount + interval3_4;
 			morning_mood.setVolume(0.0f);
 			morning_mood.play();
+		}
+		
+		if(mouseH.mouseX >= Constants.SKIP_B_X && mouseH.mouseX <= Constants.SCREEN_WIDTH
+				&& mouseH.mouseY >= Constants.SKIP_B_Y && mouseH.mouseY <= Constants.SCREEN_HEIGHT) {
+			if(mouseH.leftClick && skipButtonClicks == 0) {
+				skipButtonClicks++;
+			}
+		}
+		if(skipButtonClicks > 0) {
+			state = nextState;
+			morning_mood.stop();
+			sceneThread = null;
 		}
 		
 		if(timeLeft + interval1_1 >= interval3_4) {
@@ -466,6 +517,7 @@ public ScenePanel(String state, Player player) {
 				g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 			}
 		}
+		g2.drawImage(ImageManager.skip_b, Constants.SKIP_B_X, Constants.SKIP_B_Y, Constants.SKIP_B_WIDTH, Constants.SKIP_B_HEIGHT, this);
 		if(timeLeft == 0) {
 			state = "tutorial";
 			sceneThread = null;
@@ -573,6 +625,9 @@ public ScenePanel(String state, Player player) {
 						+ ((player.blueFlowerCountL + player.orangeFlowerCountL + player.whiteFlowerCountL + player.yellowFlowerCountL) * 30) 
 						+ (player.roseFlowerCountS * 30) + (player.roseFlowerCountM * 60) + (player.roseFlowerCountL * 90) 
 						- (player.weedCount * 20);
+				if(player.birtCount > 0) {
+					score = score + 100;
+				}
 				if(player.hitCount == 0) {
 					score = score * 2;
 				}
@@ -596,7 +651,7 @@ public ScenePanel(String state, Player player) {
 			g2.setColor(Color.black);
 			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 		}
-		if(timeLeft == 0) {
+		if(timeLeft == 0 && score != -1) {
 			state = "giving";
 		}
 	}
@@ -610,19 +665,89 @@ public ScenePanel(String state, Player player) {
 				ImageManager.time_number_8, ImageManager.time_number_9 };
 		
 		BufferedImage[] output = { numImages[numTens], numImages[numOnes] };
-		if(numTens == 0) {
-			output[0] = null;
+		if(numTens == 0 && numFlowers < 10 && numOnes != 0) {
+		    output[0] = null;
 		}
 
 		return output;
 	}
 	
-	public void givingScene(Graphics2D g2) {
-		if(state == nextState) {
-			nextState = "credits";
-		}
+	public void givingScene(Graphics2D g2) throws IOException {
+		int interval = Constants.GIVING_INT;
 		
-		g2.drawImage(ImageManager.kitchen, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, this);
-		g2.drawImage(ImageManager.kitchen1.getImage(), 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, this);
+		if(state == nextState) {
+			skipButtonClicks = 0;
+			nextState = "credits";
+			postStamp = frameCount + interval;
+			giver.setVolume(0.75f);
+			giver.play();
+			
+			kitchen1t.flush();
+			kitchen2t.flush();
+			kitchen3t.flush();
+		} else {
+			g2.drawImage(ImageManager.kitchen, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, this);
+			
+			float transparency = (float)(timeLeft) / (float)interval;
+			if(transparency < 0) {
+				transparency = 0f;
+			}
+			
+			if(mouseH.mouseX >= Constants.SKIP_B_X && mouseH.mouseX <= Constants.SCREEN_WIDTH
+					&& mouseH.mouseY >= Constants.SKIP_B_Y && mouseH.mouseY <= Constants.SCREEN_HEIGHT) {
+				if(mouseH.leftClick && skipButtonClicks == 0) {
+					skipButtonClicks++;
+					postStamp = frameCount + interval;
+				}
+			}
+			
+			if(skipButtonClicks > 0) {
+				float volume = (float)(timeLeft) / (float)interval;
+				if(volume > 0.75f) {
+					volume = 0.75f;
+				}
+				if(volume < 0f) {
+					volume = 0f;
+				}
+				giver.setVolume(volume);
+				
+				transparency = (float)(interval - timeLeft) / (float)interval;
+				if((transparency < 0 || timeLeft < 0) && postStamp != frameCount + interval) {
+					transparency = 1f;
+				} else if(transparency > 1) {
+					transparency = 0f;
+				}
+				
+				if(timeLeft < 0 && postStamp != frameCount + interval) {
+					state = "credits";
+					sceneThread = null;
+					
+					//kitchen1.flush();
+					kitchen2 = null;
+					kitchen3 = null;
+					
+					System.gc();
+				}
+			}
+			
+			g2.drawImage(ImageManager.kitchen, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, this);
+			if(score >= 1000) {
+				g2.drawImage(kitchen3t, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, this);
+			} else if (score >= 500) {
+				g2.drawImage(kitchen2t, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, this);
+			} else {
+				g2.drawImage(kitchen1t, 0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, this);
+			}
+
+			g2.setColor(Color.black);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+			g2.fillRect(0, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f)); // transparency set to 100%
+			
+			if(skipButtonClicks == 0) {
+				g2.drawImage(ImageManager.skip_b, Constants.SKIP_B_X, Constants.SKIP_B_Y, Constants.SKIP_B_WIDTH, Constants.SKIP_B_HEIGHT, this);
+			}
+
+		}
 	}
 }

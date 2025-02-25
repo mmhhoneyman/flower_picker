@@ -2,7 +2,9 @@ package main;
 
 import javax.swing.JPanel;
 
+import entity.Entity;
 import entity.EntityManager;
+import entity.Mower;
 import entity.Player;
 import tile.TileManager;
 
@@ -126,6 +128,12 @@ public class GamePanel extends JPanel implements Runnable{
 			entityM.update();
 		} else if(!(frameCount < Constants.TOTAL_GAME_TIME - Constants.POSTGAME_TIMER)) {
 			state = "supper time!";
+			for(Entity i: entityM.entities) {
+				if(i.getClass().getSimpleName().equals("Mower")) {
+					Mower j = (Mower) i;
+					j.lawn_mower_se.close();
+				}
+			}
 		}
 		timeLeft = postStamp - frameCount;
 	}
@@ -174,9 +182,10 @@ public class GamePanel extends JPanel implements Runnable{
 		}
 		if(timeLeft + interval2 >= interval3) {
 			int offset = interval3 - timeLeft;
-			g2.drawImage(ImageManager.tutorial_screen_1, 0 + offset, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
-			g2.drawImage(ImageManager.tutorial_screen_1, 0 - Constants.SCREEN_WIDTH + offset, 0 + 147, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
-			g2.drawImage(ImageManager.tutorial_screen_1, 0 - Constants.SCREEN_WIDTH + offset, 0 - 10, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			int offset2 = 400;
+			g2.drawImage(ImageManager.tutorial_screen_1, 0 + offset + offset2, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			g2.drawImage(ImageManager.tutorial_screen_1, 0 - Constants.SCREEN_WIDTH + offset + offset2, 0 + 147, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			g2.drawImage(ImageManager.tutorial_screen_1, 0 - Constants.SCREEN_WIDTH + offset + offset2, 0 - 10, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
 			
 			double zoom = 0.05 * (1 + Math.sin(frameCount * 0.025)) + 1;
 			
@@ -201,9 +210,10 @@ public class GamePanel extends JPanel implements Runnable{
 			int swipe = (int)Math.pow(interval3 - timeLeft - interval2, 1.75) / 2;
 			
 			int offset = interval3 - timeLeft;
-			g2.drawImage(ImageManager.tutorial_screen_1, 0 + offset + swipe, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
-			g2.drawImage(ImageManager.tutorial_screen_1, 0 - Constants.SCREEN_WIDTH + offset + swipe, 0 + 147, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
-			g2.drawImage(ImageManager.tutorial_screen_1, 0 - Constants.SCREEN_WIDTH + offset + swipe, 0 - 10, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			int offset2 = 400;
+			g2.drawImage(ImageManager.tutorial_screen_1, 0 + offset + swipe + offset2, 0, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			g2.drawImage(ImageManager.tutorial_screen_1, 0 - Constants.SCREEN_WIDTH + offset + swipe + offset2, 0 + 147, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
+			g2.drawImage(ImageManager.tutorial_screen_1, 0 - Constants.SCREEN_WIDTH + offset + swipe + offset2, 0 - 10, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, null);
 
 			double zoom = 0.05 * (1 + Math.sin(frameCount * 0.025)) + 1;
 			
@@ -271,6 +281,9 @@ public class GamePanel extends JPanel implements Runnable{
 		if(state == nextState) {
 			nextState = null;
 			postStamp = Constants.TOTAL_GAME_TIME;
+			supper_time_se.setVolume(0.65f);
+			supper_time_se.play();
+			flower_picker.stop();
 		}
 		if(timeLeft + interval1 >= interval4) {
 			int offset = (frameCount / 4 % 2) * 10;

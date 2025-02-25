@@ -115,6 +115,20 @@ public final class Constants {
 	public static final int MOWER_FLEE_DISTANCE = 5;
 	
 	
+	// BIRT
+	//------------------------------------------------------------------------------------------------------------------------------------------------------
+		public static final int BIRT_SPAWN_MIN = 240;
+		
+		public static final int BIRT_SPEED_MIN = 4;
+		public static final int BIRT_SPEED_MAX = 6;
+		
+		public static final int BIRT_KNOCKBACK_DISTANCE = 150;
+		public static final int BIRT_KNOCKBACK_SPEED = 30;
+		public static final double BIRT_KNOCKBACK_INERTIA = 1.2;
+		
+		public static final int BIRT_ANIMATION_FRAME_LENGTH = 2;
+	
+		
 	// TILEMANAGER
 	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final float SELTILE_TRANSPARENCY = 0.2f; // transparency set to 20%
@@ -199,13 +213,23 @@ public final class Constants {
 	
 	public static final int POSTGAME_TIMER = SUPPER_TIME_INT_4;
 	
-	public static final int TOTAL_GAME_TIME = 3600 * 2 + PREGAME_TIMER + POSTGAME_TIMER; // 2 minutes plus pregame and postgame
+	public static final int GAME_TIME = 3600 * 2; // 2 minutes
+	public static final int TOTAL_GAME_TIME = GAME_TIME + PREGAME_TIMER + POSTGAME_TIMER;
 	
 	public static final int EATING_INT_1 = 200;
-	public static final int EATING_INT_2 = EATING_INT_1 + 600;
+	public static final int EATING_INT_2 = EATING_INT_1 + 400;
 	public static final int EATING_INT_3 = EATING_INT_2 + 200;
 	public static final int EATING_INT_4 = EATING_INT_3 + 200;
 	public static final int EATING_INT_5 = EATING_INT_4 + 200;
+	
+	public static final int GIVING_INT = 300;
+	
+	// SKIP BUTTON
+	//------------------------------------------------------------------------------------------------------------------------------------------------------
+	public static final int SKIP_B_WIDTH = 28 * 2;
+	public static final int SKIP_B_HEIGHT = 6 * 2;
+	public static final int SKIP_B_X = Constants.SCREEN_WIDTH - 70;
+	public static final int SKIP_B_Y = Constants.SCREEN_HEIGHT - 30;
 	
 }
 

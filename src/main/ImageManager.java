@@ -340,19 +340,20 @@ public final class ImageManager {
 		}
 	}
 	
-	public static ImageIcon kitchen1, kitchen2, kitchen3;
-
-    static {
-        kitchen1 = new ImageIcon("res/screens/kitchen1.gif");
-        kitchen2 = new ImageIcon("res/screens/kitchen2.gif");
-        kitchen3 = new ImageIcon("res/screens/kitchen3.gif");
-    }
+//	public static ImageIcon kitchen1, kitchen2, kitchen3;
+//
+//    static {
+//        kitchen1 = new ImageIcon("res/screens/kitchen1.gif");
+//        kitchen2 = new ImageIcon("res/screens/kitchen2.gif");
+//        kitchen3 = new ImageIcon("res/screens/kitchen3.gif");
+//    }
     
-    public static BufferedImage kitchen;
+    public static BufferedImage kitchen, skip_b;
     
     static {
     	try {
 			kitchen = ImageIO.read(TileManager.class.getResourceAsStream("/screens/kitchen.png"));
+			skip_b = ImageIO.read(TileManager.class.getResourceAsStream("/other/skip_b.png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

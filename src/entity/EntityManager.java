@@ -57,9 +57,6 @@ public class EntityManager {
 		for(int i = 0; i < entities.size(); i++) {
 			entities.get(i).draw(g2);
 		}
-		if(entityClicked) {
-			
-		}
 	}
 	
 	public void addEntity(int destX, int destY, String theClass) {
@@ -77,6 +74,10 @@ public class EntityManager {
 					break;
 				case "Mower":
 					entities.add(0, new Mower(this.gp, this.mouseH, this.player, this.tileM, destX, destY));
+					break;
+				case "Birt":
+					entities.add(new Birt(this.gp, this.mouseH, this.player, this.tileM, destX, destY));
+					break;
 			}
 		//}
 		
@@ -103,6 +104,9 @@ public class EntityManager {
 							entityClicked = true;
 							entities.get(i).swat = true;
 							playSwatSound(entities.get(i));
+							if(entities.get(i).getClass().getSimpleName().equals("Birt")) {
+								player.birtCount++;
+							}
 						}
 					}	
 				}
@@ -129,6 +133,10 @@ public class EntityManager {
 			case "Ladybug":
 				ladybug_se.setVolume(0.75f);
 				ladybug_se.play();
+				break;
+			case "Birt":
+				ladybug_se.setVolume(0.75f);
+				butterfly_se.play();
 				break;
 		}
 	}

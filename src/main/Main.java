@@ -1,65 +1,60 @@
 package main;
 
+import java.awt.Color;
+
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import scene.ScenePanel;
 
 public class Main {
+    public static void main(String[] args) {
+        JFrame window = new JFrame("Mother's Day");
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setResizable(false);
+        window.setVisible(true);
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		JFrame window = new JFrame();
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setResizable(false);
-		window.setTitle("Mother's Day");
-		//window.setLocationRelativeTo(null);
-		window.setVisible(true);
-		
-		while(1==1) { // im sure this won't cause problems
-			
-			GamePanel gamePanel = new GamePanel();
-			ScenePanel scenePanel = new ScenePanel("giving", gamePanel.player);
-			
-			window.add(scenePanel);
-			window.pack();
-			scenePanel.startGameThread();
-			
-			try {
-				scenePanel.sceneThread.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-            window.remove(scenePanel);
-            window.add(gamePanel);
-            	window.pack();
+        while (true) {
+            resetGame(window);
+        }
+    }
+
+    private static void resetGame(JFrame window) {
+        GamePanel gamePanel = new GamePanel();
+        ScenePanel scenePanel = new ScenePanel("credits", gamePanel.player);
+        ScenePanel scenePanel2 = new ScenePanel("eating", gamePanel.player);
+        
+
+        resetContentPane(window, scenePanel);
+        scenePanel.startGameThread();
+        try { scenePanel.sceneThread.join(); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        resetContentPane(window, gamePanel);
+        gamePanel.startGameThread();
+        try { gamePanel.gameThread.join(); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        resetContentPane(window, scenePanel2);
+        scenePanel2.startGameThread();
+        try { scenePanel2.sceneThread.join(); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        SwingUtilities.invokeLater(() -> {
+            window.setContentPane(new JPanel());
+            window.getContentPane().setBackground(Color.BLACK);
             window.revalidate();
             window.repaint();
-            gamePanel.startGameThread();
-            
-            try {
-				gamePanel.gameThread.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            ScenePanel scenePanel2 = new ScenePanel("eating", gamePanel.player);
-            
-            window.remove(gamePanel);
-            window.add(scenePanel2);
+        });
+
+        System.gc(); 
+    }
+
+    private static void resetContentPane(JFrame window, JPanel newPanel) {
+        SwingUtilities.invokeLater(() -> {
+            window.setContentPane(newPanel);
+            window.pack();
             window.revalidate();
             window.repaint();
-            scenePanel2.startGameThread();
-            
-            try {
-				scenePanel2.sceneThread.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-
+            newPanel.requestFocusInWindow();
+        });
+    }
 }

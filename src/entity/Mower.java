@@ -19,7 +19,7 @@ public class Mower extends Entity{
 	
 	public BufferedImage image;
 	
-	Audio lawn_mower_se = new Audio("res/se/Lawn_Mower_SE.wav", true);
+	public Audio lawn_mower_se = new Audio("res/se/Lawn_Mower_SE.wav", true);
 	
 	public Mower(GamePanel gp, MouseHandler mouseH, Player player, TileManager tileM, int destX, int destY) {
 		

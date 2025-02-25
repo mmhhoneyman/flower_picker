@@ -39,6 +39,7 @@ public class Player {
 	public int collRefStamp; // this allows the player to have hit immunity for a while after getting hit
 	public int ladybugStamp;
 	public int mowerStamp;
+	public int birtStamp;
 	public int projectileStamp;
 	
 	public int offset;
@@ -69,6 +70,8 @@ public class Player {
 	
 	public int weedCount;
 	
+	public int birtCount;
+	
 	Audio flower_se = new Audio("res/se/Flower_SE.wav", false);
 	
 	
@@ -79,6 +82,7 @@ public class Player {
 		
 		ladybugStamp = gp.frameCount + Constants.PREGAME_TIMER + Utility.generateRandom(Constants.LADYBUG_SPAWN_MIN, Constants.LADYBUG_SPAWN_MAX);
 		mowerStamp = gp.frameCount + Constants.PREGAME_TIMER + Utility.generateRandom(Constants.MOWER_SPAWN_MIN, Constants.MOWER_SPAWN_MAX);
+		birtStamp = gp.frameCount + Constants.PREGAME_TIMER + Utility.generateRandom(Constants.BIRT_SPAWN_MIN, Constants.GAME_TIME - 200);
 		
 		pickTileX = -Constants.TILE_SIZE;
 		pickTileY = -Constants.TILE_SIZE;
@@ -130,6 +134,8 @@ public class Player {
 		yellowFlowerCountL = 1;
 		
 		weedCount = 1;
+		
+		birtCount = 0;
 	}
 	
 	public void update() {
@@ -142,6 +148,7 @@ public class Player {
 		checkCollision();
 		checkSpawnLadybug();
 		checkSpawnMower();
+		checkSpawnBirt();
 		
 		String state2 = state;
 		if(state1 != state2 && state2 == "picking") {
@@ -541,6 +548,13 @@ public class Player {
 		if(gp.frameCount == mowerStamp) {
 			entityM.addEntity(playerX, playerY, "Mower");
 			mowerStamp = gp.frameCount + Utility.generateRandom(Constants.MOWER_SPAWN_MIN, Constants.MOWER_SPAWN_MAX);
+		}
+	}
+	
+	public void checkSpawnBirt() {
+		if(gp.frameCount == birtStamp) {
+			entityM.addEntity(playerX, playerY, "Birt");
+			//birtStamp = gp.frameCount + Utility.generateRandom(Constants.BIRT_SPAWN_MIN, Constants.BIRT_SPAWN_MAX);
 		}
 	}
 	
