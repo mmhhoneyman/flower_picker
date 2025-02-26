@@ -23,8 +23,8 @@ public final class Constants {
 	
 	public static final int PLAYER_SPEED = 3;
 	
-	public static final int PLAYER_PICK_TIME_MIN = 300;
-	public static final int PLAYER_PICK_TIME_MAX = 360;
+	public static final int PLAYER_PICK_TIME_MIN = 200;
+	public static final int PLAYER_PICK_TIME_MAX = 260;
 	
 	public static final int PLAYER_FLICKER_SPEED = 15;
 	
@@ -53,7 +53,7 @@ public final class Constants {
 	public static final double BEE_MIN_DISTANCE_FROM_TARGET = 10;
 	
 	public static final int BEE_SPEED_MIN = 2;
-	public static final int BEE_SPEED_MAX = 2;
+	public static final int BEE_SPEED_MAX = 3;
 	
 	public static final int BEE_KNOCKBACK_DISTANCE = 96;
 	public static final int BEE_KNOCKBACK_SPEED = 15;
@@ -71,7 +71,7 @@ public final class Constants {
 	// BUTTERFLY
 	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final int BUTTERFLY_SPEED_MIN = 2;
-	public static final int BUTTERFLY_SPEED_MAX = 2;
+	public static final int BUTTERFLY_SPEED_MAX = 4;
 	
 	public static final int BUTTERFLY_KNOCKBACK_DISTANCE = 96;
 	public static final int BUTTERFLY_KNOCKBACK_SPEED = 15;
@@ -85,8 +85,8 @@ public final class Constants {
 	
 	// LADYBUG
 	//------------------------------------------------------------------------------------------------------------------------------------------------------
-	public static final int LADYBUG_SPAWN_MIN = 240;
-	public static final int LADYBUG_SPAWN_MAX = 360;
+	public static final int LADYBUG_SPAWN_MIN = 300;
+	public static final int LADYBUG_SPAWN_MAX = 600;
 	
 	public static final int LADYBUG_SPEED_MIN = 2;
 	public static final int LADYBUG_SPEED_MAX = 2;
@@ -100,11 +100,11 @@ public final class Constants {
 	
 	// MOWER
 	//------------------------------------------------------------------------------------------------------------------------------------------------------
-	public static final int MOWER_SPAWN_MIN = 600;
-	public static final int MOWER_SPAWN_MAX = 900;
+	public static final int MOWER_SPAWN_MIN = 1200;
+	public static final int MOWER_SPAWN_MAX = 1800;
 	
-	public static final int MOWER_SPEED_MIN = 2;
-	public static final int MOWER_SPEED_MAX = 2;
+	public static final int MOWER_SPEED_MIN = 1;
+	public static final int MOWER_SPEED_MAX = 1;
 	
 	public static final int MOWER_TURNS_MIN = 1;
 	public static final int MOWER_TURNS_MAX = 10;
@@ -134,36 +134,36 @@ public final class Constants {
 	public static final float SELTILE_TRANSPARENCY = 0.2f; // transparency set to 20%
 	public static final int SELTILE_ANIMATION_FRAME_LENGTH = 20;
 	
-	public static final int TILE_PLANT_SPROUT_MIN = 120;
-	public static final int TILE_PLANT_SPROUT_MAX = 210;
+	public static final int TILE_PLANT_SPROUT_MIN = 20;
+	public static final int TILE_PLANT_SPROUT_MAX = 100;
 	
-	public static final int TILE_CHANGE_FROM_SPROUT_1_MIN = 120;
-	public static final int TILE_CHANGE_FROM_SPROUT_1_MAX = 210;
-	public static final int TILE_CHANGE_FROM_SPROUT_2_MIN = 180;
-	public static final int TILE_CHANGE_FROM_SPROUT_2_MAX = 240;
+	public static final int TILE_CHANGE_FROM_SPROUT_1_MIN = 90;
+	public static final int TILE_CHANGE_FROM_SPROUT_1_MAX = 180;
+	public static final int TILE_CHANGE_FROM_SPROUT_2_MIN = 120;
+	public static final int TILE_CHANGE_FROM_SPROUT_2_MAX = 210;
 	
-	public static final int TILE_CHANGE_FROM_FLOWER_1_MIN = 180;
+	public static final int TILE_CHANGE_FROM_FLOWER_1_MIN = 120;
 	public static final int TILE_CHANGE_FROM_FLOWER_1_MAX = 240;
-	public static final int TILE_CHANGE_FROM_FLOWER_2_MIN = 180;
+	public static final int TILE_CHANGE_FROM_FLOWER_2_MIN = 90;
 	public static final int TILE_CHANGE_FROM_FLOWER_2_MAX = 240;
 	
-	public static final int TILE_CHANGE_FROM_ROSE_1_MIN = 180;
+	public static final int TILE_CHANGE_FROM_ROSE_1_MIN = 90;
 	public static final int TILE_CHANGE_FROM_ROSE_1_MAX = 240;
-	public static final int TILE_CHANGE_FROM_ROSE_2_MIN = 180;
+	public static final int TILE_CHANGE_FROM_ROSE_2_MIN = 90;
 	public static final int TILE_CHANGE_FROM_ROSE_2_MAX = 240;
 	
-	public static final int TILE_CHANGE_FROM_PICKED_MIN = 180;
+	public static final int TILE_CHANGE_FROM_PICKED_MIN = 90;
 	public static final int TILE_CHANGE_FROM_PICKED_MAX = 240;
 	
-	public static final int TILE_CHANGE_FROM_MOWED_1_MIN = 180;
+	public static final int TILE_CHANGE_FROM_MOWED_1_MIN = 90;
 	public static final int TILE_CHANGE_FROM_MOWED_1_MAX = 240;
-	public static final int TILE_CHANGE_FROM_MOWED_2_MIN = 180;
+	public static final int TILE_CHANGE_FROM_MOWED_2_MIN = 90;
 	public static final int TILE_CHANGE_FROM_MOWED_2_MAX = 240;
-	public static final int TILE_CHANGE_FROM_MOWED_3_MIN = 180;
+	public static final int TILE_CHANGE_FROM_MOWED_3_MIN = 90;
 	public static final int TILE_CHANGE_FROM_MOWED_3_MAX = 240;
 	
 	public static final int TILE_ENTITY_STAMP_MIN = 180;
-	public static final int TILE_ENTITY_STAMP_MAX = 240;
+	public static final int TILE_ENTITY_STAMP_MAX = 2000;
 	
 	
 	// IMAGES
@@ -213,7 +213,7 @@ public final class Constants {
 	
 	public static final int POSTGAME_TIMER = SUPPER_TIME_INT_4;
 	
-	public static final int GAME_TIME = 3600 * 2; // 2 minutes
+	public static final int GAME_TIME = 1800 * 5; // 30 seconds * 5 = 2:30 
 	public static final int TOTAL_GAME_TIME = GAME_TIME + PREGAME_TIMER + POSTGAME_TIMER;
 	
 	public static final int EATING_INT_1 = 200;

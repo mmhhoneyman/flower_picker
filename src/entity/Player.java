@@ -113,27 +113,27 @@ public class Player {
 		
 		hitCount = 0;
 		
-		blueFlowerCountS = 1;
-		blueFlowerCountM = 1;
-		blueFlowerCountL = 1;
+		blueFlowerCountS = 0;
+		blueFlowerCountM = 0;
+		blueFlowerCountL = 0;
 		
-		orangeFlowerCountS = 1;
-		orangeFlowerCountM = 1;
-		orangeFlowerCountL = 1;
+		orangeFlowerCountS = 0;
+		orangeFlowerCountM = 0;
+		orangeFlowerCountL = 0;
 		
-		roseFlowerCountS = 1;
-		roseFlowerCountM = 1;
-		roseFlowerCountL = 1;
+		roseFlowerCountS = 0;
+		roseFlowerCountM = 0;
+		roseFlowerCountL = 0;
 		
-		whiteFlowerCountS = 1;
-		whiteFlowerCountM = 1;
-		whiteFlowerCountL = 1;
+		whiteFlowerCountS = 0;
+		whiteFlowerCountM = 0;
+		whiteFlowerCountL = 0;
 		
-		yellowFlowerCountS = 1;
-		yellowFlowerCountM = 1;
-		yellowFlowerCountL = 1;
+		yellowFlowerCountS = 0;
+		yellowFlowerCountM = 0;
+		yellowFlowerCountL = 0;
 		
-		weedCount = 1;
+		weedCount = 0;
 		
 		birtCount = 0;
 	}

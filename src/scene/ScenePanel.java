@@ -623,18 +623,24 @@ public ScenePanel(String state, Player player) {
 				score = ((player.blueFlowerCountS + player.orangeFlowerCountS + player.whiteFlowerCountS + player.yellowFlowerCountS) * 10) 
 						+ ((player.blueFlowerCountM + player.orangeFlowerCountM + player.whiteFlowerCountM + player.yellowFlowerCountM) * 20) 
 						+ ((player.blueFlowerCountL + player.orangeFlowerCountL + player.whiteFlowerCountL + player.yellowFlowerCountL) * 30) 
-						+ (player.roseFlowerCountS * 30) + (player.roseFlowerCountM * 60) + (player.roseFlowerCountL * 90) 
-						- (player.weedCount * 20);
+						+ (player.roseFlowerCountS * 50) + (player.roseFlowerCountM * 100) + (player.roseFlowerCountL * 150) 
+						- (player.weedCount * 100);
 				if(player.birtCount > 0) {
-					score = score + 100;
+					score = score + 250;
 				}
 				if(player.hitCount == 0) {
 					score = score * 2;
+				}
+				if(score < 0) {
+					score = 0;
 				}
 				BufferedImage[] images1 = pickNumImage(score % 1000 / 10);
 				BufferedImage[] images2 = pickNumImage(score / 100);
 				g2.drawImage(ImageManager.points_score, (Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2 - textSpacing - 20, ((numSizeY + spacingY) * 9) + textShiftY, textSizeX, textSizeY, null);
 				g2.drawImage(images2[0], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - spacingX*2 - numSizeX*2 - 20, (numSizeY + spacingY) * 9, numSizeX, numSizeY, null);
+				if(images1[0] == null && images2[0] != null) {
+					images1[0] = ImageManager.time_number_0;
+				}
 				g2.drawImage(images1[0], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - spacingX - numSizeX - 20, (numSizeY + spacingY) * 9, numSizeX, numSizeY, null);
 				g2.drawImage(images1[1], ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing - 20, (numSizeY + spacingY) * 9, numSizeX, numSizeY, null);
 				g2.drawImage(ImageManager.time_number_0, ((Constants.SCREEN_WIDTH - textSizeX - numSizeX*3 - spacingX) / 2) + textSizeX + textSpacing + spacingX + numSizeX - 20, (numSizeY + spacingY) * 9, numSizeX, numSizeY, null);
@@ -664,8 +670,8 @@ public ScenePanel(String state, Player player) {
 				ImageManager.time_number_4, ImageManager.time_number_5, ImageManager.time_number_6, ImageManager.time_number_7, 
 				ImageManager.time_number_8, ImageManager.time_number_9 };
 		
-		BufferedImage[] output = { numImages[numTens], numImages[numOnes] };
-		if(numTens == 0 && numFlowers < 10 && numOnes != 0) {
+		BufferedImage[] output = { numImages[numTens], numImages[numOnes]};
+		if(numTens == 0) {
 		    output[0] = null;
 		}
 
@@ -722,7 +728,6 @@ public ScenePanel(String state, Player player) {
 					state = "credits";
 					sceneThread = null;
 					
-					//kitchen1.flush();
 					kitchen2 = null;
 					kitchen3 = null;
 					

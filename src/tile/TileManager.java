@@ -241,7 +241,11 @@ public class TileManager {
 					tileNums[randRow][randCol] = 12;
 					tile[randRow][randCol].changeStamp = gp.frameCount + Utility.generateRandom(Constants.TILE_CHANGE_FROM_SPROUT_1_MIN, Constants.TILE_CHANGE_FROM_SPROUT_1_MAX);
 					timeStamp = gp.frameCount;
-					sproutInterval = Utility.generateRandom(Constants.TILE_PLANT_SPROUT_MIN, Constants.TILE_PLANT_SPROUT_MAX);
+					if(gp.frameCount - (Constants.TUTORIAL_INT_3 + Constants.COUNTDOWN_INT_3) <= Constants.GAME_TIME / 150) {
+						sproutInterval = Utility.generateRandom(Constants.TILE_PLANT_SPROUT_MIN / 20, Constants.TILE_PLANT_SPROUT_MAX / 20);
+					} else {
+						sproutInterval = Utility.generateRandom(Constants.TILE_PLANT_SPROUT_MIN, Constants.TILE_PLANT_SPROUT_MAX);
+					}
 					tileFound = true;
 				}
 				tryCount++;
@@ -311,7 +315,12 @@ public class TileManager {
 				break;
 			case 13: // flower_sprout_2
 				
-				int rand = Utility.generateRandom(1, 41);
+				int rand;
+				if(gp.frameCount - (Constants.TUTORIAL_INT_3 + Constants.COUNTDOWN_INT_3) <= Constants.GAME_TIME / 20) {
+					rand = Utility.generateRandom(2, 41);
+				} else {
+					rand = Utility.generateRandom(1, 41);
+				}
 				
 				if(rand == 1) {
 					tileNums[r][c] = 9;
