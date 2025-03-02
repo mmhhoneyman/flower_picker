@@ -1,4 +1,4 @@
-If you have a Java Runtime Environment installed on your computer, simply download the "Mother's Day.jar" file in this the main branch.
+If you have a Java Runtime Environment installed on your computer, simply download the "Mother's Day.jar" file in this the main branch. This will NOT run on any version older than JDK 23.
 
 If not, here's a link to my itch.io page:
 https://mckeon-honeyman.itch.io/mothers-day
