@@ -1,6 +1,5 @@
 package scene;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
@@ -8,7 +7,6 @@ import entity.Player;
 import main.Audio;
 import main.Constants;
 import main.MouseHandler;
-import main.Utility;
 import main.ImageManager;
 
 import java.awt.Dimension;
@@ -16,18 +14,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 
 
 public class ScenePanel extends JPanel implements Runnable{
 
-	ImageIcon kitchen1 = new ImageIcon("res/screens/kitchen1.gif");
-	ImageIcon kitchen2 = new ImageIcon("res/screens/kitchen2.gif");
-	ImageIcon kitchen3 = new ImageIcon("res/screens/kitchen3.gif");
+	ImageIcon kitchen1 = new ImageIcon(getClass().getResource("/screens/kitchen1.gif"));
+	ImageIcon kitchen2 = new ImageIcon(getClass().getResource("/screens/kitchen2.gif"));
+	ImageIcon kitchen3 = new ImageIcon(getClass().getResource("/screens/kitchen3.gif"));
 	
 	Image kitchen1t = kitchen1.getImage();
 	Image kitchen2t = kitchen2.getImage();
@@ -57,14 +53,14 @@ public class ScenePanel extends JPanel implements Runnable{
 	
 	public Player player;
 	
-	Audio tick_se = new Audio("res/se/Tick_SE.wav", false);
-	Audio tick_sp_se = new Audio("res/se/Tick_Sp_SE.wav", false);
-	Audio celestial_cascade = new Audio("res/music/Celestial_Cascade.wav", false);
-	Audio vine_boom_se = new Audio("res/se/Vine_Boom_SE.wav", false);
-	Audio play_se = new Audio("res/se/Play_SE.wav", false);
-	Audio morning_mood = new Audio("res/music/Morning_Mood.wav", false);
-	Audio interruption_se = new Audio("res/se/Interruption_SE.wav", false);
-	Audio giver = new Audio("res/music/Giver.wav", false);
+	Audio tick_se = new Audio("/se/Tick_SE.wav", false);
+	Audio tick_sp_se = new Audio("/se/Tick_Sp_SE.wav", false);
+	Audio celestial_cascade = new Audio("/music/Celestial_Cascade.wav", false);
+	Audio vine_boom_se = new Audio("/se/Vine_Boom_SE.wav", false);
+	Audio play_se = new Audio("/se/Play_SE.wav", false);
+	Audio morning_mood = new Audio("/music/Morning_Mood.wav", false);
+	Audio interruption_se = new Audio("/se/Interruption_SE.wav", false);
+	Audio giver = new Audio("/music/Giver.wav", false);
 	
 public ScenePanel(String state, Player player) {
 		
@@ -106,6 +102,9 @@ public ScenePanel(String state, Player player) {
 		
 		double refreshRate = 1000000000/Constants.FPS; // the length of a frame in nanoseconds
 		double nextDrawTime = System.nanoTime() + refreshRate;
+		
+		tick_se.setVolume(0f);
+		tick_se.play();
 		
 		while(sceneThread != null) {
 			
@@ -526,7 +525,7 @@ public ScenePanel(String state, Player player) {
 	
 	public void eatingScene(Graphics2D g2) {
 		int interval1 = Constants.EATING_INT_1;
-		int interval2 = Constants.EATING_INT_2;
+		//int interval2 = Constants.EATING_INT_2;
 		int interval3 = Constants.EATING_INT_3;
 		int interval4 = Constants.EATING_INT_4;
 		int interval5 = Constants.EATING_INT_5;

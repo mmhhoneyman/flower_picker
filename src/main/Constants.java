@@ -101,7 +101,7 @@ public final class Constants {
 	// MOWER
 	//------------------------------------------------------------------------------------------------------------------------------------------------------
 	public static final int MOWER_SPAWN_MIN = 1200;
-	public static final int MOWER_SPAWN_MAX = 1800;
+	public static final int MOWER_SPAWN_MAX = 3600;
 	
 	public static final int MOWER_SPEED_MIN = 1;
 	public static final int MOWER_SPEED_MAX = 1;

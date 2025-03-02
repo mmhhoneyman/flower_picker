@@ -3,8 +3,6 @@ package main;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.swing.ImageIcon;
-
 import javax.imageio.ImageIO;
 
 import entity.Bee;
@@ -339,14 +337,6 @@ public final class ImageManager {
 			e.printStackTrace();
 		}
 	}
-	
-//	public static ImageIcon kitchen1, kitchen2, kitchen3;
-//
-//    static {
-//        kitchen1 = new ImageIcon("res/screens/kitchen1.gif");
-//        kitchen2 = new ImageIcon("res/screens/kitchen2.gif");
-//        kitchen3 = new ImageIcon("res/screens/kitchen3.gif");
-//    }
     
     public static BufferedImage kitchen, skip_b;
     

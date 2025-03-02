@@ -1,8 +1,8 @@
 package main;
 
 import javax.sound.sampled.*;
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 public class Audio {
 	
@@ -13,8 +13,8 @@ public class Audio {
 
     public Audio(String filePath, boolean loop) {
     	try {
-            File audioFile = new File(filePath);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+    		URL audioURL = getClass().getResource(filePath);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioURL);
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             this.filePath = filePath;
@@ -23,17 +23,11 @@ public class Audio {
             volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             
             clip.setFramePosition(0);
-            clip.addLineListener(event -> {
-                if (event.getType() == LineEvent.Type.STOP) {
-                    clip.stop();
-                    clip.flush();
-                    clip.setFramePosition(0);
+            clip.setFramePosition(0);
 
-                    if (loop) {
-                        clip.start();
-                    }
-                }
-            });
+            if (loop) {
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
+            }
             
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
@@ -41,11 +35,11 @@ public class Audio {
     }
 
     public void play() {
-        if (clip.isRunning()) {
-            clip.stop();
-            clip.flush();
-            clip.setFramePosition(0);
-        }
+    	if(clip.isRunning()) {
+    		clip.stop();
+    	}
+        clip.flush();
+        clip.setFramePosition(0);
         clip.start();
     }
 
@@ -70,4 +64,5 @@ public class Audio {
             clip.close();
         }
     }
+  
 }

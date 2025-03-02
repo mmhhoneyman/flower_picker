@@ -11,7 +11,6 @@ import tile.TileManager;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.util.Random;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -39,9 +38,9 @@ public class GamePanel extends JPanel implements Runnable{
 	int startTimeMin; // the ten minute mark on the timer
 	int startTimeHour;
 	
-	Audio supper_time_se = new Audio("res/se/Supper_Time_SE.wav", false);
+	Audio supper_time_se = new Audio("/se/Supper_Time_SE.wav", false);
 	
-	Audio flower_picker = new Audio("res/music/Flower_Picker.wav", false);
+	Audio flower_picker = new Audio("/music/Flower_Picker.wav", false);
 	
 	public GamePanel() {
 		

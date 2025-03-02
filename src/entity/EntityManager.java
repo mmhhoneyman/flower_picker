@@ -22,11 +22,11 @@ public class EntityManager {
 	
 	public ArrayList<Entity> entities;
 	
-	Audio bee_se = new Audio("res/se/Bee_SE.wav", false);
-	Audio butterfly_se = new Audio("res/se/Butterfly_SE.wav", false);
-	Audio flower_se = new Audio("res/se/Flower_SE.wav", false);
-	Audio hit_se = new Audio("res/se/Hit_SE.wav", false);
-	Audio ladybug_se = new Audio("res/se/Ladybug_SE.wav", false);
+	Audio bee_se = new Audio("/se/Bee_SE.wav", false);
+	Audio butterfly_se = new Audio("/se/Butterfly_SE.wav", false);
+	Audio flower_se = new Audio("/se/Flower_SE.wav", false);
+	Audio hit_se = new Audio("/se/Hit_SE.wav", false);
+	Audio ladybug_se = new Audio("/se/Ladybug_SE.wav", false);
 	
 	public EntityManager (GamePanel gp, MouseHandler mouseH) {
 		

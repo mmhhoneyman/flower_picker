@@ -72,7 +72,7 @@ public class Player {
 	
 	public int birtCount;
 	
-	Audio flower_se = new Audio("res/se/Flower_SE.wav", false);
+	Audio flower_se = new Audio("/se/Flower_SE.wav", false);
 	
 	
 	public Player(GamePanel gp, MouseHandler mouseH) {

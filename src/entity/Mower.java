@@ -19,7 +19,7 @@ public class Mower extends Entity{
 	
 	public BufferedImage image;
 	
-	public Audio lawn_mower_se = new Audio("res/se/Lawn_Mower_SE.wav", true);
+	public Audio lawn_mower_se = new Audio("/se/Lawn_Mower_SE.wav", true);
 	
 	public Mower(GamePanel gp, MouseHandler mouseH, Player player, TileManager tileM, int destX, int destY) {
 		
@@ -272,20 +272,21 @@ public class Mower extends Entity{
 					} while(testState == testState2);
 					turns --;
 				} else {
-					int rand = Utility.generateRandom(1, 3);
-					switch(rand) {
-						case 1: // down
-							destX = entityX;
-							destY = (Constants.MAX_SCREEN_ROW + 1) * Constants.TILE_SIZE;
-							break;
-						case 2: // left
-							destX = -2 * Constants.TILE_SIZE;
-							destY = entityY;
-							break;
-						case 3: // right
-							destX = (Constants.MAX_SCREEN_COL + 1) * Constants.TILE_SIZE;
-							destY = entityY;
-							break;
+					if(state == "up" || state == "down") {
+						int rand = Utility.generateRandom(1, 2);
+						switch(rand) {
+							case 1: // left
+								destX = -2 * Constants.TILE_SIZE;
+								destY = entityY;
+								break;
+							case 2: // right
+								destX = (Constants.MAX_SCREEN_COL + 1) * Constants.TILE_SIZE;
+								destY = entityY;
+								break;
+						}
+					} else {
+						destX = entityX;
+						destY = (Constants.MAX_SCREEN_ROW + 1) * Constants.TILE_SIZE;
 					}
 					endDestX = destX;
 					endDestY = destY;
